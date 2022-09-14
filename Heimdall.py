@@ -1,4 +1,4 @@
-from turtle import width
+from turtle import onclick, width
 import dearpygui.dearpygui as dpg
 
 class GUI:
@@ -29,24 +29,23 @@ class GUI:
 					titleFont = dpg.add_font("assets/Arial.ttf", 25)
 					searchUIFont = dpg.add_font("assets/Arial.ttf", 16)
 				with dpg.theme_component():
-					dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize,0)
 					dpg.add_theme_color(dpg.mvThemeCol_TitleBgActive,(90,0,170,100))
 					dpg.add_theme_color(dpg.mvThemeCol_TitleBg,(90,0,170,100))
 					dpg.add_theme_color(dpg.mvThemeCol_TitleBgCollapsed,(90,0,170,100))
 					dpg.add_theme_style(dpg.mvStyleVar_WindowTitleAlign,0.5,0.5)
+					dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize,0)
 					dpg.bind_theme(mainWindowTheme)
 					dpg.bind_font(titleFont)
 			with dpg.handler_registry():
 				dpg.add_mouse_drag_handler(button=0, threshold=0.0, callback=self.drag)
 
 			#Node Editor Window
-			with dpg.window(horizontal_scrollbar=False, no_scrollbar=True, no_collapse=True, no_resize=True, menubar=False, no_title_bar=False, no_close=True, no_move=True, height = int(self.height / 100 * 65), width= self.width, tag="nodeWindow", label="Heimdall"):
+			with dpg.window(horizontal_scrollbar=False, no_scrollbar=True, no_collapse=True, no_resize=True, menubar=False, no_title_bar=False, no_close=False, no_move=True, height = int(self.height / 100 * 65), width=self.width - 10, tag="nodeWindow", label="Heimdall", on_close=self.exit):
 				pass
 
 			#Search Window
 			with dpg.window(horizontal_scrollbar=False, no_scrollbar=True, no_collapse=True, no_resize=True, menubar=False, no_title_bar=False, no_close=True, no_move=True, pos = [0, int(self.height / 100 * 65)], height = int(self.height / 100 * 35), width= self.width, tag="searchWindow", label="Search") as window:
-				dpg.set_item_font(window,searchUIFont)
-				dpg.setitem
+				dpg.bind_item_font(window,searchUIFont)
 				pass
 			# with dpg.font_registry():
 			# with dpg.theme as searchUITheme:
@@ -64,7 +63,10 @@ class GUI:
 
 	def start(self):
 		dpg.start_dearpygui()
+
+	def exit(self):
 		dpg.destroy_context()
+
 
 	#Thanks to https://github.com/bandit-masked
 	def drag(self,sender, app_data, user_data):
