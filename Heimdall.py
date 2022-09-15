@@ -76,6 +76,11 @@ class GUI:
 		dpg.set_primary_window("mainWindow", True)
 
 
+	# get input
+	# pass input to plugin
+	# get back info from plugin (1 iteration) (data and node type-) need ~~node~~ dont name it node will be confusing af Dataclass..ye  class ig are plugins like. search engines or what plugins are wrappers for tools like sherlock or ehh subfinder etc | thats pretty cool  | i want it to be easy to add new tools or whatever | ye makes sense
+	# add each piece of info as node to parent node
+
 	def addNode(text):#prob more stuff
 		pass
 
