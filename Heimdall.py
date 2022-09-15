@@ -27,8 +27,8 @@ class GUI:
 
 	def initMainWindow(self):
 		with dpg.font_registry():
-			titleFont = dpg.add_font("assets/Arial.ttf", 25)
-			searchFont = dpg.add_font("assets/Arial.ttf", 20)
+			titleFont = dpg.add_font("assets/Cousine-Regular.ttf", 25)
+			searchFont = dpg.add_font("assets/Cousine-Regular.ttf", 20)
 		#Main Window (Wrapper)
 		with dpg.window(horizontal_scrollbar=False, no_background=True ,no_scrollbar=True, no_collapse=True, no_resize=True, menubar=False, no_title_bar=True, no_close=True, no_move=True, tag="mainWindow") as mainWindow:
 			# Make dragging the Window possible
@@ -44,21 +44,29 @@ class GUI:
 					dpg.add_theme_color(dpg.mvThemeCol_ButtonActive,(255,0,0,255))
 					dpg.add_theme_style(dpg.mvStyleVar_WindowTitleAlign,0.5,0.5)
 					dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize,0)
+					dpg.add_theme_style(dpg.mvStyleVar_ButtonTextAlign,0.5,0.5)
 					dpg.bind_theme(mainWindowStyling)
 					dpg.bind_font(titleFont)
 
 			#Node Editor Window
-			with dpg.window(horizontal_scrollbar=False, no_scrollbar=True, no_collapse=True, no_resize=True, menubar=False, no_title_bar=False, no_close=False, no_move=True, height = int(self.height / 100 * 65), width=self.width - 15, tag="nodeWindow", label="Heimdall", on_close=self.exit):
+			with dpg.window(horizontal_scrollbar=False, no_scrollbar=True, no_collapse=True, no_resize=True, menubar=False, no_title_bar=False, no_close=False, no_move=True, height = int(self.height / 100 * 80), width=self.width, tag="nodeWindow", label="Heimdall", on_close=self.exit):
 				pass
 
 			#Search Window
-			with dpg.window(horizontal_scrollbar=False, no_scrollbar=True, no_collapse=True, no_resize=True, menubar=False, no_title_bar=False, no_close=True, no_move=True, height = int(self.height / 100 * 35), width=self.width - 15, tag="searchWindow", label="Search", pos = [0, int(self.height / 100 * 65)]) as searchWindow:
+			with dpg.window(horizontal_scrollbar=False, no_scrollbar=False, no_collapse=True, no_resize=True, menubar=False, no_title_bar=False, no_close=True, no_move=True, height=int(self.height / 100 * 20), width=self.width, tag="searchWindow", label="Search", pos = [0, int(self.height / 100 * 80)]) as searchWindow:
 				dpg.bind_item_font(searchWindow,searchFont)
-				self.typeSelector = dpg.add_combo(default_value="Username", no_arrow_button=True, tag="searchGuiTypeSelector", width=self.width - 40,
-					items=("Email", "Image", "Name", "Phone Number", "Username", "Username", "Username", "Username", "Username", "Username",),)
+				# items =
+				self.typeSelector = dpg.add_combo(default_value=padItems(["Username","placeholder"])[0], no_arrow_button=True, tag="searchGuiTypeSelector", width=int(self.width / 100 * 95),
+					pos = [int(self.width / 2) - int(int(self.width / 100 * 95) / 2),int(int(int(self.height / 100 * 20) / 100 * 90) - 27)],
+					items=padItems(["EMail", "Image", "Name", "Phone Number", "Username"]))
+				self.logger.debug(dpg.get_item_pos(self.typeSelector),self.debug)
 				pass
-		dpg.set_primary_window("mainWindow", True)
 
+
+
+
+
+		dpg.set_primary_window("mainWindow", True)
 
 	def start(self):
 		dpg.start_dearpygui()
@@ -76,5 +84,21 @@ class GUI:
 			new_y_position = max(new_y_position, 0) # prevent the viewport to go off the top of the screen
 			dpg.set_viewport_pos([new_x_position, new_y_position])
 
-Heimdall = GUI()
+def padItems(itemList) -> list:
+	itemList.sort(key=len)
+	newItemList = []
+	for item in itemList:
+		tempItem = item
+		while len(tempItem) != 92:
+			if len(tempItem) %2 == 0:
+				tempItem = tempItem+" "
+			else:
+				tempItem = " "+tempItem
+		newItemList.append(tempItem)
+	return newItemList
+
+if __name__ == "__main__":
+	Heimdall = GUI()
+
+
 
