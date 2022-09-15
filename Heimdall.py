@@ -51,18 +51,18 @@ class GUI:
 
 			#Node Editor Window
 			with dpg.window(horizontal_scrollbar=False, no_scrollbar=True, no_collapse=True, no_resize=True, menubar=False, no_title_bar=False, no_close=False, no_move=True, height = int(self.height / 100 * 80), width=self.width, tag="nodeWindow", label="Heimdall", on_close=self.exit):
-				self.nodeUI = dpg.add_node_editor()
-
-
-
+				self.nodeUI = dpg.add_node_editor(
+					minimap=True,
+					minimap_location=dpg.mvNodeMiniMap_Location_TopLeft
+				)
 
 			#Search Window
 			with dpg.window(horizontal_scrollbar=False, no_scrollbar=False, no_collapse=True, no_resize=True, menubar=False, no_title_bar=False, no_close=True, no_move=True, height=int(self.height / 100 * 20), width=self.width, tag="searchWindow", label="Search", pos = [0, int(self.height / 100 * 80)]) as searchWindow:
 				dpg.bind_item_font(searchWindow,searchFont)
 
 				# Button to Choose what to search for
-				self.typeSelector = dpg.add_combo(default_value=padItems(["Username","placeholder"])[0], no_arrow_button=True, tag="sea rchGuiTypeSelector", width=int(self.width / 100 * 95), pos = [int(self.width / 2) - int(int(self.width / 100 * 95) / 2),int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],
-					items=padItems(["EMail", "Image", "Name", "Phone Number", "Username"]))
+				self.typeSelector = dpg.add_combo(default_value=padItems(["Username","z"])[1], no_arrow_button=True, tag="sea rchGuiTypeSelector", width=int(self.width / 100 * 95), pos = [int(self.width / 2) - int(int(self.width / 100 * 95) / 2),int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],
+					items=padItems(["Email", "Image", "Name", "Phone Number", "Username"]))
 				# Search Bar for input
 				self.searchBar = dpg.add_input_text(pos = [int(self.width / 2) - int(int(self.width / 100 * 95) / 2),int(int(int(self.height / 100 * 20) / 100 * 50) - 27)], width=int(self.width / 100 * 95) - 70, hint="Search here...")
 				# Buttont to submit search
@@ -75,6 +75,14 @@ class GUI:
 						dpg.bind_item_theme(self.submitButton,submitButton)
 
 		dpg.set_primary_window("mainWindow", True)
+
+
+	def addNode(text):#prob more stuff
+		pass
+
+	def removeNode(node):
+		pass
+
 
 	def start(self):
 		dpg.start_dearpygui()
@@ -95,7 +103,7 @@ class GUI:
 def padItems(itemList) -> list:
 	itemList.sort(key=len)
 	newItemList = []
-	for item in itemList:
+	for item in itemList: #what the fuck is this stuff to make text centered omg xd
 		tempItem = item
 		while len(tempItem) != 92:
 			if len(tempItem) %2 == 0:
