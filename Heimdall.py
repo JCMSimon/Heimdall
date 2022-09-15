@@ -1,4 +1,3 @@
-from operator import attrgetter
 import dearpygui.dearpygui as dpg
 from lib.Logger import Logger
 
