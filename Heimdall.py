@@ -79,7 +79,7 @@ class GUI:
 	# get input
 	# pass input to plugin
 	# get back info from plugin (1 iteration) (data and node type-) need ~~node~~ dont name it node will be confusing af Dataclass..ye
-	# add each piece of info as node to parent node
+	# add each piece of info as node to parent node kinda confused but ye
 
 	def addNode(text):#prob more stuff
 		pass

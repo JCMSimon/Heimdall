@@ -1,5 +1,5 @@
 from abc import ABC,abstractmethod
-from Logger import Logger
+from lib.Logger import Logger
 class Plugin(ABC):
 	"""
 	Base for all Plugins
