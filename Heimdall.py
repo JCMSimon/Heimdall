@@ -1,15 +1,16 @@
+import time
 import dearpygui.dearpygui as dpg
 from lib.Logger import Logger
+from lib.PluginRegister import PluginRegister
 
 class GUI:
 	def __init__(self) -> None:
+		self.debug = True
 		# Gui-Config ##########
 		self.width,self.height = 1080,720
-		# plugin Stuff ########
-		#TODO Init Plugin Handler here
-		# Gui Stuff ###########
+		self.pluginRegister = PluginRegister(self.debug)
 		self.logger = Logger("GUI")
-		self.debug = True
+		self.dataType = "Username"
 		dpg.create_context()
 		dpg.create_viewport(
 			clear_color=(111,111,111,255),
@@ -60,26 +61,43 @@ class GUI:
 				dpg.bind_item_font(searchWindow,searchFont)
 
 				# Button to Choose what to search for
-				self.typeSelector = dpg.add_combo(default_value=padItems(["Username","z"])[1], no_arrow_button=True, tag="sea rchGuiTypeSelector", width=int(self.width / 100 * 95), pos = [int(self.width / 2) - int(int(self.width / 100 * 95) / 2),int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],
+				self.typeSelector = dpg.add_combo(callback=self.typeSelectorCallback,default_value=padItems(["Username","z"])[1], no_arrow_button=True, tag="sea rchGuiTypeSelector", width=int(self.width / 100 * 95), pos = [int(self.width / 2) - int(int(self.width / 100 * 95) / 2),int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],
 					items=padItems(["Email", "Image", "Name", "Phone Number", "Username"]))
 				# Search Bar for input
-				self.searchBar = dpg.add_input_text(pos = [int(self.width / 2) - int(int(self.width / 100 * 95) / 2),int(int(int(self.height / 100 * 20) / 100 * 50) - 27)], width=int(self.width / 100 * 95) - 70, hint="Search here...")
+				self.searchBar = dpg.add_input_text(on_enter=True,callback=self.searchBarCallback,pos = [int(self.width / 2) - int(int(self.width / 100 * 95) / 2),int(int(int(self.height / 100 * 20) / 100 * 50) - 27)], width=int(self.width / 100 * 95) - 70, hint="Search here...")
 				# Buttont to submit search
-				self.submitButton = dpg.add_button(label="Submit", pos = [int(self.width / 2) - int(int(self.width / 100 * 95) / 2) + int(int(self.width / 100 * 95) - 70) - 4 ,int(int(int(self.height / 100 * 20) / 100 * 50) - 27)]
+				self.submitButton = dpg.add_button(callback=self.searchButtonCallback,label="Submit", pos = [int(self.width / 2) - int(int(self.width / 100 * 95) / 2) + int(int(self.width / 100 * 95) - 70) - 4 ,int(int(int(self.height / 100 * 20) / 100 * 50) - 27)]
 				)
 				with dpg.theme() as submitButton:
 					with dpg.theme_component(dpg.mvAll):
-						dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered,(0,255,0,100))
-						dpg.add_theme_color(dpg.mvThemeCol_ButtonActive,(0,255,0,255))
+						dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered,(90,0,170,255))
+						dpg.add_theme_color(dpg.mvThemeCol_ButtonActive,(120,0,200,255))
+						dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered,(90,0,170,255))
+						dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered,(90,0,170,255))
+						dpg.add_theme_color(dpg.mvThemeCol_HeaderActive,(120,0,200,255))
 						dpg.bind_item_theme(self.submitButton,submitButton)
-
+						dpg.bind_item_theme(self.typeSelector,submitButton)
 		dpg.set_primary_window("mainWindow", True)
 
+	def typeSelectorCallback(self, _, app_data):
+		self.dataType = str(app_data).strip()
+		self.logger.info(f"Selected '{self.dataType}' as data type")
+		self.logger.debug(f"Call PluginRegister with findMethod with above as argument",debug=self.debug)
 
-	# get input
-	# pass input to plugin
-	# get back info from plugin (1 iteration) (data and node type-) need ~~node~~ dont name it node will be confusing af Dataclass..ye
-	# add each piece of info as node to parent node kinda confused but ye
+	def searchButtonCallback(self, _, app_data):
+		searchTerm = dpg.get_value(self.searchBar)
+		self.searchBarCallback("Manual",searchTerm)
+
+	def searchBarCallback(self, _, app_data):
+		searchTerm = str(app_data).strip()
+		if searchTerm and searchTerm != "":
+			dpg.disable_item(self.searchBar)
+			dpg.disable_item(self.submitButton)
+			dpg.set_value(self.searchBar,f"Processing '{searchTerm}...")
+			self.logger.info(f"Search Term: '{searchTerm}' ")
+			dpg.set_value(self.searchBar,"")
+			dpg.enable_item(self.searchBar)
+			dpg.enable_item(self.submitButton)
 
 	def addNode(text):#prob more stuff
 		pass
