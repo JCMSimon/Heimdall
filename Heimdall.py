@@ -84,7 +84,7 @@ class GUI:
 		self.logger.info(f"Selected '{self.dataType}' as data type")
 		self.logger.debug(f"Call PluginRegister with findMethod with above as argument",debug=self.debug)
 
-	def searchButtonCallback(self, _, app_data):
+	def searchButtonCallback(self, _, __):
 		searchTerm = dpg.get_value(self.searchBar)
 		self.searchBarCallback("Manual",searchTerm)
 
@@ -93,7 +93,7 @@ class GUI:
 		if searchTerm and searchTerm != "":
 			dpg.disable_item(self.searchBar)
 			dpg.disable_item(self.submitButton)
-			dpg.set_value(self.searchBar,f"Processing '{searchTerm}...")
+			dpg.set_value(self.searchBar,f"Processing '{searchTerm}'...")
 			self.logger.info(f"Search Term: '{searchTerm}' ")
 			dpg.set_value(self.searchBar,"")
 			dpg.enable_item(self.searchBar)
@@ -104,7 +104,6 @@ class GUI:
 
 	def removeNode(node):
 		pass
-
 
 	def start(self):
 		dpg.start_dearpygui()

@@ -4,11 +4,11 @@ from lib.Logger import Logger
 class PluginRegister():
 	def __init__(self,debug) -> None:
 		self.logger = Logger("PluginRegister")
-		plugins = self.loadAllPlugins()
+		# plugins = self.loadAllPlugins()
 
-	def loadAllPlugins(self):
-		class1 = getattr(importlib.import_module("plugins.plugins.ex"), "tset")
-		class1.test()
+	# def loadAllPlugins(self):
+		# class1 = getattr(importlib.import_module("plugins.plugins.ex"), "tset")
+		# class1.test()
 	def runPlugin(pluginName,*kwargs):
 		pass
 
