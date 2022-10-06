@@ -1,7 +1,7 @@
 import time
 import dearpygui.dearpygui as dpg
 from lib.Logger import Logger
-from lib.PluginRegister import PluginRegister
+from plugins._PluginRegister import PluginRegister
 
 class GUI:
 	def __init__(self) -> None:
@@ -20,6 +20,8 @@ class GUI:
 			height=self.height,
 			width=self.width,
 			title="Heimdall",
+			large_icon="assets/icon.ico",
+			small_icon="assets/icon.ico",
 			)
 		dpg.setup_dearpygui()
 		dpg.show_viewport()
