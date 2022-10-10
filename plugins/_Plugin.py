@@ -8,7 +8,7 @@ class Plugin(ABC):
 		debug (bool): decides if debug info is given or not
 	"""
 	def __init__(self,debug) -> None:
-		self.logger = Logger(f"[{self.getDisplayName()}]")
+		self.logger = Logger(f"{self.getDisplayName()}")
 		super().__init__()
 
 	def debugMsg(self,text,debug):

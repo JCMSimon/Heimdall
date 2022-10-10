@@ -84,7 +84,7 @@ class GUI:
 	def typeSelectorCallback(self, _, app_data):
 		self.dataType = str(app_data).strip()
 		self.logger.info(f"Selected '{self.dataType}' as data type")
-		self.logger.debug(f"Call PluginRegister with findMethod with above as argument",debug=self.debug)
+		self.logger.debug(f"Call PluginRegister and execute plugin",debug=self.debug)
 
 	def searchButtonCallback(self, _, __):
 		searchTerm = dpg.get_value(self.searchBar)
