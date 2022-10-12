@@ -5,9 +5,8 @@ class Logger():
 		self.prefix = prefix
 		init()
 
-	def debug(self,text,debug = False):
-		if debug:
-			print(f"{Fore.BLUE}[{self.prefix} - DEBUG] {text}{Style.RESET_ALL}")
+	def debug(self,text):
+		print(f"{Fore.BLUE}[{self.prefix} - DEBUG] {text}{Style.RESET_ALL}")
 
 	def info(self,text):
 			print(f"{Fore.CYAN}[{self.prefix} - INFO] {text}{Style.RESET_ALL}")
@@ -20,13 +19,10 @@ class Logger():
 
 if __name__ == "__main__":
 	class Example():
-		def __init__(self,debug) -> None:
+		def __init__(self) -> None:
 			logger = Logger("Test")
-			logger.debug("Testing Debug Message",debug)
+			logger.debug("Testing Debug Message")
 			logger.info("Testing Info Message")
 			logger.warn("Testing Warn Message")
 			logger.error("Testing Error Message")
-	print("Debug turned off:")
-	debugOff = Example(False)
-	print("Debug turned on:")
-	debugOn = Example(True)
+	debugOn = Example()
