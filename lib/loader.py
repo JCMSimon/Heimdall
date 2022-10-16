@@ -20,6 +20,7 @@ class Loader:
 			title="Heimdall",              # Window Title (Also Application Title)
 			large_icon="assets/icon.ico",  # "favicon" for Application
 			small_icon="assets/icon.ico",  # "favicon" for Application
+			always_on_top=True,
 			decorated=False,               # Disables Windows Bar
 			resizable=False,
 			height=self.height,
@@ -67,7 +68,6 @@ class Loader:
 			):
 			dpg.add_image(texture_tag="logo",width=self.width,height=self.height)
 		dpg.set_primary_window("mainWindow",True)
-		dpg.show_style_editor()
 
 	# Starts GUI
 	def start(self):
