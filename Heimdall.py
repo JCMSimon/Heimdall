@@ -9,6 +9,7 @@ def start():
 	loaderProcess.start()
 	time.sleep(3)
 	loaderProcess.terminate()
+	gui = GUI("a")
 	print("i still work")
 	# init start ui
 	# init pluginregister
