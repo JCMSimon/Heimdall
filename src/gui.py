@@ -1,11 +1,11 @@
 import dearpygui.dearpygui as dpg
-from lib.Logger import Logger
+from src._Logger import Logger
 
 class GUI:
-	def __init__(self,pluginRegister) -> None:
+	def __init__(self,pluginRegister,debug=False) -> None:
 		self.plRegister = pluginRegister
 		self.width,self.height = 1080,720
-		self.logger = Logger("GUI")
+		self.logger = Logger("GUI",debug=debug)
 		self.getPluginDetails()
 		self.initDPG()
 		self.initDPGThemes()
@@ -150,8 +150,8 @@ class GUI:
 	# Gets called when a option is selected
 	def typeSelectorCallback(self, _, app_data):
 		self.dataType = str(app_data).strip()
-		self.logger.info(f"Selected '{self.dataType}' as data type")
-		self.logger.debug(f"Call PluginRegister and execute plugin")
+		self.logger.infoMsg(f"Selected '{self.dataType}' as data type")
+		self.logger.debugMsg(f"Call PluginRegister and execute plugin")
 
 	# Gets called when the "Submit" Button gets called
 	# Forwards to searchBarCallback
@@ -166,7 +166,7 @@ class GUI:
 			dpg.disable_item(self.searchBar)
 			dpg.disable_item(self.submitButton)
 			dpg.set_value(self.searchBar,f"Processing '{searchTerm}'...")
-			self.logger.info(f"Search Term: '{searchTerm}' ")
+			self.logger.infoMsg(f"Search Term: '{searchTerm}' ")
 			self.executeSearch()
 			dpg.set_value(self.searchBar,"")
 			dpg.enable_item(self.searchBar)

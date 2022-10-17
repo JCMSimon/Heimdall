@@ -1,12 +1,12 @@
 import dearpygui.dearpygui as dpg
 from screeninfo import get_monitors
-from lib.temp.windows import set_transparent_color
+from src.temp.windows import set_transparent_color
 import time
-# from lib.Logger import Logger
+from src._Logger import Logger
 
 class Loader:
-	def __init__(self) -> None:
-		# self.logger = Logger
+	def __init__(self,debug) -> None:
+		self.logger = Logger("Loading-UI",debug=debug)
 		self.initDPG()
 		self.initDPGThemes()
 		self.initMainWindow()
@@ -80,4 +80,3 @@ class Loader:
 
 if __name__ == "__main__":
 	_ = Loader()
-	

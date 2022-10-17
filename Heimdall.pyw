@@ -16,5 +16,5 @@ def startLoader(debug):
 	load = Loader(debug=debug)
 
 if __name__ == "__main__":
-	debug = True # fully implemented. get later as cli argument // startup argument
+	debug = False
 	start(debug)

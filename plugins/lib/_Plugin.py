@@ -1,5 +1,5 @@
 from abc import ABC,abstractmethod
-from lib.Logger import Logger
+from src._Logger import Logger
 class Plugin(ABC):
 	"""
 	Base for all Plugins
@@ -7,21 +7,22 @@ class Plugin(ABC):
 	Args:
 		debug (bool): decides if debug info is given or not
 	"""
-	def __init__(self,debug) -> None:
-		self.logger = Logger(f"{self.getDisplayName()}")
+	def __init__(self,debug=False) -> None:
+		self.debug = debug
+		self.logger = Logger(f"{self.getDisplayName()}",debug=self.debug)
 		super().__init__()
 
-	def debugMsg(self,text,debug):
-		self.logger.debug(text,debug)
+	def debugMsg(self,text):
+		self.logger.debugMsg(text)
 
 	def infoMsg(self,text):
-		self.logger.info(text)
+		self.logger.infoMsg(text)
 
 	def warnMsg(self,text):
-		self.logger.warn(text)
+		self.logger.warnMsg(text)
 
 	def errorMsg(self,text):
-		self.logger.error(text)
+		self.logger.errorMsg(text)
 
 	def checkUpdate(self):
 		print(f"Plugin with Name '{self.getDisplayName()}' has no update check.")
