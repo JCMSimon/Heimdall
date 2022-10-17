@@ -230,5 +230,7 @@ if __name__ == "__main__":
 	print(centerText("Center This String"))
 	for text in centerText(["And","These","List","Items",":)"]):
 		print(text)
+	for text in centerText(["test"]):
+		print(text)
 
 

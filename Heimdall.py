@@ -4,11 +4,15 @@ from src.gui import GUI
 from src._Logger import Logger
 import multiprocessing
 import time
+from plugins._PluginRegister import PluginRegister
 
 def start(debug):
-	loaderProcess = multiprocessing.Process(target=startLoader,args=[debug])
-	loaderProcess.start()
+	# loaderProcess = multiprocessing.Process(target=startLoader,args=[debug])
+	# loaderProcess.start()
 
+	plreg = PluginRegister(debug)
+	plugins = plreg.load()
+	print(plugins)
 	# pl reg here
 		# get all files in plugin folder
 		# make a dict of the file.getDisplayName and a reference to the plugin class.
@@ -22,9 +26,9 @@ def start(debug):
 
 		# return the dict
 
-	time.sleep(3)
-	loaderProcess.terminate()
-	mainGui = GUI("PluginRegisterPlaceholder",debug=debug)
+	# time.sleep(3)
+	# loaderProcess.terminate()
+	# mainGui = GUI("PluginRegisterPlaceholder",debug=debug)
 
 def startLoader(debug):
 	load = Loader(debug=debug)
