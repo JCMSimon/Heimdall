@@ -1,4 +1,3 @@
-from fileinput import filename
 import importlib
 from src._Logger import Logger
 from os import walk
@@ -8,6 +7,14 @@ class PluginRegister():
 		self.debug = debug
 		self.logger = Logger("PluginRegister",debug=self.debug)
 		self.plugins = self.getFiles()
+
+	def reload(self):
+		self.getFiles()
+
+	# How to import Plugin
+	# test = importlib.__import__("plugins.Username")
+	# test2 = test.Username.Username(debug=True)
+	# test2.run()
 
 	def getFiles(self):
 		fileNames = []
@@ -26,6 +33,7 @@ class PluginRegister():
 	def getPluginNames(self):
 		return self.plugins
 
-	def runPlugin(self,pluginName,text):
+	def runPlugin(self,pluginName,arg):
+		self.logger.infoMsg(f"Running Plugin '{pluginName}' with Argument '{arg}'")
 		pass #idk smth smth importlib smth smth run smth smth get node list as return smth smth process further in gui
 

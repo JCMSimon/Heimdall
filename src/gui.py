@@ -151,7 +151,6 @@ class GUI:
 	def typeSelectorCallback(self, _, app_data):
 		self.dataType = str(app_data).strip()
 		self.logger.infoMsg(f"Selected '{self.dataType}' as data type")
-		self.logger.debugMsg(f"Call PluginRegister and execute plugin")
 
 	# Gets called when the "Submit" Button gets called
 	# Forwards to searchBarCallback
@@ -178,6 +177,7 @@ class GUI:
 		# return list
 
 	def executeSearch(self):
+		self.logger.debugMsg(f"Call PluginRegister and execute plugin")
 		pass
 		# self.plRegister.smth(self.dataType)
 

@@ -1,9 +1,7 @@
-from json import load
 from src.loader import Loader
 from src.gui import GUI
 from src._Logger import Logger
 import multiprocessing
-import time
 from plugins._PluginRegister import PluginRegister
 
 def start(debug):
@@ -11,8 +9,9 @@ def start(debug):
 	# loaderProcess.start()
 
 	plreg = PluginRegister(debug)
-	plugins = plreg.load()
+	plugins = plreg.getPluginNames()
 	print(plugins)
+	plreg.runPlugin(plugins[0],"Simon")
 	# pl reg here
 		# get all files in plugin folder
 		# make a dict of the file.getDisplayName and a reference to the plugin class.
@@ -28,7 +27,7 @@ def start(debug):
 
 	# time.sleep(3)
 	# loaderProcess.terminate()
-	# mainGui = GUI("PluginRegisterPlaceholder",debug=debug)
+	mainGui = GUI("PluginRegisterPlaceholder",debug=debug)
 
 def startLoader(debug):
 	load = Loader(debug=debug)
