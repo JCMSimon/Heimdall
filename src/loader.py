@@ -1,8 +1,8 @@
 import dearpygui.dearpygui as dpg
 from screeninfo import get_monitors
-from src.temp.windows import set_transparent_color
-import time
+
 from src._Logger import Logger
+from src.temp.windows import set_transparent_color
 
 class Loader:
 	def __init__(self,debug) -> None:
@@ -44,6 +44,13 @@ class Loader:
 			(monitor_xd - self.width) / 2,
 			(monitor_yd - self.height) / 2,
 		])
+		self.logger.debugMsg(f"""Window Size:
+xd:{self.width}
+yd:{self.height}
+Window Position:
+x:{(monitor_xd - self.width) / 2}
+y:{(monitor_yd - self.height) / 2}
+""")
 
 	def initDPGThemes(self):
 		with dpg.theme() as mainWindowStyling:
@@ -70,13 +77,6 @@ class Loader:
 			dpg.add_image(texture_tag="logo",width=self.width,height=self.height)
 		dpg.set_primary_window("mainWindow",True)
 
-
 	# Starts GUI
 	def start(self):
 		dpg.start_dearpygui()
-
-	def end():
-		dpg.destroy_context()
-
-if __name__ == "__main__":
-	_ = Loader()

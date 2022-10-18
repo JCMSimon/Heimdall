@@ -1,36 +1,24 @@
-from src.loader import Loader
-from src.gui import GUI
-from src._Logger import Logger
 import multiprocessing
+
 from plugins._PluginRegister import PluginRegister
+from src._Logger import Logger
+from src.gui import GUI
+from src.loader import Loader
 
 def start(debug):
-	# loaderProcess = multiprocessing.Process(target=startLoader,args=[debug])
-	# loaderProcess.start()
+	logger = Logger("Start-up",debug=debug)
+	loaderProcess = multiprocessing.Process(target=startLoader,args=[debug,logger])
+	loaderProcess.start()
+	logger.debugMsg("Loading Plugins")
+	pluginRegister = PluginRegister(debug)
+	logger.debugMsg("Closing Loading Graphic")
+	loaderProcess.terminate()
+	logger.debugMsg("Startin Main User Interface")
+	mainGui = GUI(pluginRegister,debug=debug)
 
-	plreg = PluginRegister(debug)
-	plugins = plreg.getPluginNames()
-	print(plugins)
-	plreg.runPlugin(plugins[0],"Simon")
-	# pl reg here
-		# get all files in plugin folder
-		# make a dict of the file.getDisplayName and a reference to the plugin class.
-
-		# Example
-		# Plugin Name: Username.py
-		# *get file name*
-
-		# import Username
-		# PluginCallReference = Username.Username(debug)
-
-		# return the dict
-
-	# time.sleep(3)
-	# loaderProcess.terminate()
-	mainGui = GUI("PluginRegisterPlaceholder",debug=debug)
-
-def startLoader(debug):
-	load = Loader(debug=debug)
+def startLoader(debug,logger):
+	logger.debugMsg("Starting Loading Graphic")
+	_ = Loader(debug=debug)
 
 if __name__ == "__main__":
 	debug = True # fully implemented. get later as cli argument // startup argument

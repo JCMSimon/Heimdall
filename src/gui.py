@@ -1,15 +1,17 @@
+import time
 import dearpygui.dearpygui as dpg
-from src._Logger import Logger
 
+from src._Logger import Logger
+from src._NodeInterface import NodeInterface
 class GUI:
 	def __init__(self,pluginRegister,debug=False) -> None:
-		self.plRegister = pluginRegister
-		self.width,self.height = 1080,720
 		self.logger = Logger("GUI",debug=debug)
-		self.getPluginDetails()
+		self.plReg = pluginRegister
+		self.width,self.height = 1080,720
 		self.initDPG()
 		self.initDPGThemes()
 		self.initMainWindow()
+		self.nodeInterface = NodeInterface(self.nodeUI,debug=debug)
 		self.start()
 
 	def initDPG(self):
@@ -115,7 +117,7 @@ class GUI:
 				# Button to Choose what to search for (Type Selector Button)
 				self.typeSelector = dpg.add_combo(
 					tag="searchGuiTypeSelector",
-					items=centerText(["Email", "Image", "Name", "Phone Number", "Username"]),
+					items=centerText(self.plReg.getPluginNames()), #["Email", "Image", "Name", "Phone Number", "Username"]
 					default_value=centerText("Username"),
 					callback=self.typeSelectorCallback,
 					no_arrow_button=True,
@@ -124,6 +126,7 @@ class GUI:
 						int(self.width / 2) - int(int(self.width / 100 * 95) / 2), # x Axis
 						int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],    # y axis
 					)
+				self.dataType = "Username"
 				dpg.bind_item_theme(self.typeSelector,self.submitButtonTheme)
 				# Search Bar for input
 				self.searchBar = dpg.add_input_text(
@@ -150,7 +153,7 @@ class GUI:
 	# Gets called when a option is selected
 	def typeSelectorCallback(self, _, app_data):
 		self.dataType = str(app_data).strip()
-		self.logger.infoMsg(f"Selected '{self.dataType}' as data type")
+		self.logger.debugMsg(f"Selected '{self.dataType}' as data type")
 
 	# Gets called when the "Submit" Button gets called
 	# Forwards to searchBarCallback
@@ -164,22 +167,17 @@ class GUI:
 		if searchTerm and searchTerm != "":
 			dpg.disable_item(self.searchBar)
 			dpg.disable_item(self.submitButton)
-			dpg.set_value(self.searchBar,f"Processing '{searchTerm}'...")
-			self.logger.infoMsg(f"Search Term: '{searchTerm}' ")
-			self.executeSearch()
+			dpg.set_value(self.searchBar,f"Processing '{searchTerm}' as {self.dataType}...")
+			self.logger.debugMsg(f"Search Term: '{searchTerm}' ")
+			self.executeSearch(searchTerm)
 			dpg.set_value(self.searchBar,"")
 			dpg.enable_item(self.searchBar)
 			dpg.enable_item(self.submitButton)
 
-	def getPluginDetails(self):
-		pass
-		# list = self.plRegister.getdetails()
-		# return list
-
-	def executeSearch(self):
-		self.logger.debugMsg(f"Call PluginRegister and execute plugin")
-		pass
-		# self.plRegister.smth(self.dataType)
+	def executeSearch(self,searchTerm):
+		data = self.plReg.runPlugin(self.dataType,searchTerm)
+		time.sleep(4)
+		# smth smth self.addNode(lastNode,smth idk)
 
 	# Starts GUI
 	def start(self):
@@ -224,13 +222,3 @@ def centerText(itemList):
 					tempItem = " "+tempItem
 			newItemList.append(tempItem)
 		return list(newItemList)
-
-if __name__ == "__main__":
-	# test
-	print(centerText("Center This String"))
-	for text in centerText(["And","These","List","Items",":)"]):
-		print(text)
-	for text in centerText(["test"]):
-		print(text)
-
-
