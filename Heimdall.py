@@ -1,4 +1,5 @@
 import multiprocessing
+import sys
 
 from plugins._PluginRegister import PluginRegister
 from src._Logger import Logger
@@ -13,7 +14,7 @@ def start(debug):
 	pluginRegister = PluginRegister(debug)
 	# logger.debugMsg("Closing Loading Graphic")
 	# loaderProcess.terminate()
-	logger.debugMsg("Startin Main User Interface")
+	logger.debugMsg("Starting Main User Interface")
 	mainGui = GUI(pluginRegister,debug=debug)
 
 def startLoader(debug,logger):
@@ -21,5 +22,8 @@ def startLoader(debug,logger):
 	_ = Loader(debug=debug)
 
 if __name__ == "__main__":
-	debug = True # fully implemented. get later as cli argument // startup argument
+	if "--debug" in sys.argv[1:]:
+		debug=True
+	else:
+		debug=False
 	start(debug)
