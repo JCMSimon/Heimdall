@@ -1,7 +1,7 @@
 from plugins.lib._Plugin import Plugin
 from plugins.tools.ExampleTool import doSomething
 
-class Username(Plugin):                # Class Name must be the same as the File Name
+class Nickname(Plugin):                # Class Name must be the same as the File Name
 	def __init__(self,debug) -> None:
 		super().__init__(debug=debug)
 
@@ -12,5 +12,5 @@ class Username(Plugin):                # Class Name must be the same as the File
 		return 0.1
 
 	def run(self,arg) -> list:
-		print("IM THE USERNAME PLUGIN")
+		print("IM THE NICKNAME PLUGIN")
 		doSomething("hahaha")

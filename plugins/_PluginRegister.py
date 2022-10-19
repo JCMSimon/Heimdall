@@ -14,29 +14,36 @@ class PluginRegister():
 		self.getFiles()
 
 	def getFiles(self):
+		#This Method is prob the worst of all. def gotta rework this
 		fileNames = []
+		self.logger.debugMsg("Files in Plugin Folder:")
 		for (_, _, filename) in walk("./plugins"):
+				self.logger.debugMsg(f"- {filename}")
 				fileNames.extend(filename)
 				break
-		self.logger.debugMsg(f"Files in Plugin Folder:")
-		for file in fileNames:
-			self.logger.debugMsg(f"-{file}")
-			if str(file).startswith("_"):
-				fileNames.remove(file)
-		self.logger.debugMsg(f"Plugins in Plugin Folder:")
-		for file in fileNames:
-			temp = str(file).replace(".py","")
-			fileNames.remove(file)
-			fileNames.append(temp)
-			self.logger.debugMsg(f"-{temp}")
-		return fileNames
+		self.logger.debugMsg("Removing Files:")
+		for name in fileNames:
+			if str(name).startswith("_"):
+				self.logger.debugMsg(f"- {name}")
+				fileNames.remove(name)
+		finalNames = []
+		for name in fileNames:
+			finalNames.append(str(name).replace(".py",""))
+		self.logger.debugMsg(f"""Final List:
+{finalNames}""")
+		return finalNames
+
 
 	def getPluginNames(self):
 		return self.plugins
 
 	def runPlugin(self,pluginName,arg) -> list:
 		self.logger.debugMsg(f"Running Plugin '{pluginName}' with Argument '{arg}'")
-		pluginFile = importlib.__import__(f"plugins.{pluginName}")
-		# get classes from pluginfile
-		# test if plugin name matches plugin class
+		plugin = __import__(f'plugins.{pluginName}', fromlist=[f'{pluginName}'])
+		pluginClass = getattr(plugin, f'{pluginName}')
+		pluginClassInstance = pluginClass(debug=self.debug)
+		data = pluginClassInstance.run(arg)
 		pass
+
+if __name__ == "__main__":
+	test = PluginRegister(debug=True)

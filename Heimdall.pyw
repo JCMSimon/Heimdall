@@ -1,20 +1,25 @@
-from json import load
-from src.loader import Loader
-from src.gui import GUI
-from src._Logger import Logger
 import multiprocessing
-import time
+
+from plugins._PluginRegister import PluginRegister
+from src._Logger import Logger
+from src.gui import GUI
+from src.loader import Loader
 
 def start(debug):
-	loaderProcess = multiprocessing.Process(target=startLoader,args=[debug])
+	logger = Logger("Start-up",debug=debug)
+	loaderProcess = multiprocessing.Process(target=startLoader,args=[debug,logger])
 	loaderProcess.start()
-	time.sleep(3)
+	logger.debugMsg("Loading Plugins")
+	pluginRegister = PluginRegister(debug)
+	logger.debugMsg("Closing Loading Graphic")
 	loaderProcess.terminate()
-	mainGui = GUI("PluginRegisterPlaceholder",debug=debug)
+	logger.debugMsg("Startin Main User Interface")
+	mainGui = GUI(pluginRegister,debug=debug)
 
-def startLoader(debug):
-	load = Loader(debug=debug)
+def startLoader(debug,logger):
+	logger.debugMsg("Starting Loading Graphic")
+	_ = Loader(debug=debug)
 
 if __name__ == "__main__":
-	debug = False
+	debug = True # fully implemented. get later as cli argument // startup argument
 	start(debug)

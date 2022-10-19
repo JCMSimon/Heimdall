@@ -7,12 +7,12 @@ from src.loader import Loader
 
 def start(debug):
 	logger = Logger("Start-up",debug=debug)
-	loaderProcess = multiprocessing.Process(target=startLoader,args=[debug,logger])
-	loaderProcess.start()
-	logger.debugMsg("Loading Plugins")
+	# loaderProcess = multiprocessing.Process(target=startLoader,args=[debug,logger])
+	# loaderProcess.start()
+	# logger.debugMsg("Loading Plugins")
 	pluginRegister = PluginRegister(debug)
-	logger.debugMsg("Closing Loading Graphic")
-	loaderProcess.terminate()
+	# logger.debugMsg("Closing Loading Graphic")
+	# loaderProcess.terminate()
 	logger.debugMsg("Startin Main User Interface")
 	mainGui = GUI(pluginRegister,debug=debug)
 
