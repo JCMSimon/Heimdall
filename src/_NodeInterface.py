@@ -4,7 +4,8 @@ class NodeInterface():
 		pass
 
 	def addMasterNode():
+		# Add a Node in the Middle of the NodeUI.
+		# have a custom Theme for it.
+		# Later it should be renameable.
 		pass
 
-	def addNodeToUpperNode():
-		pass
