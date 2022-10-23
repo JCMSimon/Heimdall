@@ -202,11 +202,7 @@ class GUI:
 def centerText(itemList):
 	if type(itemList) == str:
 		while len(itemList) != 92:
-			# add a space left and right depending on the length
-			if len(itemList) %2 == 0:
-				itemList = itemList+" "
-			else:
-				itemList = " "+itemList
+			itemList = f"{itemList:^92}"
 		return str(itemList)
 	elif type(itemList) == list:
 		# Sort List
@@ -215,10 +211,6 @@ def centerText(itemList):
 		for item in itemList: #what the fuck is this stuff to make text centered omg xd
 			tempItem = item
 			while len(tempItem) != 92: # Gui element has space for 92 chars
-				# add a space left and right depending on the length
-				if len(tempItem) %2 == 0:
-					tempItem = tempItem+" "
-				else:
-					tempItem = " "+tempItem
+				tempItem = f"{tempItem:^92}"
 			newItemList.append(tempItem)
 		return list(newItemList)
