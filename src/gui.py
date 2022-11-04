@@ -2,17 +2,16 @@ import time
 import dearpygui.dearpygui as dpg
 
 from src._Logger import Logger
-from src._NodeInterface import NodeInterface
 class GUI:
-	def __init__(self,pluginRegister,debug=False) -> None:
+	def __init__(self,debug=False) -> None:
 		self.logger = Logger("GUI",debug=debug)
-		self.plReg = pluginRegister
 		self.width,self.height = 1080,720
 		self.initDPG()
 		self.initDPGThemes()
 		self.initMainWindow()
-		self.nodeInterface = NodeInterface(self.nodeUI,debug=debug)
-		self.start()
+
+	def returnEditor(self):
+		return self.nodeInterface
 
 	def initDPG(self):
 		dpg.create_context()
@@ -118,7 +117,9 @@ class GUI:
 				self.logger.debugMsg(f"Plugin Names before padding: {self.plReg.getPluginNames()}")
 				self.typeSelector = dpg.add_combo(
 					tag="searchGuiTypeSelector",
+					# REPLACE WITH CORE
 					items=centerText(self.plReg.getPluginNames()), #["Email", "Image", "Name", "Phone Number", "Username"]
+					# REPLACE WITH CORE
 					default_value=centerText("Username"),
 					callback=self.typeSelectorCallback,
 					no_arrow_button=True,
@@ -128,7 +129,9 @@ class GUI:
 						int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],    # y axis
 					)
 				self.logger.debugMsg(f"Plugin Names after padding:")
+				# REPLACE WITH CORE
 				for name in centerText(self.plReg.getPluginNames()):
+				# REPLACE WITH CORE
 					self.logger.debugMsg(f"{name}(EOL)")
 				self.dataType = "Username"
 				dpg.bind_item_theme(self.typeSelector,self.submitButtonTheme)
@@ -179,11 +182,14 @@ class GUI:
 			dpg.enable_item(self.submitButton)
 
 	def executeSearch(self,searchTerm):
+		# REPLACE WITH CORE
 		data = self.plReg.runPlugin(self.dataType,searchTerm)
-		# smth smth pass results back to core
+		# REPLACE WITH CORE
+		return data
 
 	# Starts GUI
-	def start(self):
+	def start(self,core):
+		self.core = core
 		dpg.start_dearpygui()
 
 	# End GUI
