@@ -13,4 +13,4 @@ class Username(Plugin):                # Class Name must be the same as the File
 
 	def run(self,arg) -> list:
 		print("IM THE USERNAME PLUGIN")
-		doSomething("hahaha")
+		doSomething(arg)

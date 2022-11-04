@@ -29,8 +29,7 @@ class PluginRegister():
 		finalNames = []
 		for name in fileNames:
 			finalNames.append(str(name).replace(".py",""))
-		self.logger.debugMsg(f"""Final List:
-{finalNames}""")
+		self.logger.debugMsg(f"Final List: {finalNames}")
 		return finalNames
 
 

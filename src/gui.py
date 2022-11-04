@@ -115,6 +115,7 @@ class GUI:
 				) as searchWindow:
 				dpg.bind_item_font(searchWindow,self.searchFont)
 				# Button to Choose what to search for (Type Selector Button)
+				self.logger.debugMsg(f"Plugin Names before padding: {self.plReg.getPluginNames()}")
 				self.typeSelector = dpg.add_combo(
 					tag="searchGuiTypeSelector",
 					items=centerText(self.plReg.getPluginNames()), #["Email", "Image", "Name", "Phone Number", "Username"]
@@ -126,6 +127,9 @@ class GUI:
 						int(self.width / 2) - int(int(self.width / 100 * 95) / 2), # x Axis
 						int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],    # y axis
 					)
+				self.logger.debugMsg(f"Plugin Names after padding:")
+				for name in centerText(self.plReg.getPluginNames()):
+					self.logger.debugMsg(f"{name}(EOL)")
 				self.dataType = "Username"
 				dpg.bind_item_theme(self.typeSelector,self.submitButtonTheme)
 				# Search Bar for input
@@ -168,7 +172,7 @@ class GUI:
 			dpg.disable_item(self.searchBar)
 			dpg.disable_item(self.submitButton)
 			dpg.set_value(self.searchBar,f"Processing '{searchTerm}' as {self.dataType}...")
-			self.logger.debugMsg(f"Search Term: '{searchTerm}' ")
+			self.logger.debugMsg(f"Processing Search Term: '{searchTerm}' ")
 			self.executeSearch(searchTerm)
 			dpg.set_value(self.searchBar,"")
 			dpg.enable_item(self.searchBar)
@@ -176,8 +180,7 @@ class GUI:
 
 	def executeSearch(self,searchTerm):
 		data = self.plReg.runPlugin(self.dataType,searchTerm)
-		time.sleep(4)
-		# smth smth self.addNode(lastNode,smth idk)
+		# smth smth pass results back to core
 
 	# Starts GUI
 	def start(self):
@@ -192,11 +195,15 @@ class GUI:
 	def dragWindow(self,sender, app_data, user_data):
 		if dpg.get_mouse_pos(local=False)[1] < 40:  # only drag the viewport when dragging the logo
 			drag_deltas = app_data
-			viewport_current_pos = dpg.get_viewport_pos()
-			new_x_position = viewport_current_pos[0] + drag_deltas[1]
-			new_y_position = viewport_current_pos[1] + drag_deltas[2]
-			new_y_position = max(new_y_position, 0) # prevent the viewport to go off the top of the screen
-			dpg.set_viewport_pos([new_x_position, new_y_position])
+			if drag_deltas[0] != 0 or drag_deltas[1] != 0:
+				viewport_current_pos = dpg.get_viewport_pos()
+				new_x_position = viewport_current_pos[0] + drag_deltas[1]
+				new_y_position = viewport_current_pos[1] + drag_deltas[2]
+				new_y_position = max(new_y_position, 0) # prevent the viewport to go off the top of the screen
+				self.logger.debugMsg(f"Moving Window to x:{new_x_position} y:{new_y_position} (Delta: {drag_deltas}")
+				dpg.set_viewport_pos([new_x_position, new_y_position])
+			else:
+				return
 
 # Used to center text in typeSelector
 def centerText(itemList):
