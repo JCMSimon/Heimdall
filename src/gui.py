@@ -183,9 +183,7 @@ class GUI:
 			dpg.enable_item(self.submitButton)
 
 	def executeSearch(self,searchTerm):
-		# REPLACE WITH CORE
 		data = self.core.runPlugin(self.dataType,searchTerm)
-		# REPLACE WITH CORE
 		return data
 
 	# Starts GUI
