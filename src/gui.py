@@ -176,7 +176,7 @@ class GUI:
 			dpg.disable_item(self.searchBar)
 			dpg.disable_item(self.submitButton)
 			dpg.set_value(self.searchBar,f"Processing '{searchTerm}' as {self.dataType}...")
-			self.logger.debugMsg(f"Processing Search Term: '{searchTerm}' ")
+			self.logger.debugMsg(f"Processing '{searchTerm}' as {self.dataType}...")
 			self.executeSearch(searchTerm)
 			dpg.set_value(self.searchBar,"")
 			dpg.enable_item(self.searchBar)
