@@ -29,6 +29,7 @@ class Data:
 	password = 0
 	password_hash = 0
 	numerical_pin_number = 0
+	ip_address = 0
 	home_country = 0
 	home_address = 0
 	home_state = 0
