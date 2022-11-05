@@ -14,14 +14,15 @@ def start(debug):
 	loaderProcess.start()
 	logger.debugMsg("Loading Plugins")
 	pluginRegister = PluginRegister(debug)
+	pluginNames = pluginRegister.getPluginNames()
 	logger.debugMsg("Closing Loading Graphic")
 	loaderProcess.terminate()
 	logger.debugMsg("Starting Main User Interface")
-	# unsure if gui itself is properly returned
-	gui = GUI(pluginRegister,debug=debug)
+	#
+	gui = GUI(pluginNames,debug=debug)
 	nodeEditor = gui.returnEditor()
 	core = Core(pluginRegister,nodeEditor,debug=debug)
-	gui.start(debug,core)
+	gui.start(core)
 
 
 def startLoader(debug,logger):

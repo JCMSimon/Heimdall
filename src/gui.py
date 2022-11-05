@@ -3,15 +3,16 @@ import dearpygui.dearpygui as dpg
 
 from src._Logger import Logger
 class GUI:
-	def __init__(self,debug=False) -> None:
+	def __init__(self,pluginNames,debug=False) -> None:
 		self.logger = Logger("GUI",debug=debug)
+		self.pluginNames = pluginNames
 		self.width,self.height = 1080,720
 		self.initDPG()
 		self.initDPGThemes()
 		self.initMainWindow()
 
 	def returnEditor(self):
-		return self.nodeInterface
+		return self.nodeUI
 
 	def initDPG(self):
 		dpg.create_context()
@@ -114,11 +115,11 @@ class GUI:
 				) as searchWindow:
 				dpg.bind_item_font(searchWindow,self.searchFont)
 				# Button to Choose what to search for (Type Selector Button)
-				self.logger.debugMsg(f"Plugin Names before padding: {self.plReg.getPluginNames()}")
+				self.logger.debugMsg(f"Plugin Names before padding: {self.pluginNames}")
 				self.typeSelector = dpg.add_combo(
 					tag="searchGuiTypeSelector",
 					# REPLACE WITH CORE
-					items=centerText(self.plReg.getPluginNames()), #["Email", "Image", "Name", "Phone Number", "Username"]
+					items=centerText(self.pluginNames), #["Email", "Image", "Name", "Phone Number", "Username"]
 					# REPLACE WITH CORE
 					default_value=centerText("Username"),
 					callback=self.typeSelectorCallback,
@@ -130,7 +131,7 @@ class GUI:
 					)
 				self.logger.debugMsg(f"Plugin Names after padding:")
 				# REPLACE WITH CORE
-				for name in centerText(self.plReg.getPluginNames()):
+				for name in centerText(self.pluginNames):
 				# REPLACE WITH CORE
 					self.logger.debugMsg(f"{name}(EOL)")
 				self.dataType = "Username"
@@ -183,7 +184,7 @@ class GUI:
 
 	def executeSearch(self,searchTerm):
 		# REPLACE WITH CORE
-		data = self.plReg.runPlugin(self.dataType,searchTerm)
+		data = self.core.runPlugin(self.dataType,searchTerm)
 		# REPLACE WITH CORE
 		return data
 

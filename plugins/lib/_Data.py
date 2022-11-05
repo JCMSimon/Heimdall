@@ -1,4 +1,4 @@
-class Data:
+class datapoints:
 	name_title = 0
 	first_name = 0
 	middle_name = 0
@@ -17,6 +17,9 @@ class Data:
 	date_of_birth_day = 0
 	date_of_birth_month = 0
 	date_of_birth_year = 0
+	education_level = 0
+	vehicle_license_plate = 0
+	vehicle_model_name = 0
 	family_mother_name_title = 0
 	family_mother_first_name = 0
 	family_mother_middle_name = 0
@@ -25,9 +28,6 @@ class Data:
 	family_mother_nationality = 0
 	family_mother_gender = 0
 	family_mother_age = 0
-	family_mother_age_day = 0
-	family_mother_age_month = 0
-	family_mother_age_year = 0
 	family_mother_body_height = 0
 	family_mother_body_weight = 0
 	family_mother_eye_color = 0
@@ -36,6 +36,7 @@ class Data:
 	family_mother_date_of_birth_month = 0
 	family_mother_date_of_birth_year = 0
 	family_mother_phone_number = 0
+	family_mother_education_level = 0
 	family_father_name_title = 0
 	family_father_first_name = 0
 	family_father_middle_name = 0
@@ -44,9 +45,6 @@ class Data:
 	family_father_nationality = 0
 	family_father_gender = 0
 	family_father_age = 0
-	family_father_age_day = 0
-	family_father_age_month = 0
-	family_father_age_year = 0
 	family_father_body_height = 0
 	family_father_body_weight = 0
 	family_father_eye_color = 0
@@ -55,6 +53,7 @@ class Data:
 	family_father_date_of_birth_month = 0
 	family_father_date_of_birth_year = 0
 	family_father_phone_number = 0
+	family_father_education_level = 0
 	family_brother_name_title = 0
 	family_brother_first_name = 0
 	family_brother_middle_name = 0
@@ -63,9 +62,6 @@ class Data:
 	family_brother_nationality = 0
 	family_brother_gender = 0
 	family_brother_age = 0
-	family_brother_age_day = 0
-	family_brother_age_month = 0
-	family_brother_age_year = 0
 	family_brother_body_height = 0
 	family_brother_body_weight = 0
 	family_brother_eye_color = 0
@@ -74,6 +70,7 @@ class Data:
 	family_brother_date_of_birth_month = 0
 	family_brother_date_of_birth_year = 0
 	family_brother_phone_number = 0
+	family_brother_education_level = 0
 	family_sister_name_title = 0
 	family_sister_first_name = 0
 	family_sister_middle_name = 0
@@ -82,9 +79,6 @@ class Data:
 	family_sister_nationality = 0
 	family_sister_gender = 0
 	family_sister_age = 0
-	family_sister_age_day = 0
-	family_sister_age_month = 0
-	family_sister_age_year = 0
 	family_sister_body_height = 0
 	family_sister_body_weight = 0
 	family_sister_eye_color = 0
@@ -93,6 +87,17 @@ class Data:
 	family_sister_date_of_birth_month = 0
 	family_sister_date_of_birth_year = 0
 	family_sister_phone_number = 0
+	family_sister_education_level = 0
+	family_pet_type = 0
+	family_pet_name = 0
+	family_pet_gender = 0
+	family_pet_age = 0
+	family_pet_body_height = 0
+	family_pet_body_weight = 0
+	family_pet_date_of_birth = 0
+	family_pet_date_of_birth_day = 0
+	family_pet_date_of_birth_month = 0
+	family_pet_date_of_birth_year = 0
 	family_generic_name_title = 0
 	family_generic_first_name = 0
 	family_generic_middle_name = 0
@@ -221,8 +226,7 @@ class Data:
 	google_account = 0
 	google_plus_account = 0
 	vk_account = 0
-
-class Image:
+	# Images
 	image_generic = 0
 	image_face = 0
 	image_id = 0
