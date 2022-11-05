@@ -51,5 +51,5 @@ class Plugin(ABC):
 		Main Processing Method of Plugin
 
 		Returns:
-			list: List of results
+			list: List of Node Elements
 		"""
