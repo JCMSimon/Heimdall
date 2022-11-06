@@ -15,7 +15,7 @@ class Loader:
 	def initDPG(self):
 		dpg.create_context()
 		with dpg.texture_registry():
-			self.width, self.height, _, data = dpg.load_image("./assets/heimdall_logo.png")
+			self.width, self.height, _, data = dpg.load_image("./assets/heimdall_text_logo.png")
 			self.Image = dpg.add_dynamic_texture(self.width, self.height, data,tag="logo")
 		dpg.create_viewport(
 			title="Heimdall",              # Window Title (Also Application Title)
