@@ -1,11 +1,11 @@
 import multiprocessing
 import sys
 
-from plugins._PluginRegister import PluginRegister
-from src._Logger import Logger
-from src.Gui import GUI
+from src.Logger import Logger
 from src.Loader import Loader
+from plugins._PluginRegister import PluginRegister
 from src.Core import Core
+from src.Gui import GUI
 
 def start(debug):
 	logger = Logger("Start-up",debug=debug)
