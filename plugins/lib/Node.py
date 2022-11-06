@@ -1,4 +1,4 @@
-from src._Logger import Logger
+from src.Logger import Logger
 
 class Node():
 	def __init__(self,title) -> None:
@@ -20,4 +20,3 @@ class Node():
 
 	def addImage(imagetype,imageUrl):
 		pass
-

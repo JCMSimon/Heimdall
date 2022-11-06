@@ -1,7 +1,7 @@
 import importlib
 from os import walk
 
-from src._Logger import Logger
+from src.Logger import Logger
 
 class PluginRegister():
 	def __init__(self,debug=False) -> None:

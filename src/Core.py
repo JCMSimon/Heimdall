@@ -7,4 +7,4 @@ class Core():
 	# todo
 
 	def runPlugin(self,plugin,arg):
-		print("eh")
+		print("placeholder")

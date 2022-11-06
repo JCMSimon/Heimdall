@@ -1,27 +1,24 @@
-import time
 import dearpygui.dearpygui as dpg
 
-from src._Logger import Logger
+from src.Logger import Logger
 class GUI:
 	def __init__(self,pluginNames,debug=False) -> None:
 		self.logger = Logger("GUI",debug=debug)
 		self.pluginNames = pluginNames
 		self.width,self.height = 1080,720
+		self.dataType = self.pluginNames[0]
 		self.initDPG()
 		self.initDPGThemes()
 		self.initMainWindow()
 
-	def returnEditor(self):
-		return self.nodeUI
-
 	def initDPG(self):
 		dpg.create_context()
 		dpg.create_viewport(
-			title="Heimdall",              # Window Title (Also Application Title)
-			clear_color=(111,111,111,255), # Background Color
-			large_icon="assets/icon.ico",  # "favicon" for Application
-			small_icon="assets/icon.ico",  # "favicon" for Application
-			decorated=False,               # Disables Windows Bar
+			title="Heimdall",
+			clear_color=(111,111,111,255),
+			large_icon="assets/icon.ico",
+			small_icon="assets/icon.ico",
+			decorated=False,
 			resizable=False,
 			vsync=True,
 			height=self.height,
@@ -118,10 +115,8 @@ class GUI:
 				self.logger.debugMsg(f"Plugin Names before padding: {self.pluginNames}")
 				self.typeSelector = dpg.add_combo(
 					tag="searchGuiTypeSelector",
-					# REPLACE WITH CORE
 					items=centerText(self.pluginNames), #["Email", "Image", "Name", "Phone Number", "Username"]
-					# REPLACE WITH CORE
-					default_value=centerText("Username"),
+					default_value=centerText(self.pluginNames[0]),
 					callback=self.typeSelectorCallback,
 					no_arrow_button=True,
 					width=int(self.width / 100 * 95),
@@ -130,11 +125,8 @@ class GUI:
 						int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],    # y axis
 					)
 				self.logger.debugMsg(f"Plugin Names after padding:")
-				# REPLACE WITH CORE
 				for name in centerText(self.pluginNames):
-				# REPLACE WITH CORE
 					self.logger.debugMsg(f"{name}(EOL)")
-				self.dataType = "Username"
 				dpg.bind_item_theme(self.typeSelector,self.submitButtonTheme)
 				# Search Bar for input
 				self.searchBar = dpg.add_input_text(
@@ -183,8 +175,10 @@ class GUI:
 			dpg.enable_item(self.submitButton)
 
 	def executeSearch(self,searchTerm):
-		data = self.core.runPlugin(self.dataType,searchTerm)
-		return data
+		self.core.runPlugin(self.dataType,searchTerm)
+
+	def returnEditor(self):
+		return self.nodeUI
 
 	# Starts GUI
 	def start(self,core):
@@ -207,22 +201,15 @@ class GUI:
 				new_y_position = max(new_y_position, 0) # prevent the viewport to go off the top of the screen
 				self.logger.debugMsg(f"Moving Window to x:{new_x_position} y:{new_y_position} (Delta: {drag_deltas}")
 				dpg.set_viewport_pos([new_x_position, new_y_position])
-			else:
-				return
 
 # Used to center text in typeSelector
 def centerText(itemList):
 	if type(itemList) == str:
-		while len(itemList) != 92:
-			itemList = f"{itemList:^92}"
-		return str(itemList)
+		return f"{itemList:^92}"
 	elif type(itemList) == list:
 		# Sort List
 		itemList.sort(key=len)
 		newItemList = []
 		for item in itemList: #what the fuck is this stuff to make text centered omg xd
-			tempItem = item
-			while len(tempItem) != 92: # Gui element has space for 92 chars
-				tempItem = f"{tempItem:^92}"
-			newItemList.append(tempItem)
-		return list(newItemList)
+			newItemList.append(f"{item:^92}")
+		return newItemList

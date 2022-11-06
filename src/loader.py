@@ -1,7 +1,7 @@
 import dearpygui.dearpygui as dpg
 from screeninfo import get_monitors
 
-from src._Logger import Logger
+from src.Logger import Logger
 from src.temp.windows import set_transparent_color
 
 class Loader:
