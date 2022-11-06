@@ -1,1 +1,1 @@
-![Heimdall Logo](https://github.com/JustCallMeSimon26/Heimdall/blob/1697ebf53796d7c989666265938a83665ca54e44/assets/heimdall_text_logo.png)
+![Heimdall Logo](https://github.com/JustCallMeSimon26/Heimdall/blob/7914180e6f75215d36ea85cbeb322b324237b27c/assets/heimdall_text_logo.png)
