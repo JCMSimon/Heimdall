@@ -1,4 +1,5 @@
 from plugins.lib.Plugin import Plugin
+from plugins.lib.Data import datapoints as dp
 from plugins.tools.ExampleTool import doSomething
 
 class Username(Plugin):                # Class Name must be the same as the File Name
@@ -14,3 +15,6 @@ class Username(Plugin):                # Class Name must be the same as the File
 	def run(self,arg) -> list:
 		print("IM THE USERNAME PLUGIN")
 		doSomething(arg)
+
+	def accepts(self) -> list:
+		return [dp.undefined]

@@ -40,7 +40,11 @@ class PluginRegister():
 		self.logger.debugMsg(f"Running Plugin '{pluginName}' with Argument '{arg}'")
 		plugin = __import__(f'plugins.{pluginName}', fromlist=[f'{pluginName}'])
 		pluginClass = getattr(plugin, f'{pluginName}')
-		pluginClassInstance = pluginClass(debug=self.debug)
+		try:
+			pluginClassInstance = pluginClass(debug=self.debug)
+		except TypeError:
+			self.logger.errorMsg(f"Plugin {pluginName} is not working.")
+			return
 		data = pluginClassInstance.run(arg)
 		return data
 
