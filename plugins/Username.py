@@ -16,5 +16,5 @@ class Username(Plugin):                # Class Name must be the same as the File
 		print("IM THE USERNAME PLUGIN")
 		doSomething(arg)
 
-	def accepts(self) -> list:
-		return [dp.undefined]
+	# def accepts(self) -> list:
+	# 	return [dp.undefined]
