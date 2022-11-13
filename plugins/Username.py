@@ -1,4 +1,4 @@
-from plugins.lib._Plugin import Plugin
+from plugins.lib.Plugin import Plugin
 from plugins.tools.ExampleTool import doSomething
 
 class Username(Plugin):                # Class Name must be the same as the File Name

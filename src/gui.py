@@ -175,7 +175,7 @@ class GUI:
 			dpg.enable_item(self.submitButton)
 
 	def executeSearch(self,searchTerm):
-		self.core.runPlugin(self.dataType,searchTerm)
+		self.core.search(self.dataType,searchTerm)
 
 	def returnEditor(self):
 		return self.nodeUI

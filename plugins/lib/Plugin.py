@@ -1,5 +1,6 @@
 from abc import ABC,abstractmethod
 from src.Logger import Logger
+from plugins.lib.Data import datapoints as dp
 class Plugin(ABC):
 	"""
 	Base for all Plugins
@@ -28,7 +29,7 @@ class Plugin(ABC):
 		print(f"Plugin with Name '{self.getDisplayName()}' has no update check.")
 
 	@abstractmethod
-	def getDisplayName() -> str:
+	def getDisplayName(self) -> str:
 		"""
 		Returns Plugin Name as String
 
@@ -37,7 +38,7 @@ class Plugin(ABC):
 		"""
 
 	@abstractmethod
-	def getVersion() -> str:
+	def getVersion(self) -> str:
 		"""
 		Returns Plugin Version as String
 
@@ -46,10 +47,23 @@ class Plugin(ABC):
 		"""
 
 	@abstractmethod
-	def run() -> list:
+	def accepts(self) -> list:
+		"""
+		Returns which datapoints can be fed as plugin input
+
+		Returns:
+			list: list of compatible data points
+		"""
+		return [
+			dp.undefined
+		]
+
+	@abstractmethod
+	def run(self) -> list:
 		"""
 		Main Processing Method of Plugin
 
 		Returns:
 			list: List of Node Elements
 		"""
+		print(f"Plugin with Name '{self.getDisplayName()}' has no run method.")

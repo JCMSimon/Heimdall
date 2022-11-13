@@ -42,7 +42,7 @@ class PluginRegister():
 		pluginClass = getattr(plugin, f'{pluginName}')
 		pluginClassInstance = pluginClass(debug=self.debug)
 		data = pluginClassInstance.run(arg)
-		pass
+		return data
 
 if __name__ == "__main__":
 	test = PluginRegister(debug=True)

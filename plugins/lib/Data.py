@@ -1,4 +1,5 @@
 class datapoints:
+	undefined = 0
 	name_title = 0
 	first_name = 0
 	middle_name = 0
