@@ -36,6 +36,7 @@ class Plugin(ABC):
 		Returns:
 			str: Plugin Name
 		"""
+		return "Unknown Plugin"
 
 	@abstractmethod
 	def getVersion(self) -> str:
@@ -45,6 +46,7 @@ class Plugin(ABC):
 		Returns:
 			str: Plugin Version
 		"""
+		print(f"Plugin with Name '{self.getDisplayName()}' has not defined a Version.")
 
 	@abstractmethod
 	def accepts(self) -> list:
