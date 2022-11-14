@@ -15,13 +15,5 @@ class Node():
 	def removeDataField(self,datatype,data):
 		self.data["data"].remove({datatype:data})
 
-	def addImage(imagetype,imageUrl):
-		pass
-
-	# def printData(self):
-	# 	self.logger.debugMsg("##########")
-	# 	self.logger.debugMsg(self.data["title"])
-	# 	self.logger.debugMsg("##########")
-	# 	for datatype,data in self.data["data"].items():
-	# 		self.logger.debugMsg(f"{datatype}:{data}")
-	# 	self.logger.debugMsg(f"Image: {self.data["image"]}")
+	def addImage(self,imagetype,imageUrl):
+		self.data["image"] = {imagetype:imageUrl}
