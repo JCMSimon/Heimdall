@@ -2,7 +2,7 @@ from multiprocessing import Process
 from sys import argv
 
 from src.Logger import Logger
-from src.loader import Loader
+from src.Loader import Loader
 from src.Core import Core
 from src.gui import GUI
 from plugins._PluginRegister import PluginRegister
@@ -27,8 +27,5 @@ def startLoader(debug):
 	_ = Loader(debug=debug)
 
 if __name__ == "__main__":
-	if "--debug" in argv[1:]:
-		debug=True
-	else:
-		debug=False
+	debug = bool("--debug" in argv[1:])
 	defaultStart(debug)
