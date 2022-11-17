@@ -4,7 +4,8 @@ class KeyRegister:
 	def __init__(self,apiKeys) -> None:
 		self.keysFile = "keys.toml"
 		self.loadConfig()
-		self.returnKeys(apiKeys)
+		if apiKeys:
+			self.returnKeys(apiKeys)
 
 	def loadConfig(self):
 		with open(self.keysFile,"r") as file:
@@ -18,7 +19,3 @@ class KeyRegister:
 			except KeyError:
 				returnDict[f"{keyname}"] = None
 		print(returnDict)
-
-
-if __name__ == "__main__":
-	test = KeyRegister(["SkidSearch","Dehashed","Testing"])

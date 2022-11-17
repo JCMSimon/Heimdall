@@ -7,5 +7,6 @@ class Core():
 
 	def search(self,datatype,keyword):
 		# pluginsToRun = self.pluginRegister.getPluginsForType(datatype)
-		self.pluginRegister.runPlugin(datatype,keyword)
-		pass
+		data = self.pluginRegister.runPlugin(datatype,keyword)
+		for node in data:
+			print(node.data)
