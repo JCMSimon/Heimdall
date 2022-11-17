@@ -1,10 +1,13 @@
 from abc import ABC,abstractmethod
 from src.Logger import Logger
+from src.KeyRegister import KeyRegister
 from plugins.lib.Data import datapoints as dp
 class Plugin(ABC):
-	def __init__(self,debug=False) -> None:
+	def __init__(self,apiKeys=[],debug=False) -> None:
 		self.debug = debug
 		self.logger = Logger(f"{self.getDisplayName()}",debug=self.debug)
+		if apiKeys:
+			self.apiKeys = KeyRegister(apiKeys)
 		super().__init__()
 
 	def debugMsg(self,text) -> None:

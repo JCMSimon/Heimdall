@@ -12,6 +12,7 @@ def defaultStart(debug):
 	logger.debugMsg("Starting Loading Graphic")
 	loaderProcess = Process(target=startLoader,args=[debug])
 	loaderProcess.start()
+	logger.debugMsg("Loading API Keys")
 	logger.debugMsg("Loading Plugins")
 	pluginRegister = PluginRegister(debug)
 	pluginNames = pluginRegister.getPluginNames()
