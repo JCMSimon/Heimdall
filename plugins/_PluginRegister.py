@@ -31,6 +31,20 @@ class PluginRegister():
 		self.logger.debugMsg(f"Final List: {finalNames}")
 		return finalNames
 
+	def getPluginNamesByType(self,datatype):
+		list = []
+		for pluginName in self.plugins:
+			plugin = __import__(f'plugins.{pluginName}', fromlist=[f'{pluginName}'])
+			pluginClass = getattr(plugin, f'{pluginName}')
+			try:
+				pluginClassInstance = pluginClass(debug=self.debug)
+			except TypeError:
+				self.logger.errorMsg(f"Plugin {pluginName} is not working.")
+				return
+			else:
+				if datatype in pluginClassInstance.accepts():
+					list.append(pluginName)
+
 
 	def getPluginNames(self):
 		return self.plugins

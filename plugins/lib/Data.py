@@ -1,6 +1,8 @@
 class datapoints:
 	undefined = 0
 	ip_address = 0
+	class _internal:
+		is_root_node = 0
 	class name:
 		title = 0
 		first_name = 0
