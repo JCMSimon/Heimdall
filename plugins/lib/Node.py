@@ -1,13 +1,14 @@
 from src.Logger import Logger
 
 class Node():
-	def __init__(self,title,debug=False) -> None:
+	def __init__(self,title,color=None,debug=False) -> None:
 		self.logger = Logger(f"Node({title})",debug=debug)
 		self.data = {
 			"title":title,
 			"data":[],
 			"image":None,
 		}
+		self._children = []
 
 	def addDataField(self,datatype,data):
 		self.data["data"].append({datatype:data})
