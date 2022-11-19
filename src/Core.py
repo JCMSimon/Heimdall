@@ -22,15 +22,16 @@ class Core():
 		self.logger.debugMsg(f"Adding results to root node")
 		self.root._children.extend(initialResults)
 		self.todo = initialResults
-		for node in self.todo:
-			for dataField in node.data["data"]: # this might be wrong syntax. it should loop through data fields
-				for datatype,data in dataField.items():
-					plugins = self.pluginRegister.getPluginNamesByType(datatype)
-					results = []
-					for plugin in plugins:
-						results.extend(self.pluginRegister.runPlugin(plugin,data))
-			node._children.extend(results)
-			self.todo.extend(results)
-			self.nodeInterFace.visualize(self.root)
-
+		while self.todo:
+			for node in self.todo:
+				for dataField in node.data["data"]: # this might be wrong syntax. it should loop through data fields
+					for datatype,data in dataField.items():
+						plugins = self.pluginRegister.getPluginNamesByType(datatype)
+						results = []
+						for plugin in plugins:
+							results.extend(self.pluginRegister.runPlugin(plugin,data))
+				node._children.extend(results)
+				self.todo.extend(results)
+				self.todo.remove(node)
+				self.nodeInterFace.visualize(self.root)
 	#TODO smth smth visualise every now and then

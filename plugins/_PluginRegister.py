@@ -45,7 +45,7 @@ class PluginRegister():
 				if datatype in pluginClassInstance.accepts():
 					list.append(pluginName)
 			self.logger.debugMsg(f"Found {len(list)} compatible Plugins")
-			return list
+		return list
 
 
 	def getPluginNames(self):

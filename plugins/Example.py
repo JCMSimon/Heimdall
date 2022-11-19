@@ -68,7 +68,7 @@ If for some reason you want to address a API directly, you can request a API Key
 	apiKeys = KeyRegister(apiKeys=["Dehashed","SkidSearch","SomeOtherSupportedPlatform"])
 """)
 		testResult = Node("Discord Username",debug=self.debug)
-		testResult.addDataField(dp.username.discord,"JCMS#0557")
+		testResult.addDataField(dp.username.pinterest,"JCMS")
 		testResult2 = Node("Youtube Username",debug=self.debug)
 		testResult2.addDataField(dp.username.youtube,"JCMS_")
 		imageResult = Node("Youtube Username",debug=self.debug)
