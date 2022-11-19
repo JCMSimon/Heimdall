@@ -14,8 +14,7 @@ def defaultStart(debug):
 	loaderProcess = Process(target=startLoader,args=[debug])
 	loaderProcess.start()
 	logger.debugMsg("Checking for update config")
-	result = CheckUpdateConfig()
-	if result:
+	if CheckUpdateConfig():
 		logger.debugMsg("Update config found")
 	else:
 		logger.debugMsg("Update config not found, created one")
