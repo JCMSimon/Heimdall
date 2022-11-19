@@ -31,6 +31,6 @@ class Core():
 						results.extend(self.pluginRegister.runPlugin(plugin,data))
 			node._children.extend(results)
 			self.todo.extend(results)
-			print(len(self.todo))
+			self.nodeInterFace.visualize(self.root)
 
 	#TODO smth smth visualise every now and then

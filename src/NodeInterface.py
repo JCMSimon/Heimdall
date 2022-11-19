@@ -3,9 +3,7 @@ class NodeInterface():
 		self.NE = nodeEditor
 		pass
 
-	def addMasterNode():
-		# Add a Node in the Middle of the NodeUI.
-		# have a custom Theme for it.
-		# Later it should be renameable.
-		pass
-
+	def visualize(self,tree):
+		print(tree._children)
+		for child in tree._children:
+			print("##" + str(child._children))
