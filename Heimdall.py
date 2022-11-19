@@ -3,7 +3,7 @@ from sys import argv
 import os
 
 from src.Logger import Logger
-#from src.Loader import Loader
+from src.Loader import Loader
 from src.Core import Core
 from src.gui import GUI
 from plugins._PluginRegister import PluginRegister
