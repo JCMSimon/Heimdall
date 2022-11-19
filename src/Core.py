@@ -24,12 +24,13 @@ class Core():
 		self.todo = initialResults
 		for node in self.todo:
 			for dataField in node.data["data"]: # this might be wrong syntax. it should loop through data fields
-				for datatype,data in dataField:
+				for datatype,data in dataField.items():
 					plugins = self.pluginRegister.getPluginNamesByType(datatype)
 					results = []
 					for plugin in plugins:
-						data = self.pluginRegister.runPlugin(plugin,keyword)
-					results.append(data)
+						results.extend(self.pluginRegister.runPlugin(plugin,data))
 			node._children.extend(results)
 			self.todo.extend(results)
-	#TODO smth smth vosualise every now and then
+			print(len(self.todo))
+
+	#TODO smth smth visualise every now and then

@@ -44,6 +44,7 @@ class PluginRegister():
 			else:
 				if datatype in pluginClassInstance.accepts():
 					list.append(pluginName)
+			return list
 
 
 	def getPluginNames(self):
