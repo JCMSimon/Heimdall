@@ -7,7 +7,7 @@ class Plugin(ABC):
 		self.debug = debug
 		self.logger = Logger(f"{self.getDisplayName()}",debug=self.debug)
 		if apiKeys:
-			self.apiKeys = KeyRegister(apiKeys)
+			self.apiKeys = KeyRegister().returnKeys(apiKeys)
 		super().__init__()
 
 	def debugMsg(self,text) -> None:

@@ -1,0 +1,13 @@
+[API]
+
+[API.testkey]
+key = "blablabla"
+
+[API.dehashed]
+key = "ffawfw"
+
+[API.hash]
+key = ""
+
+[PROXYLIST]
+file = "proxy.txt"
