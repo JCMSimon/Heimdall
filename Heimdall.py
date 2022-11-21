@@ -1,10 +1,13 @@
 from multiprocessing import Process
 from sys import argv
+from json import JSONDecodeError, load as jsonload
 import os
+from datetime import datetime
 
 from src.Logger import Logger
 from src.Loader import Loader
 from src.Core import Core
+from src.SetupUI import Setup
 from src.gui import GUI
 from plugins._PluginRegister import PluginRegister
 
@@ -28,17 +31,36 @@ def defaultStart(debug):
 	gui = GUI(pluginNames,debug=debug)
 	nodeEditor = gui.returnEditor()
 	core = Core(pluginRegister,nodeEditor,debug=debug)
+	if not CheckSetupDone(logger):
+		setupProcess = Process(target=oneTimeSetup,args=[logger,debug])
+		setupProcess.start()
+		setupProcess.join()
 	gui.start(core)
 
 def startLoader(debug):
 	_ = Loader(debug=debug)
 
+def oneTimeSetup(logger,debug):
+	logger.debugMsg("Starting One Time Setup")
+	_ = Setup(debug=debug)
+
 def CheckUpdateConfig():
 	if not os.path.isfile("updateconfig.json"):
 		with open("updateconfig.json","w") as f:
-			f.write("{\n\t\"lastUpdated\": \"2020-08-01T00:00:00\",\n\t\"ignoreMinorUpdates\": false,\n\t\"ignoreMajorUpdates\": false,\n\t\"ignorePreRequestWarnings\": false,\n\t\"oneTimeSetupDone\": false\n}")
+			time = datetime.now().replace(microsecond=0).isoformat()
+			f.write(f"{{\n\t\"lastUpdated\": \"{time}\",\n\t\"ignoreMinorUpdates\": false,\n\t\"ignoreMajorUpdates\": false,\n\t\"ignorePreRequestWarnings\": false,\n\t\"autoUpdate\": false,\n\t\"oneTimeSetupDone\": false\n}}")
 			return False
 	return True
+
+def CheckSetupDone(logger):
+	try:
+		with open("updateconfig.json","r") as file:
+			return jsonload(file)["oneTimeSetupDone"]
+	except JSONDecodeError:
+		logger.infoMsg("updateconfig corrupted. Resetting to defaults")
+		os.system("del updateconfig.json")
+		if not CheckUpdateConfig():
+			logger.infoMsg("Success")
 
 if __name__ == "__main__":
 	debug = bool("--debug" in argv[1:])
