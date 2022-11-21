@@ -13,6 +13,7 @@ from plugins._PluginRegister import PluginRegister
 
 def defaultStart(debug):
 	logger = Logger("Start-up",debug=debug)
+	checkForUpdate(logger,debug)
 	logger.debugMsg("Starting Loading Graphic")
 	loaderProcess = Process(target=startLoader,args=[debug])
 	loaderProcess.start()
@@ -39,6 +40,23 @@ def defaultStart(debug):
 
 def startLoader(debug):
 	_ = Loader(debug=debug)
+
+def checkForUpdate(logger,debug):
+	logger.debugMsg("Checking for Updates")
+	try:
+		with open("updateconfig.json","r") as file:
+			if jsonload(file)["autoUpdate"]:
+				if debug:
+					os.system(f"HeimdallUpdate.exe --debug")
+				else:
+					os.system(f"HeimdallUpdate.exe")
+
+	except JSONDecodeError:
+		logger.infoMsg("updateconfig corrupted. Resetting to defaults")
+		os.system("del updateconfig.json")
+		if not CheckUpdateConfig():
+			logger.infoMsg("Success")
+
 
 def oneTimeSetup(logger,debug):
 	logger.debugMsg("Starting One Time Setup")
