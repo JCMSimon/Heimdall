@@ -36,7 +36,7 @@ def startLoader(debug):
 def CheckUpdateConfig():
 	if not os.path.isfile("updateconfig.json"):
 		with open("updateconfig.json","w") as f:
-			f.write("{\n\t\"lastUpdated\": \"2020-08-01T00:00:00\",\n\t\"ignoreMinorUpdates\": false,\n\t\"ignoreMajorUpdates\": false,\n\t\"ignorePreRequestWarnings\": false,\n}")
+			f.write("{\n\t\"lastUpdated\": \"2020-08-01T00:00:00\",\n\t\"ignoreMinorUpdates\": false,\n\t\"ignoreMajorUpdates\": false,\n\t\"ignorePreRequestWarnings\": false,\n\t\"oneTimeSetupDone\": false\n}")
 			return False
 	return True
 
