@@ -1,18 +1,24 @@
-from multiprocessing import Process
-from sys import argv
-from json import JSONDecodeError, load as jsonload
 import os
 from datetime import datetime
+from json import JSONDecodeError
+from json import load as jsonload
+from multiprocessing import Process
+from sys import argv
 
-from src.Logger import Logger
-from src.Loader import Loader
-from src.Core import Core
-from src.SetupUI import Setup
-from src.gui import GUI
 from plugins._PluginRegister import PluginRegister
+from src.Core import Core
+from src.gui import GUI
+from src.Loader import Loader
+from src.Logger import Logger
+from src.SetupUI import Setup
+
 
 def defaultStart(debug):
 	logger = Logger("Start-up",debug=debug)
+	if bool("--openSettings" in argv[1:]):
+		if bool("--forceUpdate" in argv[1:]):
+			logger.errorMsg("Cant have force update and open settings together")
+			return
 	checkForUpdate(logger,debug)
 	logger.debugMsg("Starting Loading Graphic")
 	loaderProcess = Process(target=startLoader,args=[debug],daemon=True)
@@ -32,7 +38,7 @@ def defaultStart(debug):
 	gui = GUI(pluginNames,debug=debug)
 	nodeEditor = gui.returnEditor()
 	core = Core(pluginRegister,nodeEditor,debug=debug)
-	if not CheckSetupDone(logger):
+	if not CheckSetupDone(logger) or bool("--openSettings" in argv[1:]):
 		setupProcess = Process(target=oneTimeSetup,args=[logger,debug],daemon=True)
 		setupProcess.start()
 		setupProcess.join()
@@ -45,7 +51,7 @@ def checkForUpdate(logger,debug):
 	logger.debugMsg("Checking for Updates")
 	try:
 		with open("updateconfig.json","r") as file:
-			if jsonload(file)["autoUpdate"]:
+			if (jsonload(file)["autoUpdate"] and not bool("--openSettings" in argv[1:]) or bool("--forceUpdate" in argv[1:]) and not bool("--openSettings" in argv[1:])):
 				if debug:
 					os.system(f"HeimdallUpdate.exe --debug")
 				else:
