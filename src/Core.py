@@ -33,4 +33,4 @@ class Core():
 				node._children.extend(results)
 				self.todo.extend(results)
 				self.todo.remove(node)
-				self.nodeInterFace.visualize(self.root)
+		self.nodeInterFace.visualize(self.root)

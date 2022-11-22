@@ -73,5 +73,6 @@ If for some reason you want to address a API directly, you can request a API Key
 		testResult2.addDataField(dp.username.youtube,"JCMS_")
 		imageResult = Node("Youtube Username",debug=self.debug)
 		imageResult.addDataField(dp.username.instagram,"JCMS")
+		imageResult.addDataField(dp.body.eye_color,"blue")
 		imageResult.addImage(dp.image.generic,"https://pbs.twimg.com/profile_images/1270048477205200908/yS0f43oV_400x400.jpg")
 		return [testResult,testResult2,imageResult]

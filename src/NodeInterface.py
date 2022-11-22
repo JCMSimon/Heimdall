@@ -1,11 +1,27 @@
+from src.Logger import Logger
+import dearpygui.dearpygui as dpg
 class NodeInterface():
 	def __init__(self,nodeEditor,debug=False) -> None:
+		self.logger = Logger("NodeInterface",debug=debug)
 		self.NE = nodeEditor
 		pass
 
 	def visualize(self,root):
 		layers = self.splitIntoLayers(root)
-		print(layers)
+		self.logger.debugMsg("##########")
+		self.logger.debugMsg(layers)
+		for index in range(0,len(layers)):
+			self.logger.debugMsg(layers[index])
+			for node in layers[index]:
+				self.logger.debugMsg(node)
+				self.logger.debugMsg(node.data["title"])
+				for field in node.data["data"]:
+					for key,value in field.items():
+						self.logger.debugMsg(f"{key},{value}")
+						with dpg.node(parent=self.NE,label=f"{node.data['title']}",pos=[100,100]):
+							with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Static):
+								dpg.add_text(value)
+				self.logger.debugMsg("##########")
 
 	def splitIntoLayers(self,root):
 		layers = {0:[root]}

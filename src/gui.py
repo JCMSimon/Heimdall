@@ -88,6 +88,7 @@ class GUI:
 				):
 				# Node Editor (VIS)
 				self.nodeUI = dpg.add_node_editor(
+					tag="NODEEDITOR",
 					minimap=True,
 					minimap_location=dpg.mvNodeMiniMap_Location_TopLeft
 				)
