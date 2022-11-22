@@ -5,9 +5,7 @@ class NodeInterface():
 		self.NE = nodeEditor
 		pass
 
-	def visualize(self,tree):
+	def visualize(self,root):
 		pass
 
-	def dump(self,tree):
-		with open("test.json","w") as file:
-			json.dump(tree,file,default=str)
+	# C:\Users\Simon\Desktop\llimllib.github.io.html
