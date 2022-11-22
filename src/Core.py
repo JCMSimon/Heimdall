@@ -34,4 +34,3 @@ class Core():
 				self.todo.extend(results)
 				self.todo.remove(node)
 				self.nodeInterFace.visualize(self.root)
-	#TODO smth smth visualise every now and then
