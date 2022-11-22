@@ -18,9 +18,10 @@ class NodeInterface():
 				for field in node.data["data"]:
 					for key,value in field.items():
 						self.logger.debugMsg(f"{key},{value}")
-						with dpg.node(parent=self.NE,label=f"{node.data['title']}",pos=[100,100]):
+						with dpg.node(parent=self.NE,label=f"{node.data['title']}",pos=[100,100 * index]) as dpgNode:
 							with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Static):
 								dpg.add_text(value)
+						print(dpg.get_item_rect_size(dpgNode))
 				self.logger.debugMsg("##########")
 
 	def splitIntoLayers(self,root):
