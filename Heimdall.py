@@ -15,7 +15,7 @@ def defaultStart(debug):
 	logger = Logger("Start-up",debug=debug)
 	checkForUpdate(logger,debug)
 	logger.debugMsg("Starting Loading Graphic")
-	loaderProcess = Process(target=startLoader,args=[debug])
+	loaderProcess = Process(target=startLoader,args=[debug],daemon=True)
 	loaderProcess.start()
 	logger.debugMsg("Checking for update config")
 	if CheckUpdateConfig():
@@ -33,7 +33,7 @@ def defaultStart(debug):
 	nodeEditor = gui.returnEditor()
 	core = Core(pluginRegister,nodeEditor,debug=debug)
 	if not CheckSetupDone(logger):
-		setupProcess = Process(target=oneTimeSetup,args=[logger,debug])
+		setupProcess = Process(target=oneTimeSetup,args=[logger,debug],daemon=True)
 		setupProcess.start()
 		setupProcess.join()
 	gui.start(core)
@@ -50,8 +50,7 @@ def checkForUpdate(logger,debug):
 					os.system(f"HeimdallUpdate.exe --debug")
 				else:
 					os.system(f"HeimdallUpdate.exe")
-
-	except JSONDecodeError:
+	except (JSONDecodeError,FileNotFoundError):
 		logger.infoMsg("updateconfig corrupted. Resetting to defaults")
 		os.system("del updateconfig.json")
 		if not CheckUpdateConfig():

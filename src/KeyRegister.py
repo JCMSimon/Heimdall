@@ -1,5 +1,5 @@
 import toml
-from Logger import Logger
+from src.Logger import Logger
 
 class KeyRegister:
 	def __init__(self,apiKeys=[],debug=True) -> None:
