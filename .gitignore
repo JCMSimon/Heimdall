@@ -1,3 +1,4 @@
 *.cpython-*.pyc
 Heimdall.pyw
 updateconfig.json
+.vscode/*

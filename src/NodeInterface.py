@@ -4,7 +4,6 @@ class NodeInterface():
 	def __init__(self,nodeEditor,debug=False) -> None:
 		self.logger = Logger("NodeInterface",debug=debug)
 		self.NE = nodeEditor
-		pass
 
 	def visualize(self,root):
 		layers = self.splitIntoLayers(root)
@@ -21,13 +20,14 @@ class NodeInterface():
 						with dpg.node(parent=self.NE,label=f"{node.data['title']}",pos=[100,100 * index]) as dpgNode:
 							with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Static):
 								dpg.add_text(value)
-						print(dpg.get_item_rect_size(dpgNode))
+						self.logger.infoMsg(dpg.get_item_rect_size(dpgNode)) #not working sadge
 				self.logger.debugMsg("##########")
 
 	def splitIntoLayers(self,root):
 		layers = {0:[root]}
 		layers[1] = root._children
 		return self.IterateTree(layers)
+
 
 	def IterateTree(self,layers,layerIndex = 1):
 		layerList = []

@@ -51,7 +51,6 @@ class GUI:
 				dpg.add_theme_color(dpg.mvThemeCol_HeaderActive,(120,0,200,255))
 
 	def initMainWindow(self):
-		# Main Window (Wrapper)
 		with dpg.window(
 			tag="mainWindow",
 			horizontal_scrollbar=False,
