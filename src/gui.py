@@ -182,16 +182,28 @@ class GUI:
 
 	# Starts GUI
 	def start(self,core):
+		"""
+		`dpg.start_dearpygui()` is the function that starts DearPyGui.
+
+		Args:
+		  core: The core object.
+		"""
 		self.core = core
 		dpg.start_dearpygui()
 
 	# End GUI
 	def exitGUI(self):
+		"""
+		It destroys the context of the GUI
+		"""
 		dpg.destroy_context()
 
 	# Function to handle dragging the Window
 	# Thanks to https://github.com/bandit-masked
 	def dragWindow(self,sender, app_data, user_data):
+		"""
+		When the user drags the mouse over the logo, the window moves with the mouse
+		"""
 		if dpg.get_mouse_pos(local=False)[1] < 40:  # only drag the viewport when dragging the logo
 			drag_deltas = app_data
 			if drag_deltas[0] != 0 or drag_deltas[1] != 0:
@@ -204,6 +216,15 @@ class GUI:
 
 # Used to center text in typeSelector
 def centerText(itemList):
+	"""
+	It takes a list of strings and centers them
+
+	Args:
+	  itemList: The list of items to be centered.
+
+	Returns:
+	  A list of strings that are centered.
+	"""
 	if type(itemList) == str:
 		return f"{itemList:^92}"
 	elif type(itemList) == list:
