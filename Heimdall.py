@@ -8,7 +8,7 @@ from sys import argv
 from plugins._PluginRegister import PluginRegister
 from src.Core import Core
 from src.gui import GUI
-from src.Loader import Loader
+from src.Loader import LoadingUI
 from src.Logger import Logger
 from src.SetupUI import Setup
 
@@ -105,7 +105,7 @@ def startLoader(debug) -> None:
 	Args:
 	  debug: True/False
 	"""
-	_ = Loader(debug=debug)
+	_ = LoadingUI(debug=debug)
 
 def loadPlugins(debug) -> tuple[PluginRegister,list]:
 	"""
