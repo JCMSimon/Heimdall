@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime as dt
 from json import JSONDecodeError
 from json import load as jsonload
 from multiprocessing import Process
@@ -12,79 +12,161 @@ from src.Loader import Loader
 from src.Logger import Logger
 from src.SetupUI import Setup
 
+def fullStart(debug) -> None:
+	"""
+	It starts the program with the full GUI
 
-def defaultStart(debug):
-	logger = Logger("Start-up",debug=debug)
-	if bool("--openSettings" in argv[1:]):
-		if bool("--forceUpdate" in argv[1:]):
-			logger.errorMsg("Cant have force update and open settings together")
-			return
-	checkForUpdate(logger,debug)
-	logger.debugMsg("Starting Loading Graphic")
-	loaderProcess = Process(target=startLoader,args=[debug],daemon=True)
-	loaderProcess.start()
+	Args:
+	  debug: Boolean
+	"""
+	logger = startLogger("Heimdall/Main",debug)
+	# Check compatibillity
+	if "--openSettings" in argv[1:] and "--forceUpdate" in argv[1:]:
+		logger.errorMsg("Cant have force update and open settings together")
+		return
+	# Check updateconfig.json
 	logger.debugMsg("Checking for update config")
 	if CheckUpdateConfig():
 		logger.debugMsg("Update config found")
 	else:
 		logger.debugMsg("Update config not found, created one")
-	logger.debugMsg("Loading API Keys")
+	# Start update Process
+	checkForUpdate(logger,debug)
+	# Start LoadingUI
+	logger.debugMsg("Starting Loading UI")
+	loadingUIProcess = startLoadingUI(debug)
+	# Load Plugins
 	logger.debugMsg("Loading Plugins")
-	pluginRegister = PluginRegister(debug)
-	pluginNames = pluginRegister.getPluginNames()
+	pluginRegister,pluginNames = loadPlugins(debug)
+	# Close Loding UI
 	logger.debugMsg("Closing Loading Graphic")
-	loaderProcess.terminate()
+	loadingUIProcess.terminate()
+	# Start Main GUI
 	logger.debugMsg("Starting Main User Interface")
-	gui = GUI(pluginNames,debug=debug)
-	nodeEditor = gui.returnEditor()
-	core = Core(pluginRegister,nodeEditor,debug=debug)
-	if not CheckSetupDone(logger) or bool("--openSettings" in argv[1:]):
+	mainGUI = GUI(pluginNames,debug=debug)
+	# Get refernce to the node editor
+	nodeEditor = mainGUI.returnEditor()
+	logger.debugMsg("Starting Heimdall Core")
+	core = Core(pluginRegister,nodeEditor,debug)
+	# Start One time setup if needed
+	if not CheckOneTimeSetupDone(logger) or bool("--openSettings" in argv[1:]):
 		setupProcess = Process(target=oneTimeSetup,args=[logger,debug],daemon=True)
 		setupProcess.start()
 		setupProcess.join()
-	gui.start(core)
+	mainGUI.start(core)
 
-def startLoader(debug):
-	_ = Loader(debug=debug)
+def startLogger(prefix,debug) -> Logger:
+	"""
+	It returns a Logger object with the given prefix and debug flag
 
-def checkForUpdate(logger,debug):
-	logger.debugMsg("Checking for Updates")
-	try:
-		with open("updateconfig.json","r") as file:
-			if (jsonload(file)["autoUpdate"] and not bool("--openSettings" in argv[1:]) or bool("--forceUpdate" in argv[1:]) and not bool("--openSettings" in argv[1:])):
-				if debug:
-					os.system(f"HeimdallUpdate.exe --debug")
-				else:
-					os.system(f"HeimdallUpdate.exe")
-	except (JSONDecodeError,FileNotFoundError):
-		logger.infoMsg("updateconfig corrupted. Resetting to defaults")
-		os.system("del updateconfig.json")
-		if not CheckUpdateConfig():
-			logger.infoMsg("Success")
+	Args:
+	  prefix: This is the prefix of the log messages.
+	  debug: True/False
 
+	Returns:
+	  A Logger object
+	"""
+	return Logger(prefix,debug=debug)
 
-def oneTimeSetup(logger,debug):
-	logger.debugMsg("Starting One Time Setup")
-	_ = Setup(debug=debug)
+def CheckUpdateConfig() -> bool:
+	"""
+	If the updateconfig.json file doesn't exist, create it and return false. If it does exist, return true
 
-def CheckUpdateConfig():
+	Returns:
+	  a boolean value.
+	"""
 	if not os.path.isfile("updateconfig.json"):
-		with open("updateconfig.json","w") as f:
-			time = datetime.now().replace(microsecond=0).isoformat()
-			f.write(f"{{\n\t\"lastUpdated\": \"{time}\",\n\t\"ignoreMinorUpdates\": false,\n\t\"ignoreMajorUpdates\": false,\n\t\"ignorePreRequestWarnings\": false,\n\t\"autoUpdate\": false,\n\t\"oneTimeSetupDone\": false\n}}")
+		with open("updateconfig.json","w") as file:
+			time = dt.now().replace(microsecond=0).isoformat()
+			file.write(f"{{\n\t\"lastUpdated\": \"{time}\",\n\t\"ignoreMinorUpdates\": false,\n\t\"ignoreMajorUpdates\": false,\n\t\"ignorePreRequestWarnings\": false,\n\t\"autoUpdate\": false,\n\t\"oneTimeSetupDone\": false\n}}")
 			return False
 	return True
 
-def CheckSetupDone(logger):
+def checkForUpdate(logger,debug) -> None:
+	"""
+	It checks if the user has enabled auto-updates, and if so, it runs the update program.
+
+	Args:
+	  logger: A logger object
+	  debug: True/False
+	"""
+	with open("updateconfig.json","r") as file:
+		if jsonload(file)["autoUpdate"] and not "--openSettings" in argv[1:] or "--forceUpdate" in argv[1:]:
+			logger.debugMsg("Checking for Updates (Autoupdate enabled)")
+			arg = ""
+			if debug:
+				arg = " --debug"
+			os.system(f"HeimdallUpdate.exe{arg}")
+
+def startLoader(debug) -> None:
+	"""
+	It creates a new instance of the Loader class, and passes the debug argument to the class
+
+	Args:
+	  debug: True/False
+	"""
+	_ = Loader(debug=debug)
+
+def loadPlugins(debug) -> tuple[PluginRegister,list]:
+	"""
+	It creates a PluginRegister object, and then returns the object and a list of the names of the
+	plugins that were loaded
+
+	Args:
+	  debug: Boolean, if True, will print debug messages
+
+	Returns:
+	  A tuple of two items. The first item is the pluginRegister object. The second item is a list of
+	plugin names.
+	"""
+	pluginRegister = PluginRegister(debug)
+	return pluginRegister,pluginRegister.getPluginNames()
+
+def startLoadingUI(debug) -> Process:
+	"""
+	It starts a new process that runs the loading UI.
+
+	Args:
+	  debug: True/False
+
+	Returns:
+	  The process object.
+	"""
+	loadingUIProcess = Process(target=startLoader,args=[debug],daemon=True)
+	loadingUIProcess.start()
+	return loadingUIProcess
+
+def CheckOneTimeSetupDone(logger) -> bool | None:
+	"""
+	It checks if the one time setup has been done
+
+	Args:
+	  logger: A logger object
+
+	Returns:
+	  The return value of the function is the value of the key "oneTimeSetupDone" in the json file.
+	"""
 	try:
 		with open("updateconfig.json","r") as file:
 			return jsonload(file)["oneTimeSetupDone"]
 	except JSONDecodeError:
-		logger.infoMsg("updateconfig corrupted. Resetting to defaults")
+		logger.infoMsg("updateconfig.json corrupted or missing.")
 		os.system("del updateconfig.json")
 		if not CheckUpdateConfig():
 			logger.infoMsg("Success")
+		else:
+			logger.infoMsg("This should not be shown at any time :")
+
+def oneTimeSetup(logger,debug) -> None:
+	"""
+	This function is called once at the beginning of the script. It lets the user adjust Settings
+
+	Args:
+	  logger: This is the logger object that you created in the main function.
+	  debug: True/False
+	"""
+	logger.debugMsg("Starting One Time Setup")
+	_ = Setup(debug=debug)
 
 if __name__ == "__main__":
-	debug = bool("--debug" in argv[1:])
-	defaultStart(debug)
+	fullStart(bool("--debug" in argv[1:]))
