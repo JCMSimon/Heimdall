@@ -4,8 +4,17 @@ from screeninfo import get_monitors
 from src.Logger import Logger
 from src.temp.windows import set_transparent_color
 
-class Loader:
+class LoadingUI:
+	"""
+	 LoadingUI for Heimdall
+	"""
 	def __init__(self,debug) -> None:
+		"""
+		Setup for the Loading UI
+
+		Args:
+		  debug: Boolean, if True, the logger will print to the console.
+		"""
 		self.logger = Logger("Loading-UI",debug=debug)
 		self.initDPG()
 		self.initDPGThemes()
@@ -13,6 +22,9 @@ class Loader:
 		self.start()
 
 	def initDPG(self):
+		"""
+		It creates a viewport with the dimensions of the image, and sets the image as the background.
+		"""
 		dpg.create_context()
 		with dpg.texture_registry():
 			self.width, self.height, _, data = dpg.load_image("./assets/heimdall_text_logo.png")
@@ -36,6 +48,9 @@ class Loader:
 		self.centerViewport()
 
 	def centerViewport(self):
+		"""
+		It centers the window on the primary monitor
+		"""
 		for monitor in get_monitors():
 			if monitor.is_primary:
 				monitor_xd = monitor.width
@@ -53,6 +68,11 @@ y:{(monitor_yd - self.height) / 2}
 """)
 
 	def initDPGThemes(self):
+		"""
+		We're creating a new theme, and then we're creating a new theme component that applies to all
+		windows. Then we're adding a few styles to that component, and then we're binding the theme to the
+		main window
+		"""
 		with dpg.theme() as mainWindowStyling:
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize,0)
@@ -61,6 +81,9 @@ y:{(monitor_yd - self.height) / 2}
 				dpg.bind_theme(mainWindowStyling)
 
 	def initMainWindow(self):
+		"""
+		It creates a window with a tag of "mainWindow" and adds an image to it with a tag of "logo".
+		"""
 		# Main Window (Wrapper)
 		with dpg.window(
 			tag="mainWindow",
@@ -77,6 +100,8 @@ y:{(monitor_yd - self.height) / 2}
 			dpg.add_image(texture_tag="logo",width=self.width,height=self.height)
 		dpg.set_primary_window("mainWindow",True)
 
-	# Starts GUI
 	def start(self):
+		"""
+		Starts the Loading UI
+		"""
 		dpg.start_dearpygui()
