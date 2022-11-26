@@ -103,7 +103,7 @@ def startLoader(debug) -> None:
 	It creates a new instance of the Loader class, and passes the debug argument to the class
 
 	Args:
-	  debug: True/False
+	  debug: True/False 
 	"""
 	_ = LoadingUI(debug=debug)
 
