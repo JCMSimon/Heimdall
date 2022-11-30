@@ -39,7 +39,7 @@ def fullStart(debug) -> None:
 	logger.debugMsg("Loading Plugins")
 	pluginRegister,pluginNames = loadPlugins(debug)
 	# Close Loding UI
-	logger.debugMsg("Closing Loading Graphic")
+	logger.debugMsg("Closing Loading UI")
 	loadingUIProcess.terminate()
 	# Start Main GUI
 	logger.debugMsg("Starting Main User Interface")
@@ -103,7 +103,7 @@ def startLoader(debug) -> None:
 	It creates a new instance of the Loader class, and passes the debug argument to the class
 
 	Args:
-	  debug: True/False 
+	  debug: True/False
 	"""
 	_ = LoadingUI(debug=debug)
 
@@ -136,7 +136,7 @@ def startLoadingUI(debug) -> Process:
 	loadingUIProcess.start()
 	return loadingUIProcess
 
-def CheckOneTimeSetupDone(logger) -> bool | None:
+def CheckOneTimeSetupDone(logger) -> bool:
 	"""
 	It checks if the one time setup has been done
 

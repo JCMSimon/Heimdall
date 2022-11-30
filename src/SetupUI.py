@@ -42,13 +42,6 @@ class Setup:
 			(monitor_xd - self.width) / 2,
 			(monitor_yd - self.height) / 2,
 		])
-		self.logger.debugMsg(f"""Window Size:
-xd:{self.width}
-yd:{self.height}
-Window Position:
-x:{(monitor_xd - self.width) / 2}
-y:{(monitor_yd - self.height) / 2}
-""")
 
 	def initDPGThemes(self):
 		with dpg.font_registry():

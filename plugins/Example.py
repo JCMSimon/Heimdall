@@ -1,12 +1,12 @@
 from plugins.lib.Plugin import Plugin
 from plugins.lib.Data import datapoints as dp
 from plugins.lib.Node import Node
-from src.KeyRegister import KeyRegister
+from src.APIRegister import APIRegister
 
 class Example(Plugin):                # Class Name must be the same as the File Name
 	def __init__(self,debug) -> None:
 		self.debug = debug
-		super().__init__(debug=self.debug)
+		super().__init__(debug=self.debug,display=False)
 
 	def getDisplayName(self) -> str:
 		return "Example Plugin" # This shouldnt be a name but rather the input that is wanted. ex: Username
@@ -65,7 +65,9 @@ Tools will include smth like NameMC lookup,nmap etc
 
 If for some reason you want to address a API directly, you can request a API Key from the config like this:
 
+	OLD#OLD#OLD#OLD#OLD
 	apiKeys = KeyRegister(apiKeys=["Dehashed","SkidSearch","SomeOtherSupportedPlatform"])
+	OLD#OLD#OLD#OLD#OLD
 """)
 		testResult = Node("Discord Username",debug=self.debug)
 		testResult.addDataField(dp.username.pinterest,"JCMS")

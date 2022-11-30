@@ -14,7 +14,7 @@ class Core():
 		#TODO later on it should already ask for all plugins to be ran that accept the type that is input
 		#TODO have plugins define a default input type
 		self.logger.debugMsg(f"Searching '{keyword}' as '{datatype}'")
-		self.root = Node(f"Searching '{keyword}' as '{datatype}'",debug=self.debug)
+		self.root = Node(f"ROOT",debug=self.debug)
 		self.root.addDataField(dp._internal.is_root_node,True)
 		self.logger.debugMsg("First search iteration")
 		initialResults = self.pluginRegister.runPlugin(datatype,keyword)

@@ -1,13 +1,13 @@
 from abc import ABC,abstractmethod
 from src.Logger import Logger
-from src.KeyRegister import KeyRegister
 from plugins.lib.Data import datapoints as dp
 class Plugin(ABC):
-	def __init__(self,apiKeys=[],debug=False) -> None:
-		self.debug = debug
-		self.logger = Logger(f"{self.getDisplayName()}",debug=self.debug)
+	def __init__(self,display=False,apiKeys=[],debug=False) -> None:
+		self.logger = Logger(prefix=f"{self.getDisplayName()}",debug=debug)
+		self.display = display
 		if apiKeys:
-			self.apiKeys = KeyRegister().returnKeys(apiKeys)
+			from APIRegister import APIRegister
+			self.apiKeys = APIRegister().returnKeys(apiKeys)
 		super().__init__()
 
 	def debugMsg(self,text) -> None:
@@ -31,11 +31,11 @@ class Plugin(ABC):
 
 	@abstractmethod
 	def getVersion(self) -> str:
-		raise ValueError(f"Plugin with Name '{self.getDisplayName()}' has not defined a Version.")
+		self.logger.infoMsg(f"Plugin with Name '{self.getDisplayName()}' has no version number.")
 
 	@abstractmethod
-	def accepts(self) -> list:
-		return [dp.none]
+	def accepts(self) -> None:
+		pass
 
 	@abstractmethod
 	def run(self) -> list:
