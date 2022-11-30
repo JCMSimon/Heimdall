@@ -6,7 +6,7 @@ from src.APIRegister import APIRegister
 class Example(Plugin):                # Class Name must be the same as the File Name
 	def __init__(self,debug) -> None:
 		self.debug = debug
-		super().__init__(debug=self.debug,display=False)
+		super().__init__(debug=self.debug,display=True)
 
 	def getDisplayName(self) -> str:
 		return "Example Plugin" # This shouldnt be a name but rather the input that is wanted. ex: Username

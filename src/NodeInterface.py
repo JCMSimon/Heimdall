@@ -28,7 +28,6 @@ class NodeInterface():
 		layers[1] = root._children
 		return self.IterateTree(layers)
 
-
 	def IterateTree(self,layers,layerIndex = 1):
 		layerList = []
 		for node in layers[layerIndex]:
@@ -72,6 +71,5 @@ if __name__ == "__main__":
 	child2_2 = Node("c2_2") #layer1
 	child2._children.extend([child2_1,child2_2])
 	test._children.extend([child1,child2])
-
 	node = NodeInterface("none")
 	node.visualize(test)

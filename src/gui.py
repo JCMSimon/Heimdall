@@ -119,11 +119,20 @@ class GUI:
 					default_value=centerText(self.pluginNames[0]),
 					callback=self.typeSelectorCallback,
 					no_arrow_button=True,
-					width=int(self.width / 100 * 95),
+					width=int(self.width / 100 * 95) - 74,
 					pos = [
 						int(self.width / 2) - int(int(self.width / 100 * 95) / 2), # x Axis
 						int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],    # y axis
 					)
+				# reload button
+				self.reloadButton = dpg.add_button(
+					label="Reload",
+					callback=self.reloadPlugins,
+					pos = [
+						int(self.width / 2) - int(int(self.width / 100 * 95) / 2) + int(int(self.width / 100 * 95) - 70) - 4 , # x Axis
+						int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],    # y axis
+					)
+				dpg.bind_item_theme(self.reloadButton,self.submitButtonTheme)
 				self.logger.debugMsg(f"Plugin Names after padding:")
 				for name in centerText(self.pluginNames):
 					self.logger.debugMsg(f"{name}(EOL)")
@@ -179,6 +188,15 @@ class GUI:
 
 	def returnEditor(self):
 		return self.nodeUI
+
+	def reloadPlugins(self):
+		items = [self.searchBar,self.submitButton,self.reloadButton,self.typeSelector]
+		for item in items:
+			dpg.disable_item(item)
+		self.core.reloadPlugins()
+		dpg.configure_item(self.typeSelector,items=centerText(self.core.pluginRegister.getPluginNames()))
+		for item in items:
+			dpg.enable_item(item)
 
 	# Starts GUI
 	def start(self,core):

@@ -26,7 +26,7 @@ class PluginRegister():
 		It reloads the plugins
 		"""
 		self.logger.debugMsg("Reloading Plugins")
-		self.loadPlugins()
+		self.plugins = self.loadPlugins()
 
 	def loadPlugins(self):
 		for (_, _, filenames) in walk("./plugins"):
