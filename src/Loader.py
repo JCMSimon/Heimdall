@@ -1,9 +1,6 @@
 import dearpygui.dearpygui as dpg
 from screeninfo import get_monitors
 
-from src.Logger import Logger
-from src.temp.windows import set_transparent_color
-
 class LoadingUI:
 	"""
 	 LoadingUI for Heimdall
@@ -27,7 +24,7 @@ class LoadingUI:
 		"""
 		dpg.create_context()
 		with dpg.texture_registry():
-			self.width, self.height, _, data = dpg.load_image("./assets/heimdall_text_logo.png")
+			self.width, self.height, _, data = dpg.load_image("./assets/heimdall_picture_logo.png")
 			self.Image = dpg.add_dynamic_texture(self.width, self.height, data,tag="logo")
 		dpg.create_viewport(
 			title="Heimdall",              # Window Title (Also Application Title)
@@ -105,3 +102,11 @@ y:{(monitor_yd - self.height) / 2}
 		Starts the Loading UI
 		"""
 		dpg.start_dearpygui()
+
+if __name__ == "__main__":
+	from Logger import Logger
+	from temp.windows import set_transparent_color
+	test = LoadingUI(debug=True)
+else:
+	from src.Logger import Logger
+	from src.temp.windows import set_transparent_color
