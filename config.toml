@@ -1,13 +1,7 @@
 [API]
 
-[API.testkey]
-key = "blablabla"
-
-[API.dehashed]
-key = "ffawfw"
-
-[API.hash]
-key = ""
+[API.app]
+key = "key"
 
 [PROXYLIST]
-file = "proxy.txt"
+file = "proxlist.txt"

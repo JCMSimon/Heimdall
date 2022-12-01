@@ -133,7 +133,7 @@ class Setup:
 		settings["ignorePreRequestWarnings"] = dpg.get_value(self.warnUpdate)
 		settings["autoUpdate"] = dpg.get_value(self.autoCheckUpdate)
 		if settings["autoUpdate"]:
-			self.logger.infoMsg("Restart the Application to check for updates")
+			self.logger.infoMsg("Auto updates enabled. Restart the Application to check for updates")
 		settings["oneTimeSetupDone"] = True
 		with open("updateconfig.json","w") as file:
 			jsondump(settings,file,indent=4)
