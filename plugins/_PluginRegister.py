@@ -16,6 +16,9 @@ class PluginRegister():
 		self.plugins = self.loadPlugins()
 
 	def getPluginNames(self):
+		if not self.plugins.keys():
+			self.logger.errorMsg("No working Plugins. Shutting down.")
+			exit()
 		return [name for name in self.plugins.keys() if self.plugins[name]["display"]]
 
 	def getPluginNamesByType(self,datatype):
@@ -25,7 +28,7 @@ class PluginRegister():
 		"""
 		It reloads the plugins
 		"""
-		self.logger.debugMsg("Reloading Plugins")
+		self.logger.infoMsg("Reloading Plugins")
 		self.plugins = self.loadPlugins()
 
 	def loadPlugins(self):
@@ -36,12 +39,14 @@ class PluginRegister():
 		for plugin in files:
 			plugin = plugin.replace(".py","")
 			pluginClassInstance = self.getPluginInstance(plugin)
-			plugins[plugin] = {
-				"displayName":pluginClassInstance.getDisplayName(),
-				"version":pluginClassInstance.getVersion(),
-				"accepts":pluginClassInstance.accepts(),
-				"display":pluginClassInstance.display,
-			}
+			if pluginClassInstance:
+				plugins[plugin] = {
+					"displayName":pluginClassInstance.getDisplayName(),
+					"version":pluginClassInstance.getVersion(),
+					"accepts":pluginClassInstance.accepts(),
+					"display":pluginClassInstance.display,
+				}
+				self.logger.infoMsg(f"{pluginClassInstance.getDisplayName()} v{pluginClassInstance.getVersion()} loaded succesfully!")
 		return plugins
 
 	def runPlugin(self,pluginName,arg) -> list:
@@ -64,5 +69,5 @@ class PluginRegister():
 		try:
 			return pluginClass(debug=self.debug)
 		except TypeError:
-			self.logger.errorMsg(f"Plugin {pluginName} is not working.")
+			self.logger.errorMsg(f"{pluginName} could not be loaded!")
 			return
