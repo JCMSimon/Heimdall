@@ -97,6 +97,7 @@ class GUI:
 				self.menubar = dpg.add_menu_bar()
 				dpg.add_menu_item(label="Load",parent=self.menubar,callback=self.LoadButtonCallback)
 				dpg.add_menu_item(label="Save",parent=self.menubar,callback=self.LoadButtonCallback)
+				dpg.add_menu_item(label="Export",parent=self.menubar,callback=self.LoadButtonCallback,indent=975)
 
 			#Search Window
 			with dpg.window(
@@ -221,7 +222,7 @@ class GUI:
 	def loadFile(self,buttonID):
 		filename = dpg.get_item_label(buttonID)
 		dpg.delete_item(self.fileSelector)
-		path = f"./saves/{filename}"
+		path = f"./saves/{filename}.pickle"
 		print(path)
 
 	def LoadButtonCallback(self):
