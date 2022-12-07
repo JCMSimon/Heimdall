@@ -1,6 +1,6 @@
 import dearpygui.dearpygui as dpg
+from os import walk
 
-from src.Logger import Logger
 class GUI:
 	def __init__(self,pluginNames,debug=False) -> None:
 		self.logger = Logger("GUI",debug=debug)
@@ -29,12 +29,15 @@ class GUI:
 
 	def initDPGThemes(self):
 		with dpg.font_registry():
-			self.titleFont = dpg.add_font("assets/Cousine-Regular.ttf", 25)
+			self.titleFont = dpg.add_font("assets/Cousine-Regular.ttf", 30)
 			self.searchFont = dpg.add_font("assets/Cousine-Regular.ttf", 20)
 		with dpg.theme() as mainWindowStyling:
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_style(dpg.mvStyleVar_WindowTitleAlign,0.5,0.5)
 				dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize,0)
+				dpg.add_theme_style(dpg.mvStyleVar_CellPadding,0,0)
+				dpg.add_theme_style(dpg.mvStyleVar_FramePadding,0,0)
+				dpg.add_theme_style(dpg.mvStyleVar_WindowPadding,0,0)
 				dpg.add_theme_color(dpg.mvThemeCol_TitleBgActive,(90,0,170,100))
 				dpg.add_theme_color(dpg.mvThemeCol_TitleBg,(90,0,170,100))
 				dpg.add_theme_color(dpg.mvThemeCol_TitleBgCollapsed,(90,0,170,100))
@@ -91,6 +94,10 @@ class GUI:
 					minimap=True,
 					minimap_location=dpg.mvNodeMiniMap_Location_TopLeft
 				)
+				self.menubar = dpg.add_menu_bar()
+				dpg.add_menu_item(label="Load",parent=self.menubar,callback=self.LoadButtonCallback)
+				dpg.add_menu_item(label="Save",parent=self.menubar,callback=self.LoadButtonCallback)
+
 			#Search Window
 			with dpg.window(
 				tag="searchWindow",
@@ -183,6 +190,43 @@ class GUI:
 			dpg.enable_item(self.searchBar)
 			dpg.enable_item(self.submitButton)
 
+	def filePopup(self,path,extension,label="File Selector",allowNew=False):
+		for (_, _, filenames) in walk(path):
+			files = [filename for filename in filenames if filename.endswith(extension)]
+			break
+		if files:
+			self.fileSelector = dpg.add_window(
+				label=label,
+				modal=True,
+				min_size=[self.width / 2,self.height / 2],
+				max_size=[self.width / 2 * 1.5,self.height / 2],
+				pos=[self.width / 2 - (self.width / 2 / 2),self.height / 2 - (self.height / 2 / 2)],
+				no_collapse=True,
+				no_move=True,
+				no_resize=True,
+				)
+			if allowNew:
+				dpg.add_input_text(hint=centerText("New filename here",width=34),            # Text that is in the Box when nothing is typed
+					on_enter=True,
+					callback= lambda : print("yo"),
+					width=self.width / 2,
+					parent=self.fileSelector
+				)
+			for filename in files:
+				button = dpg.add_button(parent=self.fileSelector,label=str(filename).split(".")[0],width=(self.width / 2),callback=self.loadFile)
+				dpg.bind_item_theme(button,self.submitButtonTheme)
+		else:
+			self.logger.infoMsg("No valid Files Found")
+
+	def loadFile(self,buttonID):
+		filename = dpg.get_item_label(buttonID)
+		dpg.delete_item(self.fileSelector)
+		path = f"./saves/{filename}"
+		print(path)
+
+	def LoadButtonCallback(self):
+		self.filePopup("./saves",".pickle","Choose your Project File",allowNew=True)
+
 	def executeSearch(self,searchTerm):
 		self.core.search(self.dataType,searchTerm)
 
@@ -233,7 +277,7 @@ class GUI:
 				dpg.set_viewport_pos([new_x_position, new_y_position])
 
 # Used to center text in typeSelector
-def centerText(itemList):
+def centerText(itemList,width=92):
 	"""
 	It takes a list of strings and centers them
 
@@ -244,11 +288,18 @@ def centerText(itemList):
 	  A list of strings that are centered.
 	"""
 	if type(itemList) == str:
-		return f"{itemList:^92}"
+		return f"{itemList:^{width}}"
 	elif type(itemList) == list:
 		# Sort List
 		itemList.sort(key=len)
 		newItemList = []
 		for item in itemList: #what the fuck is this stuff to make text centered omg xd
-			newItemList.append(f"{item:^92}")
+			newItemList.append(f"{item:^{width}}")
 		return newItemList
+
+if __name__ == "__main__":
+	from Logger import Logger
+	test = GUI(["tseting","tetset"],debug=True)
+	test.start(None)
+else:
+	from src.Logger import Logger

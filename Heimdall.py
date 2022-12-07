@@ -75,6 +75,8 @@ def CheckUpdateConfig() -> bool:
 	Returns:
 	  a boolean value.
 	"""
+	if not os.path.isdir("saves"):
+		os.system("mkdir saves")
 	if not os.path.isfile("updateconfig.json"):
 		with open("updateconfig.json","w") as file:
 			time = dt.now().replace(microsecond=0).isoformat()

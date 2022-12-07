@@ -4,6 +4,12 @@ class NodeInterface():
 	def __init__(self,nodeEditor,debug=False) -> None:
 		self.logger = Logger("NodeInterface",debug=debug)
 		self.NE = nodeEditor
+		self.initTheme()
+
+	def initTheme(self):
+		with dpg.theme() as self.nodeTheme:
+			with dpg.theme_component(dpg.mvAll):
+				dpg.add_theme_style(dpg.mvNodeStyleVar_NodeCornerRounding,0)
 
 	def visualize(self,root):
 		layers = self.splitIntoLayers(root)
