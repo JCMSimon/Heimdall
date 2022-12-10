@@ -5,6 +5,7 @@ from src.Logger import Logger
 from plugins.lib.Data import datapoints as dp
 from plugins.lib.Node import Node
 import pickle
+from dearpygui.dearpygui import get_item_children,delete_item
 
 class Core():
 	def __init__(self,pluginRegister,nodeEditor,debug=False) -> None:
@@ -60,6 +61,8 @@ class Core():
 		self.root = None
 		with open(path,"rb") as picklefile:
 			self.root = pickle.load(picklefile)
+		for node in get_item_children(self.nodeInterFace.NE)[1]:
+			delete_item(node)
 		self.nodeInterFace.visualize(self.root)
 
 
