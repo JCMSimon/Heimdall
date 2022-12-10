@@ -43,10 +43,10 @@ class GUI:
 				dpg.add_theme_color(dpg.mvThemeCol_TitleBgCollapsed,(90,0,170,100))
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered,(255,0,0,100))
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive,(255,0,0,255))
-				dpg.bind_theme(mainWindowStyling)
-				dpg.bind_font(self.titleFont)
+			with dpg.theme_component(dpg.mvNodeEditor):
+				dpg.add_theme_style(dpg.mvNodeStyleVar_GridSpacing,100)
 		with dpg.theme() as self.submitButtonTheme:
-			with dpg.theme_component(dpg.mvAll):
+			with dpg.theme_component(dpg.mvNode):
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered,(90,0,170,255))
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive,(120,0,200,255))
 				dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered,(90,0,170,255))
