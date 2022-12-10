@@ -1,7 +1,10 @@
+import string
+from time import strftime
 from src.NodeInterface import NodeInterface
 from src.Logger import Logger
 from plugins.lib.Data import datapoints as dp
 from plugins.lib.Node import Node
+import pickle
 
 class Core():
 	def __init__(self,pluginRegister,nodeEditor,debug=False) -> None:
@@ -37,3 +40,42 @@ class Core():
 
 	def reloadPlugins(self):
 		self.pluginRegister.reload()
+
+	def save(self,filename):
+		try:
+			filename = format_filename(filename)
+			if filename == "":
+				filename = strftime("%Y%m%d-%H%M%S")
+			path = f"./saves/{filename}.pickle"
+			self.logger.debugMsg(f"Saving to {path}")
+			with open(path,"wb") as picklefile:
+				pickle.dump(self.root,picklefile)
+		except AttributeError:
+			self.logger.infoMsg("No data to save")
+
+	def load(self,filename):
+		filename = format_filename(filename)
+		path = f"./saves/{filename}.pickle"
+		self.logger.debugMsg(f"Loading from {path}")
+		self.root = None
+		with open(path,"rb") as picklefile:
+			self.root = pickle.load(picklefile)
+		self.nodeInterFace.visualize(self.root)
+
+
+# Thanks to https://gist.github.com/seanh/93666 !
+def format_filename(s):
+    """Take a string and return a valid filename constructed from the string.
+Uses a whitelist approach: any characters not present in valid_chars are
+removed. Also spaces are replaced with underscores.
+
+Note: this method may produce invalid filenames such as ``, `.` or `..`
+When I use this method I prepend a date string like '2009_01_15_19_46_32_'
+and append a file extension like '.txt', so I avoid the potential of using
+an invalid filename.
+
+"""
+    valid_chars = "-_ %s%s" % (string.ascii_letters, string.digits)
+    filename = ''.join(c for c in s if c in valid_chars)
+    filename = filename.replace(' ','_') # I don't like spaces in filenames.
+    return filename

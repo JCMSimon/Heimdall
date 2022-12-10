@@ -1,7 +1,5 @@
-import string
 import dearpygui.dearpygui as dpg
 from os import walk
-from time import strftime
 
 class GUI:
 	def __init__(self,pluginNames,debug=False) -> None:
@@ -99,7 +97,7 @@ class GUI:
 				self.menubar = dpg.add_menu_bar()
 				dpg.add_menu_item(label="Load",parent=self.menubar,callback=self.LoadButtonCallback)
 				dpg.add_menu_item(label="Save",parent=self.menubar,callback=self.SaveButtonCallback)
-				dpg.add_menu_item(label="Export",parent=self.menubar,callback=self.LoadButtonCallback,indent=975)
+				dpg.add_menu_item(label="Export",parent=self.menubar,callback=self.openExportMenu,indent=975)
 
 			#Search Window
 			with dpg.window(
@@ -213,8 +211,7 @@ class GUI:
 					on_enter=True,
 					callback=self.saveToFile,
 					width=self.width / 2,
-					parent=self.fileSelector,
-
+					parent=self.fileSelector
 				)
 			for filename in files:
 				if allowNew:
@@ -231,24 +228,33 @@ class GUI:
 		else:
 			filename = dpg.get_item_label(buttonID)
 		dpg.delete_item(self.fileSelector)
-		if filename == "":
-			filename = strftime("%Y%m%d-%H%M%S")
-		else:
-			filename = format_filename(filename)
-		path = f"./saves/{filename}.pickle"
-		self.logger.debugMsg(f"Saving to {path}")
+		self.core.save(filename)
 
 	def loadFile(self,buttonID):
 		filename = dpg.get_item_label(buttonID)
 		dpg.delete_item(self.fileSelector)
-		path = f"./saves/{filename}.pickle"
-		self.logger.debugMsg(f"Loading from {path}")
+		self.core.load(filename)
 
 	def LoadButtonCallback(self):
 		self.filePopup("./saves",".pickle","Choose your Project File")
 
 	def SaveButtonCallback(self):
 		self.filePopup("./saves",".pickle","Choose your Project File",allowNew=True)
+
+	def openExportMenu(self):
+		with dpg.window(
+				label="Export",
+				popup=True,
+				min_size=[int(self.width / 4),int(self.height / 10)],
+				max_size=[int(self.width / 4 * 1.5),int(self.height / 10)],
+				pos=[self.width / 2 - (self.width / 4 / 2),self.height / 2 - int(self.height / 10 / 2) ],
+				no_collapse=True,
+				no_move=True,
+				no_resize=True,
+				) as temppopup:
+			dpg.add_text("Soon!",indent=100)
+			okbutton = dpg.add_button(label="OK",indent=120,callback=lambda : dpg.delete_item(temppopup))
+			dpg.bind_item_theme(okbutton,self.submitButtonTheme)
 
 	def executeSearch(self,searchTerm):
 		self.core.search(self.dataType,searchTerm)
@@ -320,22 +326,6 @@ def centerText(itemList,width=92):
 			newItemList.append(f"{item:^{width}}")
 		return newItemList
 
-# Thanks to https://gist.github.com/seanh/93666 !
-def format_filename(s):
-    """Take a string and return a valid filename constructed from the string.
-Uses a whitelist approach: any characters not present in valid_chars are
-removed. Also spaces are replaced with underscores.
-
-Note: this method may produce invalid filenames such as ``, `.` or `..`
-When I use this method I prepend a date string like '2009_01_15_19_46_32_'
-and append a file extension like '.txt', so I avoid the potential of using
-an invalid filename.
-
-"""
-    valid_chars = "-_ %s%s" % (string.ascii_letters, string.digits)
-    filename = ''.join(c for c in s if c in valid_chars)
-    filename = filename.replace(' ','_') # I don't like spaces in filenames.
-    return filename
 
 if __name__ == "__main__":
 	from Logger import Logger
