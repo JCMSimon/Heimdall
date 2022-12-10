@@ -26,7 +26,6 @@ class NodeInterface():
 						with dpg.node(parent=self.NE,label=f"{node.data['title']}",pos=[100,100 * index]) as dpgNode:
 							with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Static):
 								dpg.add_text(value)
-						self.logger.infoMsg(dpg.get_item_rect_size(dpgNode)) #not working sadge
 				self.logger.debugMsg("##########")
 
 	def splitIntoLayers(self,root):

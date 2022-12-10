@@ -80,7 +80,7 @@ def CheckUpdateConfig() -> bool:
 	if not os.path.isfile("updateconfig.json"):
 		with open("updateconfig.json","w") as file:
 			time = dt.now().replace(microsecond=0).isoformat()
-			file.write(f"{{\n\t\"lastUpdated\": \"{time}\",\n\t\"ignoreMinorUpdates\": false,\n\t\"ignoreMajorUpdates\": false,\n\t\"ignorePreRequestWarnings\": false,\n\t\"autoUpdate\": false,\n\t\"oneTimeSetupDone\": false\n}}")
+			file.write(f"{{\n\t\"lastUpdated\": \"{time}\",\n\t\"ignoreMinorUpdates\": false,\n\t\"ignoreMajorUpdates\": false,\n\t\"ignorePreRequestWarnings\": false,\n\t\"autoUpdate\": false,\n\t\"oneTimeSetupDone\": false,\n\t\"autoUpdatePlugins\": false\n}}")
 			return False
 	return True
 

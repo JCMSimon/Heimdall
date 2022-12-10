@@ -65,7 +65,6 @@ class Core():
 			delete_item(node)
 		self.nodeInterFace.visualize(self.root)
 
-
 # Thanks to https://gist.github.com/seanh/93666 !
 def format_filename(s):
     """Take a string and return a valid filename constructed from the string.

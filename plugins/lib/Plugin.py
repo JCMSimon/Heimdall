@@ -22,8 +22,9 @@ class Plugin(ABC):
 	def errorMsg(self,text) -> None:
 		self.logger.errorMsg(text)
 
-	def checkUpdate(self) -> None:
+	def update(self) -> bool:
 		self.logger.infoMsg(f"Plugin with Name '{self.getDisplayName()}' has no update check.")
+		return False
 
 	@abstractmethod
 	def getDisplayName(self) -> str:

@@ -8,7 +8,7 @@ from src.Logger import Logger
 class Setup:
 	def __init__(self,debug) -> None:
 		self.logger = Logger("SetupUI",debug=debug)
-		self.height = 190
+		self.height = 230
 		self.width = 280
 		self.initDPG()
 		self.initDPGThemes()
@@ -84,7 +84,7 @@ class Setup:
 				dpg.add_table_column(parent="table")
 				dpg.add_table_column(default_sort=True, parent="table")
 				with dpg.table_row(parent="table"):
-					dpg.add_text("Auto Check for Update")
+					dpg.add_text("Auto Check for update")
 					self.autoCheckUpdate = dpg.add_checkbox()
 				with dpg.table_row(parent="table"):
 					dpg.add_text("Warn before updating")
@@ -95,6 +95,9 @@ class Setup:
 				with dpg.table_row(parent="table"):
 					dpg.add_text("Ignore minor updates")
 					self.minorUpdates = dpg.add_checkbox()
+				with dpg.table_row(parent="table"):
+					dpg.add_text("Auto Plugin Update")
+					self.pluginUpdates = dpg.add_checkbox()
 			doneButton = dpg.add_button(width=self.width * 0.94,label="DONE",callback=self.save)
 			dpg.bind_item_theme(doneButton,self.doneButton)
 			with dpg.handler_registry():   # Make dragging the Window possible

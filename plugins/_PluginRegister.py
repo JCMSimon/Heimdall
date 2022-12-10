@@ -1,5 +1,6 @@
 from os import walk
 from src.Logger import Logger
+from json import load as jsonload
 class PluginRegister():
 	"""
 	Plugin Register for Heimdall
@@ -11,6 +12,7 @@ class PluginRegister():
 		Args:
 		  debug: If set to True, the logger will print out debug messages. Defaults to False
 		"""
+		self.pluginsUpdated = False
 		self.debug = debug
 		self.logger = Logger("PluginRegister",debug=self.debug)
 		self.plugins = self.loadPlugins()
@@ -36,9 +38,15 @@ class PluginRegister():
 			files = [filename for filename in filenames if not filename.startswith("_")]
 			break
 		plugins = {}
+		updatedPlugins = []
 		for plugin in files:
 			plugin = plugin.replace(".py","")
 			pluginClassInstance = self.getPluginInstance(plugin)
+			with open("updateconfig.json","r") as file:
+				if jsonload(file)["autoUpdatePlugins"]:
+					if pluginClassInstance.update():
+						updatedPlugins.append(pluginClassInstance.getDisplayName())
+							#if the update was succesful and useful
 			if pluginClassInstance:
 				plugins[plugin] = {
 					"displayName":pluginClassInstance.getDisplayName(),
@@ -47,6 +55,8 @@ class PluginRegister():
 					"display":pluginClassInstance.display,
 				}
 				self.logger.infoMsg(f"{pluginClassInstance.getDisplayName()} v{pluginClassInstance.getVersion()} loaded succesfully!")
+		if updatedPlugins:
+			self.logger.infoMsg(f"While loading the following plugins were Updated: {', '.join(updatedPlugins)}. A restart is suggested.")
 		return plugins
 
 	def runPlugin(self,pluginName,arg) -> list:
