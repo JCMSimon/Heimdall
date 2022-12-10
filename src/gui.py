@@ -1,5 +1,7 @@
+import string
 import dearpygui.dearpygui as dpg
 from os import walk
+from time import strftime
 
 class GUI:
 	def __init__(self,pluginNames,debug=False) -> None:
@@ -96,7 +98,7 @@ class GUI:
 				)
 				self.menubar = dpg.add_menu_bar()
 				dpg.add_menu_item(label="Load",parent=self.menubar,callback=self.LoadButtonCallback)
-				dpg.add_menu_item(label="Save",parent=self.menubar,callback=self.LoadButtonCallback)
+				dpg.add_menu_item(label="Save",parent=self.menubar,callback=self.SaveButtonCallback)
 				dpg.add_menu_item(label="Export",parent=self.menubar,callback=self.LoadButtonCallback,indent=975)
 
 			#Search Window
@@ -195,37 +197,57 @@ class GUI:
 		for (_, _, filenames) in walk(path):
 			files = [filename for filename in filenames if filename.endswith(extension)]
 			break
-		if files:
+		if files or allowNew:
 			self.fileSelector = dpg.add_window(
 				label=label,
 				modal=True,
-				min_size=[self.width / 2,self.height / 2],
-				max_size=[self.width / 2 * 1.5,self.height / 2],
+				min_size=[int(self.width / 2),int(self.height / 2)],
+				max_size=[int(self.width / 2 * 1.5),int(self.height / 2)],
 				pos=[self.width / 2 - (self.width / 2 / 2),self.height / 2 - (self.height / 2 / 2)],
 				no_collapse=True,
 				no_move=True,
 				no_resize=True,
 				)
 			if allowNew:
-				dpg.add_input_text(hint=centerText("New filename here",width=34),            # Text that is in the Box when nothing is typed
+				self.fileNameField = dpg.add_input_text(hint=centerText("New filename here",width=34),            # Text that is in the Box when nothing is typed
 					on_enter=True,
-					callback= lambda : print("yo"),
+					callback=self.saveToFile,
 					width=self.width / 2,
-					parent=self.fileSelector
+					parent=self.fileSelector,
+
 				)
 			for filename in files:
-				button = dpg.add_button(parent=self.fileSelector,label=str(filename).split(".")[0],width=(self.width / 2),callback=self.loadFile)
+				if allowNew:
+					button = dpg.add_button(parent=self.fileSelector,label=str(filename).split(".")[0],width=(self.width / 2),callback=self.saveToFile)
+				else:
+					button = dpg.add_button(parent=self.fileSelector,label=str(filename).split(".")[0],width=(self.width / 2),callback=self.loadFile)
 				dpg.bind_item_theme(button,self.submitButtonTheme)
 		else:
 			self.logger.infoMsg("No valid Files Found")
+
+	def saveToFile(self,buttonID):
+		if buttonID == self.fileNameField:
+			filename = dpg.get_value(self.fileNameField)
+		else:
+			filename = dpg.get_item_label(buttonID)
+		dpg.delete_item(self.fileSelector)
+		if filename == "":
+			filename = strftime("%Y%m%d-%H%M%S")
+		else:
+			filename = format_filename(filename)
+		path = f"./saves/{filename}.pickle"
+		self.logger.debugMsg(f"Saving to {path}")
 
 	def loadFile(self,buttonID):
 		filename = dpg.get_item_label(buttonID)
 		dpg.delete_item(self.fileSelector)
 		path = f"./saves/{filename}.pickle"
-		print(path)
+		self.logger.debugMsg(f"Loading from {path}")
 
 	def LoadButtonCallback(self):
+		self.filePopup("./saves",".pickle","Choose your Project File")
+
+	def SaveButtonCallback(self):
 		self.filePopup("./saves",".pickle","Choose your Project File",allowNew=True)
 
 	def executeSearch(self,searchTerm):
@@ -297,6 +319,23 @@ def centerText(itemList,width=92):
 		for item in itemList: #what the fuck is this stuff to make text centered omg xd
 			newItemList.append(f"{item:^{width}}")
 		return newItemList
+
+# Thanks to https://gist.github.com/seanh/93666 !
+def format_filename(s):
+    """Take a string and return a valid filename constructed from the string.
+Uses a whitelist approach: any characters not present in valid_chars are
+removed. Also spaces are replaced with underscores.
+
+Note: this method may produce invalid filenames such as ``, `.` or `..`
+When I use this method I prepend a date string like '2009_01_15_19_46_32_'
+and append a file extension like '.txt', so I avoid the potential of using
+an invalid filename.
+
+"""
+    valid_chars = "-_ %s%s" % (string.ascii_letters, string.digits)
+    filename = ''.join(c for c in s if c in valid_chars)
+    filename = filename.replace(' ','_') # I don't like spaces in filenames.
+    return filename
 
 if __name__ == "__main__":
 	from Logger import Logger
