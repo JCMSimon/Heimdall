@@ -14,7 +14,7 @@ class Logger():
 		  prefix: The prefix of the logger.
 		  debug: If set to True, it will print out the debug messages. Defaults to False
 		"""
-		self.debug = debug
+		self._debug = debug
 		self.prefix = prefix
 		initColors()
 
@@ -25,7 +25,7 @@ class Logger():
 		Args:
 		  text: The text to be printed
 		"""
-		if self.debug:
+		if self._debug:
 			print(f"{Fore.BLUE}[{self.getTimeStamp()} - {self.prefix} - DEBUG] {text}{Style.RESET_ALL}")
 
 	def infoMsg(self,text):
