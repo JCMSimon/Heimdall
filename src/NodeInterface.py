@@ -11,19 +11,21 @@ class NodeInterface():
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_style(dpg.mvNodeStyleVar_NodeCornerRounding,0)
 
-	def convert(self,root):
+	def visualize(self,root):
 		nonDPGLayers = self.splitIntoLayers(root)
-		self.layerDPGNodes = self.convertLayersToDPG(nonDPGLayers)
-		dpg.set_frame_callback(dpg.get_frame_count() + 1,self.visualize)
+		layerDPGNodes = self.convertLayersToDPG(nonDPGLayers)
+		dpg.split_frame()
+		layerHeights = self.getLayerHeights(layerDPGNodes)
+		print(layerHeights)
 
-	def visualize(self):
+	def getLayerHeights(self,layerDPGNodes):
 		layerHeights = {}
-		for layerIndex in self.layerDPGNodes:
+		for layerIndex in layerDPGNodes:
 			heights = set()
-			for node in self.layerDPGNodes[layerIndex]:
+			for node in layerDPGNodes[layerIndex]:
 				heights.add(dpg.get_item_rect_max(node)[1])
 			layerHeights[layerIndex] = max(heights)
-		print(layerHeights)
+		return layerHeights
 
 	def convertLayersToDPG(self,layers):
 		dpgLayers = {}

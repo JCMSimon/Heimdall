@@ -38,7 +38,7 @@ class Core():
 				self.todo.extend(results)
 				self.todo.remove(node)
 		# Visualize whole Tree
-		self.nodeInterFace.convert(self.root)
+		self.nodeInterFace.visualize(self.root)
 
 	def reloadPlugins(self):
 		self.pluginRegister.reload()
