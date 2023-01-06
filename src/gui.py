@@ -192,6 +192,10 @@ class GUI:
 			dpg.enable_item(self.submitButton)
 
 	def filePopup(self,path,extension,label="File Selector",allowNew=False):
+		if allowNew:
+			self.FilePopupType = "save"
+		else:
+			self.FilePopupType = "load"
 		for (_, _, filenames) in walk(path):
 			files = [filename for filename in filenames if filename.endswith(extension)]
 			break
@@ -205,6 +209,7 @@ class GUI:
 				no_collapse=True,
 				no_move=True,
 				no_resize=True,
+				no_scrollbar=False
 				)
 			if allowNew:
 				self.fileNameField = dpg.add_input_text(hint=centerText("New filename here",width=34),            # Text that is in the Box when nothing is typed
@@ -215,9 +220,13 @@ class GUI:
 				)
 			for filename in files:
 				if allowNew:
-					button = dpg.add_button(parent=self.fileSelector,label=str(filename).split(".")[0],width=(self.width / 2),callback=self.saveToFile)
+					button = dpg.add_button(parent=self.fileSelector,label=str(filename).split(".")[0],width=(self.width / 2 * 0.89),callback=self.saveToFile)
+					dpg.split_frame()
+					deletebutton = dpg.add_button(parent=self.fileSelector,label="DEL",width=(self.width / 2 * 0.09),pos=[dpg.get_item_width(button),dpg.get_item_pos(button)[1]],callback=self.deleteFile)
 				else:
-					button = dpg.add_button(parent=self.fileSelector,label=str(filename).split(".")[0],width=(self.width / 2),callback=self.loadFile)
+					button = dpg.add_button(parent=self.fileSelector,label=str(filename).split(".")[0],width=(self.width / 2 * 0.89),callback=self.loadFile)
+					dpg.split_frame()
+					deletebutton = dpg.add_button(parent=self.fileSelector,label="DEL",width=(self.width / 2 * 0.09),pos=[dpg.get_item_width(button),dpg.get_item_pos(button)[1]],callback=self.deleteFile)
 				dpg.bind_item_theme(button,self.submitButtonTheme)
 		else:
 			self.logger.infoMsg("No valid Files Found")
@@ -229,6 +238,20 @@ class GUI:
 			filename = dpg.get_item_label(buttonID)
 		dpg.delete_item(self.fileSelector)
 		self.core.save(filename)
+
+	def deleteFile(self,buttonID):
+		filename = dpg.get_item_label(buttonID - 1)
+		if self.core.deleteSave(filename):
+			dpg.delete_item(buttonID - 1)
+			dpg.delete_item(buttonID)
+			dpg.delete_item(self.fileSelector)
+			dpg.split_frame()
+			if self.FilePopupType == "load":
+				print("test")
+				self.LoadButtonCallback()
+			else:
+				print("test 2")
+				self.SaveButtonCallback()
 
 	def loadFile(self,buttonID):
 		filename = dpg.get_item_label(buttonID)
