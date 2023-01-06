@@ -78,4 +78,4 @@ class Example(Plugin):                # Class Name must be the same as the File 
 		imageResult.addDataField(dp.username.instagram,"JCMS")
 		imageResult.addDataField(dp.body.eye_color,"blue")
 		imageResult.addImage(dp.image.generic,"https://pbs.twimg.com/profile_images/1270048477205200908/yS0f43oV_400x400.jpg")
-		return [testResult] * 100
+		return [testResult]

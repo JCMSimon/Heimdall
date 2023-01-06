@@ -42,11 +42,6 @@ class PluginRegister():
 		for plugin in files:
 			plugin = plugin.replace(".py","")
 			pluginClassInstance = self.getPluginInstance(plugin)
-			with open("updateconfig.json","r") as file:
-				if jsonload(file)["autoUpdatePlugins"]:
-					if pluginClassInstance.update():
-						updatedPlugins.append(pluginClassInstance.getDisplayName())
-							#if the update was succesful and useful
 			if pluginClassInstance:
 				plugins[plugin] = {
 					"displayName":pluginClassInstance.getDisplayName(),

@@ -43,15 +43,15 @@ class GUI:
 				dpg.add_theme_color(dpg.mvThemeCol_TitleBgCollapsed,(90,0,170,100))
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered,(255,0,0,100))
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive,(255,0,0,255))
-			with dpg.theme_component(dpg.mvNodeEditor):
-				dpg.add_theme_style(dpg.mvNodeStyleVar_GridSpacing,100)
 		with dpg.theme() as self.submitButtonTheme:
-			with dpg.theme_component(dpg.mvNode):
+			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered,(90,0,170,255))
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive,(120,0,200,255))
 				dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered,(90,0,170,255))
 				dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered,(90,0,170,255))
 				dpg.add_theme_color(dpg.mvThemeCol_HeaderActive,(120,0,200,255))
+		dpg.bind_theme(mainWindowStyling)
+		dpg.bind_font(self.titleFont)
 
 	def initMainWindow(self):
 		with dpg.window(
@@ -288,6 +288,7 @@ class GUI:
 		It destroys the context of the GUI
 		"""
 		dpg.destroy_context()
+		# exit(0)
 
 	# Function to handle dragging the Window
 	# Thanks to https://github.com/bandit-masked
