@@ -14,13 +14,16 @@ class NodeInterface():
 	def convert(self,root):
 		nonDPGLayers = self.splitIntoLayers(root)
 		self.layerDPGNodes = self.convertLayersToDPG(nonDPGLayers)
-		print(self.layerDPGNodes)
+		dpg.set_frame_callback(dpg.get_frame_count() + 1,self.visualize)
 
 	def visualize(self):
-		if self.layerDPGNodes:
-			for key, value in self.layerDPGNodes.items():
-				for element in value:
-					print(dpg.get_item_configuration(element))
+		layerHeights = {}
+		for layerIndex in self.layerDPGNodes:
+			heights = set()
+			for node in self.layerDPGNodes[layerIndex]:
+				heights.add(dpg.get_item_rect_max(node)[1])
+			layerHeights[layerIndex] = max(heights)
+		print(layerHeights)
 
 	def convertLayersToDPG(self,layers):
 		dpgLayers = {}
