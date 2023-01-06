@@ -18,14 +18,14 @@ class Core():
 		#TODO later on it should already ask for all plugins to be ran that accept the type that is input
 		#TODO have plugins define a default input type
 		self.logger.debugMsg(f"Searching '{keyword}' as '{datatype}'")
+		# Create root node
 		self.root = Node(f"ROOT",debug=self.debug)
 		self.root.addDataField(dp._internal.is_root_node,True)
-		self.logger.debugMsg("First search iteration")
+		# First Search
 		initialResults = self.pluginRegister.runPlugin(datatype,keyword)
-		self.logger.debugMsg(f"Results: {initialResults}")
-		self.logger.debugMsg(f"Adding results to root node")
 		self.root._children.extend(initialResults)
 		self.todo = initialResults
+		# Recursive search
 		while self.todo:
 			for node in self.todo:
 				for dataField in node.data["data"]: # this might be wrong syntax. it should loop through data fields
@@ -37,7 +37,9 @@ class Core():
 				node._children.extend(results)
 				self.todo.extend(results)
 				self.todo.remove(node)
-		self.nodeInterFace.visualize(self.root)
+		# Visualize whole Tree
+		self.nodeInterFace.convert(self.root)
+		self.nodeInterFace.visualize()
 
 	def reloadPlugins(self):
 		self.pluginRegister.reload()

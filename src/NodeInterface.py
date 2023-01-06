@@ -11,21 +11,30 @@ class NodeInterface():
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_style(dpg.mvNodeStyleVar_NodeCornerRounding,0)
 
-	def visualize(self,root):
-		layers = self.splitIntoLayers(root)
-		self.logger.debugMsg("##########")
-		self.logger.debugMsg(layers)
+	def convert(self,root):
+		nonDPGLayers = self.splitIntoLayers(root)
+		self.layerDPGNodes = self.convertLayersToDPG(nonDPGLayers)
+		print(self.layerDPGNodes)
+
+	def visualize(self):
+		if self.layerDPGNodes:
+			for key, value in self.layerDPGNodes.items():
+				for element in value:
+					print(dpg.get_item_configuration(element))
+
+	def convertLayersToDPG(self,layers):
+		dpgLayers = {}
 		for index in range(0,len(layers)):
-			self.logger.debugMsg(layers[index])
+			dpgLayers[index] = []
 			for node in layers[index]:
-				self.logger.debugMsg(node)
-				self.logger.debugMsg(node.data["title"])
 				for field in node.data["data"]:
 					for key,value in field.items():
-						self.logger.debugMsg(f"{key},{value}")
-						with dpg.node(parent=self.NE,label=f"{node.data['title']}",pos=[100,100 * index]) as dpgNode:
+						with dpg.node(parent=self.NE,label=f"{node.data['title']}") as node:
 							with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Static):
 								dpg.add_text(value)
+						dpgLayers[index].append(node)
+		return dpgLayers
+
 
 	def splitIntoLayers(self,root):
 		layers = {0:[root]}
