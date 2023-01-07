@@ -16,14 +16,38 @@ class NodeInterface():
 		layerDPGNodes = self.convertLayersToDPG(nonDPGLayers)
 		dpg.split_frame()
 		layerHeights = self.getLayerHeights(layerDPGNodes)
-		print(layerHeights)
+		# offset = dpg.get_item_pos(layerDPGNodes[0][0])[0]
+		offset = 0
+		direction = 1
+		for layer,_ in layerHeights.items():
+			for node in layerDPGNodes[layer]:
+				if layer == 0:
+					test = dpg.get_item_rect_size(self.NE)
+					dpg.set_item_pos(node,[test[0] / 2 - dpg.get_item_rect_size(node)[0] / 2,0])
+				else:
+					self.gap = 5
+					#TODO HAVE GAP SETTING SOMEWHERE
+					dpg.set_item_pos(
+						node,
+						[
+						(dpg.get_item_pos(layerDPGNodes[0][0])[0]) + (dpg.get_item_rect_size(layerDPGNodes[0][0])[0] / 2) - (dpg.get_item_rect_size(node)[0] / 2) + (offset * direction),
+						layerHeights[layer - 1] + self.gap
+						]
+					)
+					try:
+						offset = dpg.get_item_rect_size(prevnode)[0]
+					except UnboundLocalError:
+						offset = dpg.get_item_rect_size(node)[0]
+					prevnode = node
+					direction *= -1
+
 
 	def getLayerHeights(self,layerDPGNodes):
 		layerHeights = {}
 		for layerIndex in layerDPGNodes:
 			heights = set()
 			for node in layerDPGNodes[layerIndex]:
-				heights.add(dpg.get_item_rect_max(node)[1])
+				heights.add(dpg.get_item_rect_size(node)[1])
 			layerHeights[layerIndex] = max(heights)
 		return layerHeights
 
@@ -34,10 +58,11 @@ class NodeInterface():
 			for node in layers[index]:
 				for field in node.data["data"]:
 					for key,value in field.items():
-						with dpg.node(parent=self.NE,label=f"{node.data['title']}") as node:
-							with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Static):
-								dpg.add_text(value)
-						dpgLayers[index].append(node)
+						with dpg.node(parent=self.NE,label=f"{node.data['title']}") as nodeID:
+							if node.data['title'] != "ROOT":
+								with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Static):
+									dpg.add_text(value)
+						dpgLayers[index].append(nodeID)
 		return dpgLayers
 
 
