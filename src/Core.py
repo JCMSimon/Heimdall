@@ -19,7 +19,7 @@ class Core():
 		#TODO have plugins define a default input type
 		self.logger.debugMsg(f"Searching '{keyword}' as '{datatype}'")
 		# Create root node
-		self.root = Node(f"ROOT",debug=self.debug)
+		self.root = Node("ROOT", debug=self.debug)
 		self.root.addDataField(dp._internal.is_root_node,True)
 		# First Search
 		initialResults = self.pluginRegister.runPlugin(datatype,keyword)
@@ -68,7 +68,7 @@ class Core():
 
 # Thanks to https://gist.github.com/seanh/93666 !
 def format_filename(s):
-    """Take a string and return a valid filename constructed from the string.
+	"""Take a string and return a valid filename constructed from the string.
 Uses a whitelist approach: any characters not present in valid_chars are
 removed. Also spaces are replaced with underscores.
 
@@ -78,7 +78,6 @@ and append a file extension like '.txt', so I avoid the potential of using
 an invalid filename.
 
 """
-    valid_chars = "-_ %s%s" % (string.ascii_letters, string.digits)
-    filename = ''.join(c for c in s if c in valid_chars)
-    filename = filename.replace(' ','_') # I don't like spaces in filenames.
-    return filename
+	valid_chars = f"-_ {string.ascii_letters}{string.digits}"
+	filename = ''.join(c for c in s if c in valid_chars)
+	return filename.replace(' ','_')
