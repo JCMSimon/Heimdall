@@ -20,4 +20,8 @@ class Facebook(Plugin):                # Class Name must be the same as the File
 	def run(self,arg) -> list:
 		testResult = Node("Facebook Username",debug=self.debug)
 		testResult.addDataField(dp.username.facebook,"JCMS#0557")
+		testResult2 = Node("Facebook Username",debug=self.debug)
+		testResult2.addDataField(dp.username.facebook,"JCMS#0557")
+		testResult3 = Node("Facebook Username",debug=self.debug)
+		testResult3.addDataField(dp.username.facebook,"JCMS#0557")
 		return [testResult]

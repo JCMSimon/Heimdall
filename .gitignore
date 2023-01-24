@@ -3,4 +3,3 @@ Heimdall.pyw
 updateconfig.json
 .vscode/*
 saves/*
-plugins/*.py

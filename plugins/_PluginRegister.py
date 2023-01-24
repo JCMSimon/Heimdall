@@ -34,6 +34,7 @@ class PluginRegister():
 		self.plugins = self.loadPlugins()
 
 	def loadPlugins(self):
+		# sourcery skip: move-assign-in-block, use-named-expression
 		for (_, _, filenames) in walk("./plugins"):
 			files = [filename for filename in filenames if not filename.startswith("_")]
 			break
@@ -41,8 +42,7 @@ class PluginRegister():
 		updatedPlugins = []
 		for plugin in files:
 			plugin = plugin.replace(".py","")
-			pluginClassInstance = self.getPluginInstance(plugin)
-			if pluginClassInstance:
+			if pluginClassInstance := self.getPluginInstance(plugin):
 				plugins[plugin] = {
 					"displayName":pluginClassInstance.getDisplayName(),
 					"version":pluginClassInstance.getVersion(),
@@ -69,10 +69,10 @@ class PluginRegister():
 		return self.getPluginInstance(pluginName).run(arg)
 
 	def getPluginInstance(self,pluginName):
-		pluginModule = __import__(f'plugins.{pluginName}', fromlist=[f'{pluginName}'])
-		pluginClass = getattr(pluginModule, f'{pluginName}')
 		try:
+			pluginModule = __import__(f'plugins.{pluginName}', fromlist=[f'{pluginName}'])
+			pluginClass = getattr(pluginModule, f'{pluginName}')
 			return pluginClass(debug=self.debug)
-		except TypeError:
+		except (AttributeError,TypeError):
 			self.logger.errorMsg(f"{pluginName} could not be loaded!")
 			return

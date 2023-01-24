@@ -33,7 +33,10 @@ class Core():
 						plugins = self.pluginRegister.getPluginNamesByType(datatype)
 						results = []
 						for plugin in plugins:
-							results.extend(self.pluginRegister.runPlugin(plugin,data))
+							try:
+								results.extend(self.pluginRegister.runPlugin(plugin,data))
+							except (TypeError,IndexError):
+								self.logger.infoMsg(f"{plugin} returned no results")
 				node._children.extend(results)
 				self.todo.extend(results)
 				self.todo.remove(node)
@@ -61,7 +64,10 @@ class Core():
 		self.logger.debugMsg(f"Loading from {path}")
 		self.root = None
 		with open(path,"rb") as picklefile:
-			self.root = pickle.load(picklefile)
+			try:
+				self.root = pickle.load(picklefile)
+			except EOFError:
+				self.logger.errorMsg("Cant load empty File")
 		for node in get_item_children(self.nodeInterFace.NE)[1]:
 			delete_item(node)
 		self.nodeInterFace.visualize(self.root)
