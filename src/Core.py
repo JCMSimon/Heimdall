@@ -5,7 +5,8 @@ from src.Logger import Logger
 from plugins.lib.Data import datapoints as dp
 from plugins.lib.Node import Node
 import pickle
-from dearpygui.dearpygui import get_item_children,delete_item
+import os
+from dearpygui.dearpygui import get_item_children,delete_item,split_frame
 
 class Core():
 	def __init__(self,pluginRegister,nodeEditor,debug=False) -> None:
@@ -53,13 +54,13 @@ class Core():
 				filename = strftime("%Y%m%d-%H%M%S")
 			path = f"./saves/{filename}.pickle"
 			self.logger.debugMsg(f"Saving to {path}")
+			split_frame()
 			with open(path,"wb") as picklefile:
 				pickle.dump(self.root,picklefile)
 		except AttributeError:
 			self.logger.infoMsg("No data to save")
 
 	def load(self,filename):
-		filename = format_filename(filename)
 		path = f"./saves/{filename}.pickle"
 		self.logger.debugMsg(f"Loading from {path}")
 		self.root = None
@@ -68,9 +69,20 @@ class Core():
 				self.root = pickle.load(picklefile)
 			except EOFError:
 				self.logger.errorMsg("Cant load empty File")
+
 		for node in get_item_children(self.nodeInterFace.NE)[1]:
 			delete_item(node)
-		self.nodeInterFace.visualize(self.root)
+		if self.root:
+			self.nodeInterFace.visualize(self.root)
+
+	def deleteSave(self,filename):
+		path = f".\saves\{filename}.pickle"
+		if os.path.exists(path):
+			os.system(f"del {path}")
+			return True
+		else:
+			self.logger.errorMsg(f"There is no Save at {path}")
+			return False
 
 # Thanks to https://gist.github.com/seanh/93666 !
 def format_filename(s):
