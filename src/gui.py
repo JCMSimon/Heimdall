@@ -54,6 +54,7 @@ class GUI:
 		dpg.bind_font(self.titleFont)
 
 	def initMainWindow(self):
+		# sourcery skip: extract-method, remove-redundant-fstring, simplify-division
 		with dpg.window(
 			tag="mainWindow",
 			horizontal_scrollbar=False,
@@ -191,10 +192,7 @@ class GUI:
 			dpg.enable_item(self.submitButton)
 
 	def filePopup(self,path,extension,label="File Selector",allowNew=False):
-		if allowNew:
-			self.FilePopupType = "save"
-		else:
-			self.FilePopupType = "load"
+		self.FilePopupType = "save" if allowNew else "load"
 		for (_, _, filenames) in walk(path):
 			files = [filename for filename in filenames if filename.endswith(extension)]
 			break
@@ -218,14 +216,23 @@ class GUI:
 					parent=self.fileSelector
 				)
 			for filename in files:
-				if allowNew:
-					button = dpg.add_button(parent=self.fileSelector,label=str(filename).split(".")[0],width=(self.width / 2 * 0.89),callback=self.saveToFile)
-					dpg.split_frame()
-					deletebutton = dpg.add_button(parent=self.fileSelector,label="DEL",width=(self.width / 2 * 0.09),pos=[dpg.get_item_width(button),dpg.get_item_pos(button)[1]],callback=self.deleteFile)
-				else:
-					button = dpg.add_button(parent=self.fileSelector,label=str(filename).split(".")[0],width=(self.width / 2 * 0.89),callback=self.loadFile)
-					dpg.split_frame()
-					deletebutton = dpg.add_button(parent=self.fileSelector,label="DEL",width=(self.width / 2 * 0.09),pos=[dpg.get_item_width(button),dpg.get_item_pos(button)[1]],callback=self.deleteFile)
+				button = (
+					dpg.add_button(
+						parent=self.fileSelector,
+						label=str(filename).split(".")[0],
+						width=(self.width / 2 * 0.89),
+						callback=self.saveToFile,
+					)
+					if allowNew
+					else dpg.add_button(
+						parent=self.fileSelector,
+						label=str(filename).split(".")[0],
+						width=(self.width / 2 * 0.89),
+						callback=self.loadFile,
+					)
+				)
+				dpg.split_frame()
+				deletebutton = dpg.add_button(parent=self.fileSelector,label="DEL",width=(self.width / 2 * 0.09),pos=[dpg.get_item_width(button),dpg.get_item_pos(button)[1]],callback=self.deleteFile)
 				dpg.bind_item_theme(button,self.submitButtonTheme)
 		else:
 			self.logger.infoMsg("No valid Files Found")
@@ -342,10 +349,7 @@ def centerText(itemList,width=92):
 	elif type(itemList) == list:
 		# Sort List
 		itemList.sort(key=len)
-		newItemList = []
-		for item in itemList: #what the fuck is this stuff to make text centered omg xd
-			newItemList.append(f"{item:^{width}}")
-		return newItemList
+		return [f"{item:^{width}}" for item in itemList]
 
 
 if __name__ == "__main__":
