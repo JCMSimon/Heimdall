@@ -246,10 +246,8 @@ class GUI:
 			dpg.delete_item(self.fileSelector)
 			dpg.split_frame()
 			if self.FilePopupType == "load":
-				print("test")
 				self.LoadButtonCallback()
 			else:
-				print("test 2")
 				self.SaveButtonCallback()
 
 	def loadFile(self,buttonID):
