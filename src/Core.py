@@ -19,14 +19,14 @@ class Core():
 		#TODO later on it should already ask for all plugins to be ran that accept the type that is input
 		#TODO have plugins define a default input type
 		self.logger.debugMsg(f"Searching '{keyword}' as '{datatype}'")
-		self.root = Node(f"ROOT",debug=self.debug)
+		# Create root node
+		self.root = Node("ROOT", debug=self.debug)
 		self.root.addDataField(dp._internal.is_root_node,True)
-		self.logger.debugMsg("First search iteration")
+		# First Search
 		initialResults = self.pluginRegister.runPlugin(datatype,keyword)
-		self.logger.debugMsg(f"Results: {initialResults}")
-		self.logger.debugMsg(f"Adding results to root node")
 		self.root._children.extend(initialResults)
 		self.todo = initialResults
+		# Recursive search
 		while self.todo:
 			for node in self.todo:
 				for dataField in node.data["data"]: # this might be wrong syntax. it should loop through data fields
@@ -34,10 +34,14 @@ class Core():
 						plugins = self.pluginRegister.getPluginNamesByType(datatype)
 						results = []
 						for plugin in plugins:
-							results.extend(self.pluginRegister.runPlugin(plugin,data))
+							try:
+								results.extend(self.pluginRegister.runPlugin(plugin,data))
+							except (TypeError,IndexError):
+								self.logger.infoMsg(f"{plugin} returned no results")
 				node._children.extend(results)
 				self.todo.extend(results)
 				self.todo.remove(node)
+		# Visualize whole Tree
 		self.nodeInterFace.visualize(self.root)
 
 	def reloadPlugins(self):
@@ -64,7 +68,8 @@ class Core():
 			try:
 				self.root = pickle.load(picklefile)
 			except EOFError:
-				pass
+				self.logger.errorMsg("Cant load empty File")
+
 		for node in get_item_children(self.nodeInterFace.NE)[1]:
 			delete_item(node)
 		if self.root:
@@ -81,7 +86,7 @@ class Core():
 
 # Thanks to https://gist.github.com/seanh/93666 !
 def format_filename(s):
-    """Take a string and return a valid filename constructed from the string.
+	"""Take a string and return a valid filename constructed from the string.
 Uses a whitelist approach: any characters not present in valid_chars are
 removed. Also spaces are replaced with underscores.
 
@@ -91,7 +96,6 @@ and append a file extension like '.txt', so I avoid the potential of using
 an invalid filename.
 
 """
-    valid_chars = "-_ %s%s" % (string.ascii_letters, string.digits)
-    filename = ''.join(c for c in s if c in valid_chars)
-    filename = filename.replace(' ','_') # I don't like spaces in filenames.
-    return filename
+	valid_chars = f"-_ {string.ascii_letters}{string.digits}"
+	filename = ''.join(c for c in s if c in valid_chars)
+	return filename.replace(' ','_')

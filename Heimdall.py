@@ -49,7 +49,7 @@ def fullStart(debug) -> None:
 	logger.debugMsg("Starting Heimdall Core")
 	core = Core(pluginRegister,nodeEditor,debug)
 	# Start One time setup if needed
-	if not CheckOneTimeSetupDone(logger) or bool("--openSettings" in argv[1:]):
+	if not CheckOneTimeSetupDone(logger) or "--openSettings" in argv[1:]:
 		setupProcess = Process(target=oneTimeSetup,args=[logger,debug],daemon=True)
 		setupProcess.start()
 		setupProcess.join()
@@ -93,11 +93,13 @@ def checkForUpdate(logger,debug) -> None:
 	  debug: True/False
 	"""
 	with open("updateconfig.json","r") as file:
-		if jsonload(file)["autoUpdate"] and not "--openSettings" in argv[1:] or "--forceUpdate" in argv[1:]:
+		if (
+			jsonload(file)["autoUpdate"]
+			and "--openSettings" not in argv[1:]
+			or "--forceUpdate" in argv[1:]
+		):
 			logger.debugMsg("Checking for Updates (Autoupdate enabled)")
-			arg = ""
-			if debug:
-				arg = " --debug"
+			arg = " --debug" if debug else ""
 			os.system(f"HeimdallUpdate.exe{arg}")
 
 def startLoader(debug) -> None:
@@ -138,7 +140,7 @@ def startLoadingUI(debug) -> Process:
 	loadingUIProcess.start()
 	return loadingUIProcess
 
-def CheckOneTimeSetupDone(logger) -> bool:
+def CheckOneTimeSetupDone(logger):
 	"""
 	It checks if the one time setup has been done
 
@@ -171,4 +173,4 @@ def oneTimeSetup(logger,debug) -> None:
 	_ = Setup(debug=debug)
 
 if __name__ == "__main__":
-	fullStart(bool("--debug" in argv[1:]))
+	fullStart("--debug" in argv[1:])
