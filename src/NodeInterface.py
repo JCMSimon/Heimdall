@@ -1,4 +1,3 @@
-import contextlib
 from src.Logger import Logger
 import dearpygui.dearpygui as dpg
 import jsonpickle
@@ -15,28 +14,17 @@ class NodeInterface():
 		layers = self.splitIntoLayers(root)
 		self.assignDPGIds(layers)
 		layerHeights,layerWidths = self.getLayerDimensions(layers)
-		self.drawLastLayer(layers,layerHeights,layerWidths)
-		self.drawParents(layers)
-		# get the last layer, split nodes into groups defined by parents
-		# for each of those groups get the parent, and center above
+		self.drawLayers(layers,layerHeights,layerWidths)
 
-	def drawParents(self,layers):
-		for layerIndex in range(len(layers) - 1):
-			layer = layers[layerIndex]
-
-	def drawLastLayer(self,layers,layerHeights,layerWidths):
-		layer = layers[len(layers) - 1]
-		layerWidth = layerWidths[len(layers) - 1]
-		x = round((dpg.get_item_rect_size(self.NE)[0] / 2) - (layerWidth / 2))
-		y = round(sum(layerHeights.values()) + (len(layerHeights) - 1) * self.YGap)
-		for index in range(len(layer)):
-			dpg.show_item(layer[index].data["DPGId"])
-			dpg.set_item_pos(layer[index].data["DPGId"],[x,y])
-			try:
-				x += dpg.get_item_rect_size(layer[index + 1].data["DPGId"])[0]
-			except IndexError:
-				continue
-
+	def drawLayers(self,layers,layerHeights,layerWidths):
+		editorMiddleX = dpg.get_item_rect_size(self.NE)[0] / 2
+		for layerId in range(len(layers)):
+			x = round(editorMiddleX - ((layerWidths[layerId]) / 2))
+			y = sum(list(layerHeights.values())[:layerId]) + len(list(layerHeights.values())[:layerId]) + (self.YGap * layerId)
+			for node in layers[layerId]:
+				dpg.set_item_pos(node.data["DPGId"],[x,y])
+				dpg.show_item(node.data["DPGId"])
+				x += self.XGap + dpg.get_item_rect_size(node.data["DPGId"])[0]
 
 	def getLayerDimensions(self,layers):
 		layerHeights = {}
@@ -45,8 +33,8 @@ class NodeInterface():
 			layerHeights[layerId] = max(dpg.get_item_rect_size(node.data["DPGId"])[1] for node in layers[layerId])
 			layerWidths[layerId] = sum(dpg.get_item_rect_size(node.data["DPGId"])[0] for node in layers[layerId]) + ((len(layers[layerId]) - 1) * self.XGap)
 			nodeIds = [node.data["DPGId"] for node in layers[layerId]]
-			# for nodeId in nodeIds:
-				# dpg.hide_item(nodeId)
+			for nodeId in nodeIds:
+				dpg.hide_item(nodeId)
 		return layerHeights,layerWidths
 
 	def assignDPGIds(self,layers):
