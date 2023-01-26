@@ -48,8 +48,8 @@ class NodeInterface():
 							node.data["DPGId"] = nodeID
 							if node.data['title'] != "ROOT":
 								with dpg.node_attribute(
-									attribute_type=dpg.mvNode_Attr_Static):
-									dpg.add_text(value)
+									attribute_type=dpg.mvNode_Attr_Static) as attr:
+									text = dpg.add_text(value)
 				dpg.split_frame()
 
 	def splitIntoLayers(self,root):

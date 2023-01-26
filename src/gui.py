@@ -31,27 +31,26 @@ class GUI:
 		with dpg.font_registry():
 			self.titleFont = dpg.add_font("assets/Cousine-Regular.ttf", 30)
 			self.searchFont = dpg.add_font("assets/Cousine-Regular.ttf", 20)
-		with dpg.theme() as mainWindowStyling:
+			self.nodeFont = dpg.add_font("assets/Cousine-Regular.ttf", 15)
+		with dpg.theme() as mainTheme:
 			with dpg.theme_component(dpg.mvAll):
-				dpg.add_theme_style(dpg.mvStyleVar_WindowTitleAlign,0.5,0.5)
 				dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize,0)
+				dpg.add_theme_style(dpg.mvStyleVar_WindowTitleAlign,0.5,0.5)
+				dpg.add_theme_color(dpg.mvThemeCol_TitleBgActive,(90,0,170,100))
+				dpg.add_theme_color(dpg.mvThemeCol_TitleBg,(90,0,170,100))
 				dpg.add_theme_style(dpg.mvStyleVar_CellPadding,0,0)
 				dpg.add_theme_style(dpg.mvStyleVar_FramePadding,0,0)
 				dpg.add_theme_style(dpg.mvStyleVar_WindowPadding,0,0)
-				dpg.add_theme_color(dpg.mvThemeCol_TitleBgActive,(90,0,170,100))
-				dpg.add_theme_color(dpg.mvThemeCol_TitleBg,(90,0,170,100))
-				dpg.add_theme_color(dpg.mvThemeCol_TitleBgCollapsed,(90,0,170,100))
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered,(255,0,0,100))
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive,(255,0,0,255))
-		with dpg.theme() as self.submitButtonTheme:
+		with dpg.theme() as self.purpleButtonTheme:
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered,(90,0,170,255))
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive,(120,0,200,255))
 				dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered,(90,0,170,255))
 				dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered,(90,0,170,255))
 				dpg.add_theme_color(dpg.mvThemeCol_HeaderActive,(120,0,200,255))
-		dpg.bind_theme(mainWindowStyling)
-		dpg.bind_font(self.titleFont)
+		dpg.bind_theme(mainTheme)
 
 	def initMainWindow(self):
 		# sourcery skip: extract-method, remove-redundant-fstring, simplify-division
@@ -86,9 +85,10 @@ class GUI:
 				no_resize=True,
 				menubar=False,
 				no_move=True,
+				# show=False, #TEMP
 				height = int(self.height / 100 * 80), # Make it take up 80% of the Window Height
 				width=self.width,
-				):
+				) as nodeWindow:
 				# Node Editor (VIS)
 				self.nodeUI = dpg.add_node_editor(
 					tag="NODEEDITOR",
@@ -96,10 +96,13 @@ class GUI:
 					minimap_location=dpg.mvNodeMiniMap_Location_TopLeft
 				)
 				self.menubar = dpg.add_menu_bar()
-				dpg.add_menu_item(label="Load",parent=self.menubar,callback=self.LoadButtonCallback)
-				dpg.add_menu_item(label="Save",parent=self.menubar,callback=self.SaveButtonCallback)
-				dpg.add_menu_item(label="Export",parent=self.menubar,callback=self.openExportMenu,indent=975)
-
+				loadbutton = dpg.add_menu_item(label="Load",parent=self.menubar,callback=self.LoadButtonCallback)
+				savebutton = dpg.add_menu_item(label="Save",parent=self.menubar,callback=self.SaveButtonCallback)
+				exportbutton = dpg.add_menu_item(label="Export",parent=self.menubar,callback=self.openExportMenu,indent=975)
+				dpg.bind_item_theme(loadbutton,self.purpleButtonTheme)
+				dpg.bind_item_theme(savebutton,self.purpleButtonTheme)
+				dpg.bind_item_theme(exportbutton,self.purpleButtonTheme)
+			dpg.bind_item_font(nodeWindow,self.titleFont)
 			#Search Window
 			with dpg.window(
 				tag="searchWindow",
@@ -133,6 +136,7 @@ class GUI:
 						int(self.width / 2) - int(int(self.width / 100 * 95) / 2), # x Axis
 						int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],    # y axis
 					)
+				dpg.bind_item_theme(self.typeSelector,self.purpleButtonTheme)
 				# reload button
 				self.reloadButton = dpg.add_button(
 					label="Reload",
@@ -141,11 +145,10 @@ class GUI:
 						int(self.width / 2) - int(int(self.width / 100 * 95) / 2) + int(int(self.width / 100 * 95) - 70) - 4 , # x Axis
 						int(int(int(self.height / 100 * 20) / 100 * 80) - 27)],    # y axis
 					)
-				dpg.bind_item_theme(self.reloadButton,self.submitButtonTheme)
+				dpg.bind_item_theme(self.reloadButton,self.purpleButtonTheme)
 				self.logger.debugMsg(f"Plugin Names after padding:")
 				for name in centerText(self.pluginNames):
 					self.logger.debugMsg(f"{name}(EOL)")
-				dpg.bind_item_theme(self.typeSelector,self.submitButtonTheme)
 				# Search Bar for input
 				self.searchBar = dpg.add_input_text(
 					hint="Search here...",            # Text that is in the Box when nothing is typed
@@ -165,7 +168,8 @@ class GUI:
 						int(self.width / 2) - int(int(self.width / 100 * 95) / 2) + int(int(self.width / 100 * 95) - 70) - 4 , # x Axis
 						int(int(int(self.height / 100 * 20) / 100 * 50) - 27)]                                                 # y Axis
 				)
-				dpg.bind_item_theme(self.submitButton,self.submitButtonTheme)
+				dpg.bind_item_theme(self.submitButton,self.purpleButtonTheme)
+			dpg.bind_item_font(searchWindow,self.searchFont)
 		dpg.set_primary_window("mainWindow", True)    # Maximize the Main Window Wrapper
 
 	# Gets called when a option is selected
@@ -208,6 +212,7 @@ class GUI:
 				no_resize=True,
 				no_scrollbar=False
 				)
+			dpg.bind_item_font(self.fileSelector,self.titleFont)
 			if allowNew:
 				self.fileNameField = dpg.add_input_text(hint=centerText("New filename here",width=34),            # Text that is in the Box when nothing is typed
 					on_enter=True,
@@ -233,7 +238,6 @@ class GUI:
 				)
 				dpg.split_frame()
 				deletebutton = dpg.add_button(parent=self.fileSelector,label="DEL",width=(self.width / 2 * 0.09),pos=[dpg.get_item_width(button),dpg.get_item_pos(button)[1]],callback=self.deleteFile)
-				dpg.bind_item_theme(button,self.submitButtonTheme)
 		else:
 			self.logger.infoMsg("No valid Files Found")
 
@@ -281,7 +285,7 @@ class GUI:
 				) as temppopup:
 			dpg.add_text("Soon!",indent=100)
 			okbutton = dpg.add_button(label="OK",indent=120,callback=lambda : dpg.delete_item(temppopup))
-			dpg.bind_item_theme(okbutton,self.submitButtonTheme)
+			dpg.bind_item_theme(okbutton,self.purpleButtonTheme)
 
 	def executeSearch(self,searchTerm):
 		self.core.search(self.dataType,searchTerm)
