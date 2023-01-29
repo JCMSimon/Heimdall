@@ -31,7 +31,6 @@ class GUI:
 		with dpg.font_registry():
 			self.titleFont = dpg.add_font("assets/Cousine-Regular.ttf", 30)
 			self.searchFont = dpg.add_font("assets/Cousine-Regular.ttf", 20)
-			self.nodeFont = dpg.add_font("assets/Cousine-Regular.ttf", 15)
 		with dpg.theme() as mainTheme:
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize,0)
