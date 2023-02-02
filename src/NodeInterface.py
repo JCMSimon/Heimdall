@@ -1,12 +1,17 @@
 from src.Logger import Logger
+from plugins.lib.Data import datapoints as dp
 import dearpygui.dearpygui as dpg
-import jsonpickle
 class NodeInterface():
 	def __init__(self,nodeEditor,XGap=10,YGap=10,debug=False) -> None:
 		self.logger = Logger("NodeInterface",debug=debug)
+		self.initStyles()
 		self.NE = nodeEditor
 		self.XGap = XGap
 		self.YGap = YGap
+
+	def initStyles(self):
+		with dpg.font_registry():
+			self.nodeFont = dpg.add_font("assets/Cousine-Regular.ttf", 15)
 
 	def visualize(self,root):
 		if not root:
@@ -44,13 +49,16 @@ class NodeInterface():
 					for key,value in field.items():
 						with dpg.node(
 							parent=self.NE,
-							label=f"{node.data['title']}") as nodeID:
+							label=f"{node.data['title']}",
+							) as nodeID:
 							node.data["DPGId"] = nodeID
-							if node.data['title'] != "ROOT":
+
+							if key != dp._internal.is_root_node:
 								with dpg.node_attribute(
-									attribute_type=dpg.mvNode_Attr_Static):
+									attribute_type=dpg.mvNode_Attr_Static) as attr:
 									dpg.add_text(value)
-				dpg.split_frame()
+						dpg.bind_item_font(nodeID,self.nodeFont)
+		dpg.split_frame()
 
 	def splitIntoLayers(self,root):
 		layers = {0: [root], 1: root._children}
