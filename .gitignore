@@ -1,5 +1,6 @@
-*.cpython-*.pyc
-Heimdall.pyw
-updateconfig.json
-.vscode/*
 saves/*
+pluginData/*
+updateconfig.json
+Heimdall.pyw
+.vscode/*
+*.cpython-*.pyc

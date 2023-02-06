@@ -69,9 +69,9 @@ class Core():
 				self.root = pickle.load(picklefile)
 			except EOFError:
 				self.logger.errorMsg("Cant load empty File")
-
-		for node in get_item_children(self.nodeInterFace.NE)[1]:
-			delete_item(node)
+			else:
+				for node in get_item_children(self.nodeInterFace.NE)[1]:
+					delete_item(node)
 		if self.root:
 			self.nodeInterFace.visualize(self.root)
 
