@@ -2,13 +2,15 @@ import toml
 from src.Logger import Logger
 
 class APIRegister:
-	def __init__(self,apiKeys=[],debug=True) -> None:
+	def __init__(self, apiKeys=None, debug=True) -> None:
+		if apiKeys is None:
+			apiKeys = []
 		self.logger = Logger("KeyRegister",debug=debug)
 		self.keysFile = "config.toml"
 		self.loadConfig()
 
 	def loadConfig(self):
-		with open(self.keysFile,"r") as file:
+		with open(self.keysFile,"r"):
 			self.keys = toml.load(self.keysFile,)["API"]
 
 	def returnKeys(self,apiKeys):
