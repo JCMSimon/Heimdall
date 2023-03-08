@@ -9,53 +9,36 @@ import os
 from dearpygui.dearpygui import get_item_children,delete_item,split_frame
 
 class Core():
-	"""
-	Main Core Class. Will be used for the CLI too.
-
-	Args:
-		pluginRegister: This is the plugin register that the core will use to register plugins.
-		nodeEditor: The NodeEditor class
-		debug: If set to true, the logger will print out debug messages. Defaults to False
-	"""
-	def __init__(self,pluginRegister,nodeEditor,debug=False) -> None:
-		"""
-		"""
-		self.debug = debug
-		self.logger = Logger("Core",DEBUG=self.debug)
+	"""Heimdall's Core. responsible for the search process"""
+	def __init__(self,pluginRegister,DEBUG=False) -> None:
+		self._DEBUG = DEBUG
+		self.logger = Logger("Core",DEBUG=self._DEBUG)
 		self.pluginRegister = pluginRegister
 
-	def search(self,datatype,keyword) -> None:
-		"""
-		It takes a keyword and a datatype, runs the plugins that accept that datatype, and then recursively
-		runs the plugins that accept the datatypes of the data fields of the results
+	def search(self,pluginName,keyword) -> None:
+		self.root = Node("ROOT", debug=self.debug).addDataField(dp._internal.is_root_node,True)
+		datapoint = self.pluginRegister.getDefaultDatapointByName(pluginName)
 
-		Args:
-		  datatype: the type of data that is being searched for
-		  keyword: The keyword to search for
-		"""
-		self.logger.debugMsg(f"Searching '{keyword}' as '{datatype}'")
-		# Create root node
-		self.root = Node("ROOT", debug=self.debug)
-		self.root.addDataField(dp._internal.is_root_node,True)
-		# First Search
-		initialResults = self.pluginRegister.runPlugin(datatype,keyword)
-		self.root._children.extend(initialResults)
-		self.todo = initialResults
+	def recursiveSearch(self,datapoint,keyword):
+		pass
+
+		# self.root._children.extend(initialResults)
+		# self.todo = initialResults
 		# Recursive search
-		while self.todo:
-			for node in self.todo:
-				for dataField in node.data["data"]: # this might be wrong syntax. it should loop through data fields
-					for datatype,data in dataField.items():
-						plugins = self.pluginRegister.getPluginNamesByType(datatype)
-						results = []
-						for plugin in plugins:
-							try:
-								results.extend(self.pluginRegister.runPlugin(plugin,data))
-							except (TypeError,IndexError):
-								self.logger.infoMsg(f"{plugin} returned no results")
-				node._children.extend(results)
-				self.todo.extend(results)
-				self.todo.remove(node)
+		# while self.todo:
+		# 	for node in self.todo:
+		# 		for dataField in node.data["data"]: # this might be wrong syntax. it should loop through data fields
+		# 			for datatype,data in dataField.items():
+		# 				plugins = self.pluginRegister.getPluginNamesByType(datatype)
+		# 				results = []
+		# 				for plugin in plugins:
+		# 					try:
+		# 						results.extend(self.pluginRegister.runPlugin(plugin,data))
+		# 					except (TypeError,IndexError):
+		# 						self.logger.infoMsg(f"{plugin} returned no results")
+		# 		node._children.extend(results)
+		# 		self.todo.extend(results)
+		# 		self.todo.remove(node)
 
 	def reloadPlugins(self) -> None:
 		"""

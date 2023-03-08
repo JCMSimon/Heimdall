@@ -36,7 +36,7 @@ class PluginRegister():
 			pluginModule = __import__(f'plugins.{pluginName}', fromlist=[pluginName])
 			# Create a Class instance of the Plugin
 			pluginClass = getattr(pluginModule, pluginName)
-			return pluginClass(debug=self._DEBUG)
+			return pluginClass(DEBUG=self._DEBUG)
 		except AttributeError as e:
 			self.logger.errorMsg(f"{pluginName} could not be loaded! ({e})")
 			return None
@@ -48,6 +48,12 @@ class PluginRegister():
 		self.logger.infoMsg("Reloading Plugins")
 		self.plugins = self.loadPlugins()
 
-	def runPlugin(self,pluginName,arg) -> list:
-		self.logger.debugMsg(f"Running Plugin '{pluginName}' with Argument '{arg}'")
-		return self.getPluginInstance(pluginName).run(arg)
+	def runPlugin(self,pluginName,keyword) -> list:
+		self.logger.debugMsg(f"Running Plugin '{pluginName}' with Argument '{keyword}'")
+		return self.getPluginInstance(pluginName).run(keyword)
+
+	def getDefaultDatapointByName(self,pluginName) -> str:
+		return self.plugins[pluginName]["defaultInput"]
+
+	def getPluginNamesByDatapoint(self,DATAPOINT):
+		return [pluginName for pluginName in self.plugins.keys() if self.plugins[pluginName]["defaultInput"] == DATAPOINT]

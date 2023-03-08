@@ -4,7 +4,7 @@ from src.Logger import Logger
 
 
 class APIRegister:
-	def __init__(self, apiKeys=None, DEBUG=True) -> None:
+	def __init__(self, apiKeys=None, DEBUG=False) -> None:
 		self.logger = Logger("APIKeyRegister",DEBUG=DEBUG)
 		if apiKeys is None:
 			self.requestedKeys = []
