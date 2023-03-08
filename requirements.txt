@@ -1,4 +1,6 @@
 colorama==0.4.6
+toml==0.10.2
 dearpygui==1.8.0
+
 screeninfo==0.8.1
 six==1.16.0
