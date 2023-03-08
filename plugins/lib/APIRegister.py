@@ -13,7 +13,7 @@ class APIRegister:
 			self.keysFile = "config.toml"
 			self.loadConfig()
 		else:
-			self.logger.infoMsg("Called without keys being requested")
+			self.logger.debugMsg("Called without keys being requested")
 			return None
 
 	def loadConfig(self):
@@ -29,5 +29,4 @@ class APIRegister:
 			except (KeyError):
 				_returnDict[str(keyname)] = None
 		self.logger.debugMsg(f"Found Keys:{[key for key in list(_returnDict.keys()) if key is None]} Missing Keys:{[key for key in list(_returnDict.keys()) if key is not None]}")
-		print(f"Found Keys:{[key for key in list(_returnDict.keys()) if _returnDict[key] is not None]}")
 		return _returnDict
