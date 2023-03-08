@@ -1,43 +1,51 @@
-from abc import ABC,abstractmethod
+from abc import ABC, abstractmethod
+
 from src.Logger import Logger
-from plugins.lib.Data import datapoints as dp
+
+
 class Plugin(ABC):
-	def __init__(self,display=False,apiKeys=[],debug=False) -> None:
-		self.logger = Logger(prefix=f"{self.getDisplayName()}",debug=debug)
+	"""
+	Base Class for all Heimdall Plugins
+	"""
+	def __init__(self, display=False, APIKEYS=None, DEBUG=False) -> None:
+		self.logger = Logger(PREFIX=self.displayname(),DEBUG=DEBUG)
 		self.display = display
-		if apiKeys:
-			from APIRegister import APIRegister
-			self.apiKeys = APIRegister().returnKeys(apiKeys)
+		if APIKEYS and type(APIKEYS) == list or tuple:
+			from plugins.lib.APIRegister import APIRegister
+			self.APIKEYS = APIRegister(apiKeys=APIKEYS).returnKeys()
+		elif APIKEYS:
+			raise TypeError("Argument APIKEYS must be a list or tuple")
 		super().__init__()
 
-	def debugMsg(self,text) -> None:
-		self.logger.debugMsg(text)
-
-	def infoMsg(self,text) -> None:
-		self.logger.infoMsg(text)
-
-	def warnMsg(self,text) -> None:
-		self.logger.warnMsg(text)
-
-	def errorMsg(self,text) -> None:
-		self.logger.errorMsg(text)
-
-	def update(self) -> bool:
-		self.logger.infoMsg(f"Plugin with Name '{self.getDisplayName()}' has no update check.")
-		return False
+	@abstractmethod
+	def displayname(self) -> str:
+		"""Returns the Plugins display name which is used in the gui"""
+		raise NotImplementedError(f"Plugin {self} has no name.")
 
 	@abstractmethod
-	def getDisplayName(self) -> str:
-		raise ValueError(f"Plugin {self} has no name.")
+	def version(self) -> str:
+		"""Returns the Plugins version. Uses semantic versioning"""
+		self.logger.infoMsg(f"Plugin with Name '{self.displayname()}' has no version number.")
+		return "Unknown"
 
 	@abstractmethod
-	def getVersion(self) -> str:
-		self.logger.infoMsg(f"Plugin with Name '{self.getDisplayName()}' has no version number.")
-
-	@abstractmethod
-	def accepts(self) -> None:
-		pass
+	def accepts(self) -> list:
+		"""Returns the datapoints that the plugin accepts as input"""
+		self.logger.debugMsg(f"Plugin with Name '{self.displayname()}' accepts no inputs. Manual execution only.")
+		return []
 
 	@abstractmethod
 	def run(self) -> list:
-		raise ValueError(f"Plugin with Name '{self.getDisplayName()}' has no run method.")
+		"""Plugin's main execution method.
+
+		Returns a list of Heimdall Nodes with Results.
+		"""
+		raise NotImplementedError(f"Plugin with Name '{self.displayname()}' has no run method.")
+
+	def update(self) -> bool:
+		self.logger.infoMsg(f"Plugin with Name '{self.displayname()}' has no update check.")
+		return False
+
+	def defaultInput(self) -> str:
+		self.logger.debugMsg(f"Plugin with Name '{self.displayname()}' has no default input.")
+		return None
