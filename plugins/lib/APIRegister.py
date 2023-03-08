@@ -5,7 +5,7 @@ from src.Logger import Logger
 
 class APIRegister:
 	def __init__(self, apiKeys=None, DEBUG=True) -> None:
-		# self.logger = Logger("APIKeyRegister",DEBUG=DEBUG)
+		self.logger = Logger("APIKeyRegister",DEBUG=DEBUG)
 		if apiKeys is None:
 			self.requestedKeys = []
 		if apiKeys:
@@ -28,6 +28,6 @@ class APIRegister:
 				_returnDict[str(keyname)] = self.keys[keyname.lower()]
 			except (KeyError):
 				_returnDict[str(keyname)] = None
-		# self.logger.debugMsg(f"Found Keys:{[key for key in list(returnDict.keys()) if key is None]} Missing Keys:{[key for key in list(returnDict.keys()) if key is not None]}")
+		self.logger.debugMsg(f"Found Keys:{[key for key in list(_returnDict.keys()) if key is None]} Missing Keys:{[key for key in list(_returnDict.keys()) if key is not None]}")
 		print(f"Found Keys:{[key for key in list(_returnDict.keys()) if _returnDict[key] is not None]}")
 		return _returnDict

@@ -12,7 +12,7 @@ class Plugin(ABC):
 		self.display = display
 		if APIKEYS and type(APIKEYS) == list or tuple:
 			from plugins.lib.APIRegister import APIRegister
-			self.APIKEYS = APIRegister(apiKeys=APIKEYS).returnKeys()
+			self.APIKEYS = APIRegister(apiKeys=APIKEYS).getKeys()
 		elif APIKEYS:
 			raise TypeError("Argument APIKEYS must be a list or tuple")
 		super().__init__()
