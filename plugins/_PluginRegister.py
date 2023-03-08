@@ -4,7 +4,7 @@ class PluginRegister():
 	"""
 	Plugin Register/Manager for Heimdall
 	"""
-	def __init__(self,DEBUG=False):
+	def __init__(self,DEBUG=False) -> None:
 		self._DEBUG = DEBUG
 		self.logger = Logger("PluginRegister",DEBUG=self._DEBUG)
 		self.plugins = self.loadPlugins()
@@ -36,13 +36,12 @@ class PluginRegister():
 			pluginModule = __import__(f'plugins.{pluginName}', fromlist=[pluginName])
 			# Create a Class instance of the Plugin
 			pluginClass = getattr(pluginModule, pluginName)
-			print(pluginClass(debug=self._DEBUG))
 			return pluginClass(debug=self._DEBUG)
 		except AttributeError as e:
 			self.logger.errorMsg(f"{pluginName} could not be loaded! ({e})")
 			return None
 
-	def reload(self):
+	def reload(self) -> None:
 		"""
 		It reloads the plugins
 		"""
