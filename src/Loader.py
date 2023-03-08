@@ -12,7 +12,7 @@ class LoadingUI:
 		Args:
 		  debug: Boolean, if True, the logger will print to the console.
 		"""
-		self.logger = Logger("Loading-UI",debug=debug)
+		self.logger = Logger("Loading-UI",DEBUG=debug)
 		self.initDPG()
 		self.initDPGThemes()
 		self.initMainWindow()

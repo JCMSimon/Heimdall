@@ -5,12 +5,12 @@ from plugins.lib.Node import Node
 class Example(Plugin):                # Class Name must be the same as the File Name
 	def __init__(self,debug) -> None:
 		self.debug = debug
-		super().__init__(debug=self.debug,display=True,)
+		super().__init__(DEBUG=self.debug,display=True,)
 
-	def getDisplayName(self) -> str:
+	def displayname(self) -> str:
 		return "Example Plugin"
 
-	def getVersion(self) -> str:
+	def version(self) -> str:
 		return "0.0.1"
 
 	def accepts(self):

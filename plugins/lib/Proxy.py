@@ -4,7 +4,7 @@ from random import randint
 
 class Proxy:
 	def __init__(self,debug=True) -> None:
-		self.logger = Logger("Proxy",debug=debug)
+		self.logger = Logger("Proxy",DEBUG=debug)
 		self.config = "config.toml"
 		self.loadConfig()
 		self.used = []

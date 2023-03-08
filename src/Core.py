@@ -1,7 +1,6 @@
 import string
 from time import strftime
 from typing import LiteralString
-from src.NodeInterface import NodeInterface
 from src.Logger import Logger
 from plugins.lib.Data import datapoints as dp
 from plugins.lib.Node import Node
@@ -22,9 +21,8 @@ class Core():
 		"""
 		"""
 		self.debug = debug
-		self.logger = Logger("Core",debug=self.debug)
+		self.logger = Logger("Core",DEBUG=self.debug)
 		self.pluginRegister = pluginRegister
-		self.nodeInterFace = NodeInterface(nodeEditor,debug=debug)
 
 	def search(self,datatype,keyword) -> None:
 		"""
@@ -35,8 +33,6 @@ class Core():
 		  datatype: the type of data that is being searched for
 		  keyword: The keyword to search for
 		"""
-		#TODO later on it should already ask for all plugins to be ran that accept the type that is input
-		#TODO have plugins define a default input type
 		self.logger.debugMsg(f"Searching '{keyword}' as '{datatype}'")
 		# Create root node
 		self.root = Node("ROOT", debug=self.debug)
@@ -60,8 +56,6 @@ class Core():
 				node._children.extend(results)
 				self.todo.extend(results)
 				self.todo.remove(node)
-		# Visualize whole Tree
-		self.nodeInterFace.visualize(self.root)
 
 	def reloadPlugins(self) -> None:
 		"""

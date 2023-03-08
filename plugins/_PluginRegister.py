@@ -1,6 +1,5 @@
 from os import walk
 from src.Logger import Logger
-from json import load as jsonload
 class PluginRegister():
 	"""
 	Plugin Register for Heimdall
@@ -14,7 +13,7 @@ class PluginRegister():
 		"""
 		self.pluginsUpdated = False
 		self.debug = debug
-		self.logger = Logger("PluginRegister",debug=self.debug)
+		self.logger = Logger("PluginRegister",DEBUG=self.debug)
 		self.plugins = self.loadPlugins()
 
 	def getPluginNames(self):
@@ -49,13 +48,6 @@ class PluginRegister():
 		self.plugins = self.loadPlugins()
 
 	def loadPlugins(self) -> dict:
-		"""
-		It loads all the plugins in the plugins folder and returns a dictionary of the plugins with their
-		display name, version, accepts, and display function.
-
-		Returns:
-			A dictionary of dictionaries.
-		"""
 		# sourcery skip: move-assign-in-block, use-named-expression
 		for (_, _, filenames) in walk("./plugins"):
 			files = [filename for filename in filenames if not filename.startswith("_")]
@@ -69,6 +61,7 @@ class PluginRegister():
 					"displayName":pluginClassInstance.getDisplayName(),
 					"version":pluginClassInstance.getVersion(),
 					"accepts":pluginClassInstance.accepts(),
+					"defaultInput":pluginClassInstance.getDefaultInput(),
 					"display":pluginClassInstance.display,
 				}
 				self.logger.infoMsg(f"{pluginClassInstance.getDisplayName()} v{pluginClassInstance.getVersion()} loaded succesfully!")

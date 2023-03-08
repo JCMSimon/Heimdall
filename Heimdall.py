@@ -23,7 +23,7 @@ def GuiStart(debug) -> Literal[1, 0]:
 	Returns:
 	  The return value is the exit code of the program.
 	"""
-	logger = Logger("Heimdal // Main",debug=debug)
+	logger = Logger("Heimdal // Main",DEBUG=debug)
 	if "--openSettings" in argv[1:] and "--forceUpdate" in argv[1:]:
 		logger.errorMsg("The Arguments '--openSetting' and '--forceUpdate' cannot be used at the same time.")
 		return 1

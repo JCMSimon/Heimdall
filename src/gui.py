@@ -1,6 +1,7 @@
 from typing import NoReturn
 import dearpygui.dearpygui as dpg
 from os import walk
+from src.Logger import Logger
 
 class GUI:
 	"""
@@ -16,7 +17,7 @@ class GUI:
 	def __init__(self,pluginNames,debug=False) -> None:
 		"""
 		"""
-		self.logger = Logger("GUI",debug=debug)
+		self.logger = Logger("GUI",DEBUG=debug)
 		self.pluginNames = pluginNames
 		self.width,self.height = 1080,720
 		self.dataType = self.pluginNames[0]
@@ -451,11 +452,3 @@ def centerText(itemList,width=92) -> str | list[str]:
 	elif type(itemList) == list:
 		itemList.sort(key=len)
 		return [f"{item:^{width}}" for item in itemList]
-
-
-if __name__ == "__main__":
-	from Logger import Logger
-	test = GUI(["tseting","tetset"],debug=True)
-	test.start(None)
-else:
-	from src.Logger import Logger

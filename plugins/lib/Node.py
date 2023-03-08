@@ -2,7 +2,7 @@ from src.Logger import Logger
 
 class Node():
 	def __init__(self,title,color=None,debug=False) -> None:
-		self.logger = Logger(f"Node({title})",debug=debug)
+		self.logger = Logger(f"Node({title})",DEBUG=debug)
 		self.data = {
 			"title":title,
 			"data":[],

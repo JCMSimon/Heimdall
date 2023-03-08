@@ -7,7 +7,7 @@ from src.Logger import Logger
 
 class Setup:
 	def __init__(self,debug) -> None:
-		self.logger = Logger("SetupUI",debug=debug)
+		self.logger = Logger("SetupUI",DEBUG=debug)
 		self.height = 230
 		self.width = 280
 		self.initDPG()
