@@ -14,15 +14,6 @@ from src.Logger import Logger
 from src.SetupUI import Setup
 
 def GuiStart(debug) -> Literal[1, 0]:
-	"""
-	It starts the GUI and the core
-
-	Args:
-	  debug: Boolean, if true, the program will run in debug mode
-
-	Returns:
-	  The return value is the exit code of the program.
-	"""
 	logger = Logger("Main",DEBUG=debug)
 	if "--openSettings" in argv[1:] and "--forceUpdate" in argv[1:]:
 		logger.errorMsg("The Arguments '--openSetting' and '--forceUpdate' cannot be used at the same time.")
@@ -37,7 +28,7 @@ def GuiStart(debug) -> Literal[1, 0]:
 	logger.debugMsg("Starting Loading UI")
 	loadingUIProcess = startLoadingUI(debug)
 	logger.debugMsg("Loading Plugins")
-	pluginRegister,pluginNames = loadPlugins(debug)
+	pluginRegister = loadPlugins(debug)
 	logger.debugMsg("Closing Loading UI")
 	loadingUIProcess.terminate()
 	logger.debugMsg("Starting Main User Interface")
@@ -110,8 +101,8 @@ def loadPlugins(debug) -> tuple[PluginRegister,list]:
 	  A tuple of two items. The first item is a PluginRegister object. The second item is a list of
 	strings.
 	"""
-	pluginRegister = PluginRegister(debug)
-	return pluginRegister,pluginRegister.getPluginNames()
+	return PluginRegister(debug)
+
 
 def startLoadingUI(debug) -> Process:
 	"""
