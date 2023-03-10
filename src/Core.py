@@ -19,8 +19,7 @@ class Core():
 		self.root = Node("ROOT", debug=self.debug).addDataField(dp._internal.is_root_node,True)
 		datapoint = self.pluginRegister.getDefaultDatapointByName(pluginName)
 
-	def recursiveSearch(self,datapoint,keyword):
-		pass
+
 
 		# self.root._children.extend(initialResults)
 		# self.todo = initialResults
@@ -40,11 +39,6 @@ class Core():
 		# 		self.todo.extend(results)
 		# 		self.todo.remove(node)
 
-	def reloadPlugins(self) -> None:
-		"""
-		It reloads the plugins
-		"""
-		self.pluginRegister.reload()
 
 	def save(self,filename) -> None:
 		"""
