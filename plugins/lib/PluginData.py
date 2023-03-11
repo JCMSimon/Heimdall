@@ -19,7 +19,7 @@ class PluginData:
 		self.realKey = str(key) + self.hashKey(key)
 		self.data = self.loadFile()
 
-	def loadFile(self):
+	def loadFile(self) -> dict:
 		"""
 		It loads a pickle file and returns the data in it
 

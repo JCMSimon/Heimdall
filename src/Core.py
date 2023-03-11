@@ -42,10 +42,10 @@ class Core():
 		if datapoint := self.pluginRegister.getDefaultDatapointByName(pluginName) is None:
 			todo.extend(self.pluginRegister.run(pluginName,keyword))
 		else:
-			todo.extend(Node("F4K3").addDataField(datapoint,keyword))
+			todo.extend(Node("F4K3").addDataField(datapoint,keyword)) # type: ignore
 		return self.recursiveSearch(todo)
 
-	def recursiveSearch(self,todo,pbar) -> Node:
+	def recursiveSearch(self,todo) -> Node:
 		"""
 		It takes a list of nodes, and for each node, it runs all plugins that are registered for the
 		datatype of the node's data, and then adds the results of those plugins to the node's children
@@ -66,14 +66,14 @@ class Core():
 					for plugin in plugins:
 						results.extend(self.pluginRegister.runPlugin(plugin,data))
 			if node.data["title"] == "F4K3":
-				self.root._children.extend(results)
+				self.root._children.extend(results) # type: ignore
 			else:
-				node._children.extend(results)
+				node._children.extend(results) # type: ignore
 			pbar.update(1)
-			todo.extend(results)
+			todo.extend(results) # type: ignore
 			# pbar.total += len(results)
 		pbar.close()
-		return self.root
+		return self.root # type: ignore
 
 	def save(self,filename) -> None:
 		"""
@@ -120,7 +120,7 @@ class Core():
 		Returns:
 		  A boolean value. True if file was deleted successfuly. False if not.
 		"""
-		path = f".\saves\{filename}.pickle"
+		path = f"./saves/{filename}.pickle" #TODO This might not work. gonna see in future
 		if os.path.exists(path):
 			os.system(f"del {path}")
 			return True

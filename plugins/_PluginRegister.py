@@ -27,12 +27,12 @@ class PluginRegister():
 		for pluginName in self.getPluginFiles():
 			if pluginClassInstance := self.getPluginInstance(pluginName):
 				plugins[pluginName] = {
-					"displayName":pluginClassInstance.displayname(),
-					"version":pluginClassInstance.version(),
-					"accepts":pluginClassInstance.accepts(),
-					"defaultInput":pluginClassInstance.defaultInput(),
-					"display":pluginClassInstance.display,
-					"runMethod":pluginClassInstance.run,
+					"displayName":pluginClassInstance.displayname(), # type: ignore
+					"version":pluginClassInstance.version(), # type: ignore
+					"accepts":pluginClassInstance.accepts(), # type: ignore
+					"defaultInput":pluginClassInstance.defaultInput(), # type: ignore
+					"display":pluginClassInstance.display, # type: ignore
+					"runMethod":pluginClassInstance.run, # type: ignore
 				}
 				self.logger.infoMsg(f"{plugins[pluginName]['displayName']} v{plugins[pluginName]['version']} loaded succesfully!")
 		return plugins
@@ -47,9 +47,9 @@ class PluginRegister():
 		for (_, _, filenames) in walk("./plugins"):
 			files = [filename.replace(".py","") for filename in filenames if not filename.startswith("_")]
 			break
-		return files
+		return files # type: ignore
 
-	def getPluginInstance(self,pluginName) -> Plugin:
+	def getPluginInstance(self,pluginName) -> Plugin.Plugin | None:
 		"""
 		It imports the plugin file and creates a class instance of the plugin
 
@@ -88,7 +88,7 @@ class PluginRegister():
 		  A list of dictionaries.
 		"""
 		self.logger.debugMsg(f"Running Plugin '{pluginName}' with Argument '{keyword}'")
-		return self.getPluginInstance(pluginName).run(keyword)
+		return self.getPluginInstance(pluginName).run(keyword) # type: ignore
 
 	def getDefaultDatapointByName(self,pluginName) -> str:
 		"""

@@ -71,7 +71,7 @@ class Plugin(ABC):
 		self.logger.infoMsg(f"Plugin with Name '{self.displayname()}' has no update check.")
 		return False
 
-	def defaultInput(self) -> str:
+	def defaultInput(self) -> str | None:
 		"""
 		`defaultInput()` returns the default input for the plugin
 
