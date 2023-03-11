@@ -1,17 +1,23 @@
+#TODO This needs a rework. it shouldnt only return a string form a file but rather
+#     return a proxy that is 100% working and also returns its type
+
+from random import choice
+
 import toml
+
 from src.Logger import Logger
-from random import randint
+
 
 class Proxy:
-	def __init__(self,debug=True) -> None:
-		self.logger = Logger("Proxy",DEBUG=debug)
-		self.config = "config.toml"
+	def __init__(self,DEBUG=True) -> None:
+		self.logger = Logger("Proxy",DEBUG=DEBUG)
+		self.configFile = "config.toml"
 		self.loadConfig()
 		self.used = []
 
-	def loadConfig(self):
-		with open(self.config,"r") as file:
-			self.proxyfile = toml.load(self.config,)["PROXYLIST"]["file"]
+	def loadConfig(self) -> None:
+		with open(self.configFile,"r") as file:
+			self.proxyfile = toml.load(self.configFile,)["PROXYLIST"]["file"]
 		try:
 			with open(self.proxyfile) as file:
 				self.proxyList = file.read().splitlines()
@@ -19,24 +25,22 @@ class Proxy:
 			self.logger.warnMsg(f"Proxylist {self.proxyfile} not found!")
 			self.proxyList = []
 
-	def getProxy(self,unused=False):
+	def getProxy(self,unused=False) -> str | None:
 		if self.proxyList:
 			if unused:
-				list = [proxy for proxy in self.proxyList if proxy not in self.used]
 				try:
-					proxy = list[randint(0,len(list) - 1)]
+					proxy = choice([proxy for proxy in self.proxyList if proxy not in self.used])
 					self.used.append(proxy)
 					return proxy
-				except (IndexError,ValueError):
+				except IndexError:
 					self.logger.infoMsg("No unused proxy left!")
 					return None
 			else:
 				try:
-					proxy = self.proxyList[randint(0,len(self.proxyList) - 1)]
-					return proxy
+					return choice(self.proxyList)
 				except IndexError:
 					self.logger.infoMsg("No proxies found!")
 		else:
-			self.logger.warnMsg(f"Proxylist empty!")
+			self.logger.warnMsg("Proxylist empty!")
 			return None
 

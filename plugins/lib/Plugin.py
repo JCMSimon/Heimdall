@@ -8,6 +8,14 @@ class Plugin(ABC):
 	Base Class for all Heimdall Plugins
 	"""
 	def __init__(self, display=False, APIKEYS=None, DEBUG=False) -> None:
+		"""
+		A template for a plugin.
+
+		Args:
+		  display: If True, the plugin will be displayed in the plugin list. Defaults to False
+		  APIKEYS: A list of API keys to use for the plugin.
+		  DEBUG: If set to True, will print out debug messages. Defaults to False
+		"""
 		self.logger = Logger(PREFIX=self.displayname(),DEBUG=DEBUG)
 		self.display = display
 		if APIKEYS and type(APIKEYS) == list or tuple:
@@ -16,6 +24,17 @@ class Plugin(ABC):
 		elif APIKEYS:
 			raise TypeError("Argument APIKEYS must be a list or tuple")
 		super().__init__()
+
+	@abstractmethod
+	def getCredits(self) -> dict:
+		"""Returns a dictionary with credits for the plugin
+
+			dict {
+				author: authorname, # your name
+				image: imagePathURL, # Url or path to a image. can be a profile picture or specific to the plugin
+				social: sociallink, # for ex a github link
+			}
+		"""
 
 	@abstractmethod
 	def displayname(self) -> str:
@@ -43,9 +62,21 @@ class Plugin(ABC):
 		raise NotImplementedError(f"Plugin with Name '{self.displayname()}' has no run method.")
 
 	def update(self) -> bool:
+		"""
+		`update()` is a function that is used to update the plugin or check for updates.
+
+		Returns:
+		  The return value is a boolean value. True if update is successful. False if not
+		"""
 		self.logger.infoMsg(f"Plugin with Name '{self.displayname()}' has no update check.")
 		return False
 
 	def defaultInput(self) -> str:
+		"""
+		`defaultInput()` returns the default input for the plugin
+
+		Returns:
+		  The default input for the plugin.
+		"""
 		self.logger.debugMsg(f"Plugin with Name '{self.displayname()}' has no default input.")
 		return None
