@@ -30,7 +30,7 @@ class Plugin(ABC):
 		"""Returns a dictionary with credits for the plugin
 
 			dict {
-				author: authorname, # your name
+				author: authorname, # your name or alias
 				image: imagePathURL, # Url or path to a image. can be a profile picture or specific to the plugin
 				social: sociallink, # for ex a github link
 			}
