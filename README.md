@@ -15,4 +15,4 @@
 * After Searching the first time, then saving and loading, only the latest Search will be saved and therefore loaded. (Support for multiple Searches is not planned)
 * Moving the Window can be buggy. I know why but i have no Solution yet
 
-[Documentation for Plugins](https://google.com "Here!") (Soon-ish)
+[Documentation for Plugins](https://google.com "Here!") ~~(Soon-ish)~~ <- thats a lie
