@@ -1,6 +1,6 @@
 from os import walk
 from src.Logger import Logger
-from plugins.lib import Plugin
+from plugins._lib.Plugin import Plugin
 class PluginRegister():
 	"""
 	Plugin Register/Manager for Heimdall
@@ -45,7 +45,7 @@ class PluginRegister():
 		  A list of strings.
 		"""
 		for (_, _, filenames) in walk("./plugins"):
-			files = [filename.replace(".py","") for filename in filenames if not filename.startswith("_")]
+			files = [filename.replace(".py","") for filename in filenames if filename.endswith(".py")]
 			break
 		return files # type: ignore
 

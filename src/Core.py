@@ -6,8 +6,8 @@ from typing import LiteralString
 
 from tqdm import tqdm
 
-from plugins.lib.Data import datapoints as dp
-from plugins.lib.Node import Node
+from plugins._lib.Data import datapoints as dp
+from plugins._lib.Node import Node
 from src.Logger import Logger
 
 
