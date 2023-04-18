@@ -1,6 +1,6 @@
-from plugins.lib.Plugin import Plugin
-from plugins.lib.Data import datapoints as dp
-from plugins.lib.Node import Node
+from plugins._lib.Plugin import Plugin
+from plugins._lib.Data import datapoints as dp
+from plugins._lib.Node import Node
 
 class Example(Plugin):                # Class Name must be the same as the File Name
 	def __init__(self,DEBUG) -> None:

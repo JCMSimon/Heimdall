@@ -21,7 +21,7 @@ class APIRegister:
 			self.requestedKeys = []
 		if apiKeys:
 			self.requestedKeys = apiKeys
-			self.keysFile = "config.toml"
+			self.keysFile = "./config.toml"
 			self.loadConfig()
 		else:
 			self.logger.debugMsg("Called without keys being requested")

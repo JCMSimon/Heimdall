@@ -19,7 +19,7 @@ class Plugin(ABC):
 		self.logger = Logger(PREFIX=self.displayname(),DEBUG=DEBUG)
 		self.display = display
 		if APIKEYS and type(APIKEYS) == list or tuple:
-			from plugins.lib.APIRegister import APIRegister
+			from plugins._lib.util.APIRegister import APIRegister
 			self.APIKEYS = APIRegister(apiKeys=APIKEYS).getKeys()
 		elif APIKEYS:
 			raise TypeError("Argument APIKEYS must be a list or tuple")

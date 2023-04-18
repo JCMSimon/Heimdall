@@ -11,7 +11,7 @@ from src.Logger import Logger
 class Proxy:
 	def __init__(self,DEBUG=True) -> None:
 		self.logger = Logger("Proxy",DEBUG=DEBUG)
-		self.configFile = "config.toml"
+		self.configFile = "./config.toml"
 		self.loadConfig()
 		self.used = []
 
