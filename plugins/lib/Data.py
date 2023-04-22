@@ -1,8 +1,6 @@
 class datapoints:
 	undefined = "dp.undefined"
 	ip_address = "dp.ip_address"
-	class _internal:
-		is_root_node = "dp._internal.is_root_node"
 	class name:
 		title = "dp.name.title"
 		first_name = "dp.name.first_name"
