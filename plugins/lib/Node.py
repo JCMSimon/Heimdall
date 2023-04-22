@@ -1,7 +1,7 @@
 from src.Logger import Logger
 
 class Node():
-	def __init__(self,title,color=None,debug=False) -> None:
+	def __init__(self,title,color=None,debug=False,_is_root=False) -> None:
 		self.logger = Logger(f"Node({title})",debug=debug)
 		self.data = {
 			"title":title,
@@ -9,6 +9,7 @@ class Node():
 			"image":None,
 		}
 		self._children = []
+		self._is_root_node = _is_root
 
 	def addDataField(self,datatype,data):
 		self.data["data"].append({datatype:data})
