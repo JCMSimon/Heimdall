@@ -1,3 +1,5 @@
+# Needs a redo
+
 from src.temp.windows import set_transparent_color
 from src.Logger import Logger
 import dearpygui.dearpygui as dpg
@@ -26,7 +28,7 @@ class LoadingUI:
 		"""
 		dpg.create_context()
 		with dpg.texture_registry():
-			self.width, self.height, _, data = dpg.load_image("./assets/heimdall_picture_logo.png")
+			self.width, self.height, _, data = dpg.load_image("./src/gui/assets/textures/loader/logo.png")
 			self.Image = dpg.add_dynamic_texture(self.width, self.height, data,tag="logo")
 		dpg.create_viewport(
 			title="Heimdall",              # Window Title (Also Application Title)
