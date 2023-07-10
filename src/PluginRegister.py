@@ -113,3 +113,6 @@ class PluginRegister():
 		  A list of plugin names that have a defaultInput of DATAPOINT.
 		"""
 		return [pluginName for pluginName in self.plugins.keys() if self.plugins[pluginName]["defaultInput"] == DATAPOINT]
+
+	def getDatapointInputs(self):
+		return [plugin["defaultInput"] for plugin in self.plugins]
