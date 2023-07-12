@@ -2,9 +2,11 @@ import dearpygui.dearpygui as dpg
 from os import walk
 from src.Logger import Logger
 from screeninfo import get_monitors
+from src.gui.lib.RelationalUI import RelationalNodeUI as RNUI
 
 class GUI():
 	def __init__(self,Core=None,debug=False) -> None:
+		if Core is None: debug=True
 		self.logger = Logger("GUI",DEBUG=debug)
 		self.core = Core
 		dpg.create_context()
@@ -14,7 +16,7 @@ class GUI():
 		self.loadTextures()
 		self.mainWindow = dpg.add_window(label="Heimdall",on_close=self.closeGUI,horizontal_scrollbar=False,no_title_bar=True,no_scrollbar=True,no_collapse=True,no_close=False,no_resize=True,menubar=False,no_move=True,height=dpg.get_viewport_height(),width=dpg.get_viewport_width())
 		dpg.set_primary_window(self.mainWindow,True)
-		dpg.set_frame_callback(1,callback=lambda: self.switchState("MAIN"))
+		dpg.set_frame_callback(1,callback=lambda: self.switchState("VIEW"))
 		self.centerViewport()
 		dpg.show_viewport()
 		dpg.start_dearpygui()
@@ -26,18 +28,36 @@ class GUI():
 				dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize, 0, category=dpg.mvThemeCat_Core)
 			with dpg.theme_component(dpg.mvImageButton):
 				dpg.add_theme_color(dpg.mvThemeCol_Button, (0,0,0,0), category=dpg.mvThemeCat_Core)
-				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (255,255,255,127), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (13,17,23,75), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (0,0,0,0), category=dpg.mvThemeCat_Core)
 		with dpg.theme() as self.exit_button_theme:
 			with dpg.theme_component(dpg.mvImageButton):
 				dpg.add_theme_color(dpg.mvThemeCol_Button, (0,0,0,0), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (0,0,0,0), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (0,0,0,0), category=dpg.mvThemeCat_Core)
-		with dpg.theme() as self.search_input_theme:
+		with dpg.theme() as self.search_ui_theme:
 			with dpg.font_registry():
-				self.input_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=60)
+				self.input_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=62)
+				self.loading_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=124)
 			with dpg.theme_component(dpg.mvInputText):
 				dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_Text, (73,50,154,255), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_TextSelectedBg, (73,50,154,100), category=dpg.mvThemeCat_Core)
+			with dpg.theme_component(dpg.mvCombo):
+				dpg.add_theme_color(dpg.mvThemeCol_Text, (73,50,154,255), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (255,255,255,10), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_PopupBg, (13,17,23,255), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, (73,50,154,100), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_HeaderActive, (73,50,154,200), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_Header, (255,255,255,127), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 15)
+				dpg.add_theme_style(dpg.mvStyleVar_PopupRounding, 15)
+				dpg.add_theme_style(dpg.mvStyleVar_PopupBorderSize, 0)
+			with dpg.theme_component(dpg.mvImageButton):
+				dpg.add_theme_color(dpg.mvThemeCol_Button, (0,0,0,0), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (0,0,0,0), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (0,0,0,0), category=dpg.mvThemeCat_Core)
 		dpg.bind_theme(global_theme)
 
 	def loadTextures(self):
@@ -66,26 +86,39 @@ class GUI():
 				# Structure
 				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
+				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
 				dpg.add_image(texture_tag=self.textures["title"],parent=self.mainWindow,pos=[251,198])
 				dpg.add_image_button(label="button-new",texture_tag=self.textures["button-new"],parent=self.mainWindow,pos=[255,342],callback=lambda: self.switchState("SEARCH"))
-				dpg.add_image_button(label="button-load",texture_tag=self.textures["button-load"],parent=self.mainWindow,pos=[510,342],callback=lambda: self.switchState("LOAD"))
-				dpg.add_image_button(label="button-settings",texture_tag=self.textures["button-settings"],parent=self.mainWindow,pos=[765,342],callback=lambda: self.switchState("SETTINGS"))
+				dpg.add_image_button(label="button-load",texture_tag=self.textures["button-load"],parent=self.mainWindow,pos=[510,342]) #,callback=lambda: self.switchState("LOAD")
+				dpg.add_image_button(label="button-settings",texture_tag=self.textures["button-settings"],parent=self.mainWindow,pos=[765,342]) #,callback=lambda: self.switchState("SETTINGS")
 				# Style
 				dpg.bind_item_theme(exit_button,self.exit_button_theme)
 				# Function
 				# TODO | Add a drag handler to the "bar" image to drag the window
 			case "SEARCH":
+				# Structure
 				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["search-background"],parent=self.mainWindow,pos=[0,0])
+				data_type_selector = dpg.add_combo(parent=self.mainWindow,items=["fawfa","gagwg"],pos=[95,317],width=245,default_value="Name",no_arrow_button=True,popup_align_left=True)
 				search_input = dpg.add_input_text(parent=self.mainWindow,pos=[346,317],width=665,multiline=False,hint="Search")
+				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,396],callback=lambda: self.switchState("MAIN"))
+				# Style
+				dpg.bind_item_font(data_type_selector,self.input_font)
 				dpg.bind_item_font(search_input,self.input_font)
-				dpg.bind_item_theme(search_input,self.search_input_theme)
+				dpg.bind_item_theme(data_type_selector,self.search_ui_theme)
+				dpg.bind_item_theme(search_input,self.search_ui_theme)
+				dpg.bind_item_theme(back_button,self.search_ui_theme)
+				# Function
+				# TODO | Replace Values in combo and add enter callback to search
 			case "LOADING":
-				dpg.add_button(label="loading while searching",parent=self.mainWindow,callback=lambda: self.switchState("MAIN"))
+				# TODO | needs more work with an actual loader or whatever. maybe a debug console idfk
+				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
+				loading_text = dpg.add_text(parent=self.mainWindow,default_value="Loading...")
+				dpg.bind_item_font(loading_text,self.loading_font)
 			case "VIEW":
-				dpg.add_button(label="view results",parent=self.mainWindow,callback=lambda: self.switchState("MAIN"))
+				self.RNUI = RNUI(self.mainWindow,width=1100,height=700)
 			case "LOAD":
 				dpg.add_button(label="load a saved file",parent=self.mainWindow,callback=lambda: self.switchState("MAIN"))
 			case "SETTINGS":
