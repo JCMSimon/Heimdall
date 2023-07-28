@@ -18,7 +18,7 @@ class Plugin(ABC):
 		"""
 		self.logger = Logger(PREFIX=self.displayname(),DEBUG=DEBUG)
 		self.display = display
-		if APIKEYS and type(APIKEYS) == list or tuple:
+		if APIKEYS and type(APIKEYS) == list or type(APIKEYS) == tuple:
 			from plugins._lib.util.APIRegister import APIRegister
 			self.APIKEYS = APIRegister(apiKeys=APIKEYS).getKeys()
 		elif APIKEYS:
@@ -70,13 +70,3 @@ class Plugin(ABC):
 		"""
 		self.logger.infoMsg(f"Plugin with Name '{self.displayname()}' has no update check.")
 		return False
-
-	def defaultInput(self) -> str | None:
-		"""
-		`defaultInput()` returns the default input for the plugin
-
-		Returns:
-		  The default input for the plugin.
-		"""
-		self.logger.debugMsg(f"Plugin with Name '{self.displayname()}' has no default input.")
-		return None
