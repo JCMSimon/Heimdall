@@ -30,10 +30,10 @@ class PluginRegister():
 					"displayName":pluginClassInstance.displayname(), # type: ignore
 					"version":pluginClassInstance.version(), # type: ignore
 					"accepts":pluginClassInstance.accepts(), # type: ignore
-					"defaultInput":pluginClassInstance.defaultInput(), # type: ignore
 					"display":pluginClassInstance.display, # type: ignore
 					"runMethod":pluginClassInstance.run, # type: ignore
 				}
+				# TODO Add stuff like getcredits etc
 				self.logger.infoMsg(f"{plugins[pluginName]['displayName']} v{plugins[pluginName]['version']} loaded succesfully!")
 		return plugins
 
@@ -90,18 +90,6 @@ class PluginRegister():
 		self.logger.debugMsg(f"Running Plugin '{pluginName}' with Argument '{keyword}'")
 		return self.getPluginInstance(pluginName).run(keyword) # type: ignore
 
-	def getDefaultDatapointByName(self,pluginName) -> str:
-		"""
-		> This function returns the default datapoint for a given plugin
-
-		Args:
-		  pluginName: The name of the plugin you want to get the default datapoint from.
-
-		Returns:
-		  The default datapoint for the plugin.
-		"""
-		return self.plugins[pluginName]["defaultInput"]
-
 	def getPluginNamesByDatapoint(self,DATAPOINT) -> list:
 		"""
 		> Return a list of plugin names that have a default input of the given datapoint
@@ -114,7 +102,5 @@ class PluginRegister():
 		"""
 		return [pluginName for pluginName in self.plugins.keys() if self.plugins[pluginName]["defaultInput"] == DATAPOINT]
 
-	def getDatapointInputs(self) -> set:
-		print(self.plugins)
-		for plugin in self.plguins:
-			
+	def getAvailableDatapoints(self):
+		return set(datatype for plugin in self.plugins for datatype in self.plugins[plugin]["accepts"])
