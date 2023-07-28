@@ -7,7 +7,7 @@ class datapoints:
 		is_root_node = "dp._internal.is_root_node"
 	class name:
 		title = "dp.name.title"
-		first_name = "dp.name.first_name"
+		first_name = "First name"
 		middle_name = "dp.name.middle_name"
 		last_name = "dp.name.last_name"
 	class age:

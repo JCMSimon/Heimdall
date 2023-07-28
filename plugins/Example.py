@@ -7,6 +7,13 @@ class Example(Plugin):                # Class Name must be the same as the File 
 		self._DEBUG = DEBUG
 		super().__init__(DEBUG=self._DEBUG,display=True,)
 
+	def getCredits(self):
+		return {
+				"author": "JCMS", # your name or alias
+				"image": "https://whatever", # Url or path to a image. can be a profile picture or specific to the plugin
+				"social": "fucck.yourmom", # for ex a github link
+				}
+
 	def displayname(self) -> str:
 		return "Example Plugin"
 

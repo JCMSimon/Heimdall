@@ -49,7 +49,7 @@ class PluginRegister():
 			break
 		return files # type: ignore
 
-	def getPluginInstance(self,pluginName) -> Plugin.Plugin | None:
+	def getPluginInstance(self,pluginName) -> Plugin | None:
 		"""
 		It imports the plugin file and creates a class instance of the plugin
 
@@ -114,5 +114,7 @@ class PluginRegister():
 		"""
 		return [pluginName for pluginName in self.plugins.keys() if self.plugins[pluginName]["defaultInput"] == DATAPOINT]
 
-	def getDatapointInputs(self):
-		return [plugin["defaultInput"] for plugin in self.plugins]
+	def getDatapointInputs(self) -> set:
+		print(self.plugins)
+		for plugin in self.plguins:
+			

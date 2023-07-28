@@ -1,6 +1,6 @@
-from gui.Main import GUI
+from src.gui.Main import GUI
 
-t = GUI()
+t = GUI(DEBUG=True)
 # t.start()
 
 # TODO

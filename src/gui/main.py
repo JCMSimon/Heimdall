@@ -3,12 +3,12 @@ from os import walk
 from src.Logger import Logger
 from screeninfo import get_monitors
 from src.gui.lib.RelationalUI import RelationalNodeUI as RNUI
+from src.Core import Core
 
 class GUI():
-	def __init__(self,Core=None,debug=False) -> None:
-		if Core is None: debug=True
-		self.logger = Logger("GUI",DEBUG=debug)
-		self.core = Core
+	def __init__(self,DEBUG=False) -> None:
+		self.logger = Logger("GUI",DEBUG=DEBUG)
+		self.core = Core(DEBUG=DEBUG)
 		dpg.create_context()
 		dpg.create_viewport(title="Heimdall", min_width=1100, min_height=700, width=1100, height=700, decorated=False)
 		dpg.setup_dearpygui()
@@ -16,7 +16,7 @@ class GUI():
 		self.loadTextures()
 		self.mainWindow = dpg.add_window(label="Heimdall",on_close=self.closeGUI,horizontal_scrollbar=False,no_title_bar=True,no_scrollbar=True,no_collapse=True,no_close=False,no_resize=True,menubar=False,no_move=True,height=dpg.get_viewport_height(),width=dpg.get_viewport_width())
 		dpg.set_primary_window(self.mainWindow,True)
-		dpg.set_frame_callback(1,callback=lambda: self.switchState("VIEW"))
+		dpg.set_frame_callback(1,callback=lambda: self.switchState("SEARCH"))
 		self.centerViewport()
 		dpg.show_viewport()
 		dpg.start_dearpygui()
@@ -101,7 +101,7 @@ class GUI():
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["search-background"],parent=self.mainWindow,pos=[0,0])
-				data_type_selector = dpg.add_combo(parent=self.mainWindow,items=["fawfa","gagwg"],pos=[95,317],width=245,default_value="Name",no_arrow_button=True,popup_align_left=True)
+				data_type_selector = dpg.add_combo(parent=self.mainWindow,items=["placeholder"],pos=[95,317],width=245,default_value="Name",no_arrow_button=True,popup_align_left=True)
 				search_input = dpg.add_input_text(parent=self.mainWindow,pos=[346,317],width=665,multiline=False,hint="Search")
 				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,396],callback=lambda: self.switchState("MAIN"))
 				# Style
@@ -111,20 +111,19 @@ class GUI():
 				dpg.bind_item_theme(search_input,self.search_ui_theme)
 				dpg.bind_item_theme(back_button,self.search_ui_theme)
 				# Function
+				dpg.set_value(data_type_selector,self.core.getPluginTypes())
 				# TODO | Replace Values in combo and add enter callback to search
 			case "LOADING":
 				# TODO | needs more work with an actual loader or whatever. maybe a debug console idfk
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
-				loading_text = dpg.add_text(parent=self.mainWindow,default_value="Loading...")
-				dpg.bind_item_font(loading_text,self.loading_font)
 			case "VIEW":
-				self.RNUI = RNUI(self.mainWindow,width=1100,height=700)
+				pass
 			case "LOAD":
-				dpg.add_button(label="load a saved file",parent=self.mainWindow,callback=lambda: self.switchState("MAIN"))
+				pass
 			case "SETTINGS":
-				dpg.add_button(label="adjust settings",parent=self.mainWindow,callback=lambda: self.switchState("MAIN"))
+				pass
 			case _:
-				dpg.add_button(label="wtf",parent=self.mainWindow,callback=lambda: self.switchState("MAIN"))
+				print("OHNO")
 
 	def resetToDefault(self):
 		for item in dpg.get_item_children(self.mainWindow)[children_index := 1]:

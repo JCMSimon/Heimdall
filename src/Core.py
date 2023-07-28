@@ -6,6 +6,7 @@ from typing import LiteralString
 
 from tqdm import tqdm
 
+from src.PluginRegister import PluginRegister
 from plugins._lib.Data import datapoints as dp
 from plugins._lib.Node import Node
 from src.Logger import Logger
@@ -13,7 +14,7 @@ from src.Logger import Logger
 
 class Core():
 	"""Heimdall's Core. responsible for the search process"""
-	def __init__(self,pluginRegister,DEBUG=False) -> None:
+	def __init__(self,DEBUG=False) -> None:
 		"""
 		This function initializes the Core class
 
@@ -23,7 +24,7 @@ class Core():
 		"""
 		self._DEBUG = DEBUG
 		self.logger = Logger("Core",DEBUG=self._DEBUG)
-		self.pluginRegister = pluginRegister
+		self.pluginRegister = PluginRegister(DEBUG=DEBUG)
 
 	def search(self,pluginName,keyword) -> Node:
 		"""
@@ -43,9 +44,18 @@ class Core():
 			todo.extend(self.pluginRegister.run(pluginName,keyword))
 		else:
 			todo.extend(Node("F4K3").addDataField(datapoint,keyword)) # type: ignore
-		return self.recursiveSearch(todo)
+		return self._recursiveSearch(todo)
 
-	def recursiveSearch(self,todo) -> Node:
+	def getPluginTypes(self) -> set:
+		"""
+		The function `getPluginTypes` returns a set of datapoint inputs from the plugin register.
+
+		Returns:
+		  a set of plugin types.
+		"""
+		return self.pluginRegister.getDatapointInputs()
+
+	def _recursiveSearch(self,todo) -> Node:
 		"""
 		It takes a list of nodes, and for each node, it runs all plugins that are registered for the
 		datatype of the node's data, and then adds the results of those plugins to the node's children
@@ -75,7 +85,7 @@ class Core():
 		pbar.close()
 		return self.root # type: ignore
 
-	def save(self,filename) -> None:
+	def createSave(self,filename) -> None:
 		"""
 		It saves the Core root to a file
 
@@ -94,7 +104,7 @@ class Core():
 			with open(path,"wb") as picklefile:
 				pickle.dump(self.root,picklefile)
 
-	def load(self,filename) -> None:
+	def loadSave(self,filename) -> None:
 		"""
 		It loads a save file and sets the Core root to the loaded object
 
@@ -107,6 +117,7 @@ class Core():
 		with open(path,"rb") as picklefile:
 			try:
 				self.root = pickle.load(picklefile)
+				return self.root
 			except EOFError:
 				self.logger.errorMsg("Cant load empty File")
 
