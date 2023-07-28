@@ -37,8 +37,7 @@ class GUI():
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (0,0,0,0), category=dpg.mvThemeCat_Core)
 		with dpg.theme() as self.search_ui_theme:
 			with dpg.font_registry():
-				self.input_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=62)
-				self.loading_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=124)
+				self.input_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=55)
 			with dpg.theme_component(dpg.mvInputText):
 				dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_Text, (73,50,154,255), category=dpg.mvThemeCat_Core)
@@ -51,6 +50,10 @@ class GUI():
 				dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, (73,50,154,100), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_HeaderActive, (73,50,154,200), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_Header, (255,255,255,127), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_ScrollbarBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_ScrollbarGrab, (73,50,154,100), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_ScrollbarGrabActive, (73,50,154,255), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_ScrollbarGrabHovered, (73,50,154,200), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 15)
 				dpg.add_theme_style(dpg.mvStyleVar_PopupRounding, 15)
 				dpg.add_theme_style(dpg.mvStyleVar_PopupBorderSize, 0)
@@ -101,8 +104,10 @@ class GUI():
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["search-background"],parent=self.mainWindow,pos=[0,0])
-				data_type_selector = dpg.add_combo(parent=self.mainWindow,items=["placeholder"],pos=[95,317],width=245,default_value="Name",no_arrow_button=True,popup_align_left=True)
-				search_input = dpg.add_input_text(parent=self.mainWindow,pos=[346,317],width=665,multiline=False,hint="Search")
+				data_values = list(self.core.getAvailableDatapoints())
+				data_values.sort()
+				data_type_selector = dpg.add_combo(parent=self.mainWindow,items=data_values,pos=[95,320],width=245,default_value=data_values[0],no_arrow_button=True,popup_align_left=True,height_mode=dpg.mvComboHeight_Small,)
+				search_input = dpg.add_input_text(parent=self.mainWindow,pos=[346,320],width=665,multiline=False,hint="Search")
 				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,396],callback=lambda: self.switchState("MAIN"))
 				# Style
 				dpg.bind_item_font(data_type_selector,self.input_font)
@@ -110,9 +115,6 @@ class GUI():
 				dpg.bind_item_theme(data_type_selector,self.search_ui_theme)
 				dpg.bind_item_theme(search_input,self.search_ui_theme)
 				dpg.bind_item_theme(back_button,self.search_ui_theme)
-				# Function
-				dpg.set_value(data_type_selector,self.core.getPluginTypes())
-				# TODO | Replace Values in combo and add enter callback to search
 			case "LOADING":
 				# TODO | needs more work with an actual loader or whatever. maybe a debug console idfk
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
