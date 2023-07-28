@@ -24,9 +24,9 @@ class Core():
 		"""
 		self._DEBUG = DEBUG
 		self.logger = Logger("Core",DEBUG=self._DEBUG)
-		self.pluginRegister = PluginRegister(DEBUG=DEBUG)
+		self.pluginRegister = PluginRegister(DEBUG=self._DEBUG)
 
-	def search(self,pluginName,keyword) -> Node:
+	def search(self,datapoint,keyword) -> Node:
 		"""
 		> The function takes a plugin name and a keyword, and returns a list of nodes that are the result of
 		the search
@@ -39,21 +39,8 @@ class Core():
 		  A list of nodes.
 		"""
 		self.root = Node("ROOT", debug=self._DEBUG).addDataField(dp._internal.is_root_node,True)
-		todo = []
-		if datapoint := self.pluginRegister.getDefaultDatapointByName(pluginName) is None:
-			todo.extend(self.pluginRegister.run(pluginName,keyword))
-		else:
-			todo.extend(Node("F4K3").addDataField(datapoint,keyword)) # type: ignore
+		todo = [Node("F4K3").addDataField(datapoint,keyword)]
 		return self._recursiveSearch(todo)
-
-	def getPluginTypes(self) -> set:
-		"""
-		The function `getPluginTypes` returns a set of datapoint inputs from the plugin register.
-
-		Returns:
-		  a set of plugin types.
-		"""
-		return self.pluginRegister.getDatapointInputs()
 
 	def _recursiveSearch(self,todo) -> Node:
 		"""
@@ -138,6 +125,9 @@ class Core():
 		else:
 			self.logger.errorMsg(f"There is no save at {path}")
 			return False
+
+	def getAvailableDatapoints(self) -> set:
+		return self.pluginRegister.getAvailableDatapoints()
 
 # Thanks to https://gist.github.com/seanh/93666 !
 def format_filename(name) -> LiteralString:
