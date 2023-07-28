@@ -1,6 +1,13 @@
 from src.gui.Main import GUI
+from sys import argv
 
-t = GUI(DEBUG=True)
+if "--debug" in argv:
+    DEBUG = True
+else:
+    DEBUG = False
+
+
+t = GUI(DEBUG=DEBUG)
 # t.start()
 
 # TODO
