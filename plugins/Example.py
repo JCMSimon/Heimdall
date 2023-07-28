@@ -21,7 +21,7 @@ class Example(Plugin):                # Class Name must be the same as the File 
 		return "0.0.1"
 
 	def accepts(self):
-		return [dp.name.first_name]
+		return [dp.name.first_name,dp.name.first_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name]
 
 	def run(self,arg) -> list:
 		testResult = Node("Example Result",debug=self._DEBUG)
