@@ -10,11 +10,8 @@ class Link:
 		self.node_2 = createDPGNode(node_2,node_editor)
 
 	def draw(self,drawList):
-	 	#TODO instead of drawing into the middle draw to the closest edge that is in direction of link. (idk how yet lmfao)
-
 		node_1_poses = generate_anchor_points(self.node_1)
 		node_2_poses = generate_anchor_points(self.node_2)
-
 		poses = find_closest_points(node_1_poses,node_2_poses)
 		return dpg.draw_arrow(poses[1],poses[0],parent=drawList,thickness=3)
 

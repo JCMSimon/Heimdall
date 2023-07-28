@@ -9,5 +9,3 @@ else:
 
 t = GUI(DEBUG=DEBUG)
 # t.start()
-
-# TODO
