@@ -99,6 +99,12 @@ class GUI():
 				# Function
 				# TODO | Add a drag handler to the "bar" image to drag the window
 			case "SEARCH":
+				# Definition
+				def searchCallback():
+					# TODO | Put searching into a seperate thread and load "LOADING" state while thats going
+					if results := self.core.search(dpg.get_value(data_type_selector),dpg.get_value(search_input)):
+						self.results = results
+						self.switchState("VIEW")
 				# Structure
 				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
@@ -107,7 +113,7 @@ class GUI():
 				data_values = list(self.core.getAvailableDatapoints())
 				data_values.sort()
 				data_type_selector = dpg.add_combo(parent=self.mainWindow,items=data_values,pos=[95,320],width=245,default_value=data_values[0],no_arrow_button=True,popup_align_left=True,height_mode=dpg.mvComboHeight_Small,)
-				search_input = dpg.add_input_text(parent=self.mainWindow,pos=[346,320],width=665,multiline=False,hint="Search")
+				search_input = dpg.add_input_text(parent=self.mainWindow,pos=[346,320],width=665,multiline=False,hint="Search",callback=searchCallback,on_enter=True)
 				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,396],callback=lambda: self.switchState("MAIN"))
 				# Style
 				dpg.bind_item_font(data_type_selector,self.input_font)
@@ -115,11 +121,12 @@ class GUI():
 				dpg.bind_item_theme(data_type_selector,self.search_ui_theme)
 				dpg.bind_item_theme(search_input,self.search_ui_theme)
 				dpg.bind_item_theme(back_button,self.search_ui_theme)
+				# Function
 			case "LOADING":
 				# TODO | needs more work with an actual loader or whatever. maybe a debug console idfk
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
 			case "VIEW":
-				pass
+				dpg.add_text(f"{self.results._children[0].data}",parent=self.mainWindow)
 			case "LOAD":
 				pass
 			case "SETTINGS":

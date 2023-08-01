@@ -32,7 +32,7 @@ class Core():
 		the search
 
 		Args:
-		  pluginName: The name of the plugin to run.
+		  datapoint: a defined data point.
 		  keyword: The keyword to search for
 
 		Returns:
@@ -54,7 +54,7 @@ class Core():
 		Returns:
 		  A Tree of nodes
 		"""
-		pbar = getPbar(todo,"Processing Nodes","Nodes")
+		# pbar = getPbar(todo,"Processing Nodes","Nodes")
 		for node in todo:
 			for dataField in node.data["data"]:
 				for datatype,data in dataField.items():
@@ -66,10 +66,10 @@ class Core():
 				self.root._children.extend(results) # type: ignore
 			else:
 				node._children.extend(results) # type: ignore
-			pbar.update(1)
-			todo.extend(results) # type: ignore
+			# pbar.update(1)
+			# todo.extend(results) # type: ignore
 			# pbar.total += len(results)
-		pbar.close()
+		# pbar.close()
 		return self.root # type: ignore
 
 	def createSave(self,filename) -> None:

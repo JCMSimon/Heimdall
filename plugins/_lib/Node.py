@@ -19,6 +19,7 @@ class Node():
 			"color":color,
 		}
 		self._children = []
+
 	def addDataField(self,datapoint,data) -> None:
 		"""
 		> This function takes a datapoint and data as parameters and adds them to the Node as data field
@@ -28,6 +29,7 @@ class Node():
 		data: The data to be added to the Node.
 		"""
 		self.data["data"].append({datapoint:data})
+		return self
 
 	def addImage(self,imagetype,imageUrl) -> None:
 		"""
