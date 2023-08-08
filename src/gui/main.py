@@ -2,7 +2,7 @@ import dearpygui.dearpygui as dpg
 from os import walk
 from src.Logger import Logger
 from screeninfo import get_monitors
-from src.gui.lib.RelationalUI import RelationalNodeUI as RNUI
+from src.gui.lib.RelationalUI import RelationalNodeUI
 from src.Core import Core
 
 class GUI():
@@ -101,9 +101,10 @@ class GUI():
 			case "SEARCH":
 				# Definition
 				def searchCallback():
+					self.switchState("LOADING")
 					# TODO | Put searching into a seperate thread and load "LOADING" state while thats going
 					if results := self.core.search(dpg.get_value(data_type_selector),dpg.get_value(search_input)):
-						self.results = results
+						self.result = results
 						self.switchState("VIEW")
 				# Structure
 				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
@@ -126,7 +127,14 @@ class GUI():
 				# TODO | needs more work with an actual loader or whatever. maybe a debug console idfk
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
 			case "VIEW":
-				dpg.add_text(f"{self.results._children[0].data}",parent=self.mainWindow)
+				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
+				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
+				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
+				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
+				dpg.add_image(texture_tag=self.textures["view-background"],parent=self.mainWindow,pos=[79,111])
+				dpg.add_image(texture_tag=self.textures["view-filename-background"],parent=self.mainWindow,pos=[408,52])
+				RNUI = RelationalNodeUI(parent=self.mainWindow,width=942,height=512,x=111,y=79)
+				RNUI.visualize(self.result)
 			case "LOAD":
 				pass
 			case "SETTINGS":

@@ -23,27 +23,25 @@ class Link:
 class RelationalNodeUI:
 	"""A Relational UI specifically made for [Heimdall](https://hdll.jcms.dev) based on the node editor from [dearpygui](https://github.com/hoffstadt/DearPyGui)
 	"""
-	def __init__(self,parent,width,height,) -> None:
+	def __init__(self,parent,width,height,y,x) -> None:
 		self.width = width
 		self.height = height
-		self.editor = dpg.add_node_editor(parent=parent,width=self.width,height=self.height)
+		self.pos = [y,x]
+		self.editorWindow = dpg.add_child_window(border=False,no_scrollbar=True,parent=parent,width=self.width,height=self.height,pos=self.pos)
 		with dpg.theme() as editor_theme:
 			with dpg.theme_component(dpg.mvAll):
-				dpg.add_theme_style(dpg.mvStyleVar_WindowPadding,0,0,category=dpg.mvThemeCat_Core)
-				dpg.add_theme_style(dpg.mvNodeStyleVar_GridSpacing,0,category=dpg.mvThemeCat_Nodes)
-				dpg.add_theme_style(dpg.mvNodeStyleVar_NodePadding,6,4,category=dpg.mvThemeCat_Nodes)
-				dpg.add_theme_style(dpg.mvNodeStyleVar_NodeCornerRounding,0,category=dpg.mvThemeCat_Nodes)
-				dpg.add_theme_style(dpg.mvNodeStyleVar_NodeBorderThickness,0,category=dpg.mvThemeCat_Nodes)
-		dpg.bind_item_theme(parent,editor_theme)
-		dpg.set_frame_callback(1,self.setup_draw_layer)
+				dpg.add_theme_style(dpg.mvNodeStyleVar_GridSpacing,0)
+		self.editor = dpg.add_node_editor(parent=self.editorWindow,width=self.width,height=self.height)
+		dpg.bind_item_theme(self.editorWindow,editor_theme)
+		dpg.set_frame_callback(dpg.get_frame_count() + 1,self.setup_draw_layer)
 
 	def setup_draw_layer(self):
 		with dpg.theme() as draw_window_theme:
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_style(dpg.mvStyleVar_WindowPadding,0,0,category=dpg.mvThemeCat_Core)
-		with dpg.window(no_background=True,pos=dpg.get_item_pos(self.editor),width=self.width,height=self.height,no_move=True,no_title_bar=True,no_scrollbar=True,no_resize=True,max_size=(self.width,self.height),horizontal_scrollbar=False,min_size=(self.width,self.height),no_close=True,no_collapse=True) as drawWindow:
+		with dpg.window(no_background=True,pos=self.pos,width=self.width,height=self.height,no_move=True,no_title_bar=True,no_scrollbar=True,no_resize=True,max_size=(self.width,self.height),horizontal_scrollbar=False,min_size=(self.width,self.height),no_close=True,no_collapse=True) as drawWindow:
+			self.drawList = dpg.add_drawlist(parent=drawWindow,width=self.width,height=self.height,pos=self.pos)
 			dpg.bind_item_theme(drawWindow,draw_window_theme)
-			self.drawList = dpg.add_drawlist(width=self.width,height=self.height,pos=dpg.get_item_pos(self.editor))
 
 	def startInteractionThreads(self):
 		self.drawThread = threading.Thread(target=self.drawLinks)

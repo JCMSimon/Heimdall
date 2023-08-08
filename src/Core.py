@@ -39,7 +39,9 @@ class Core():
 		  A list of nodes.
 		"""
 		self.root = Node("ROOT", debug=self._DEBUG).addDataField(dp._internal.is_root_node,True)
-		todo = [Node("F4K3").addDataField(datapoint,keyword)]
+		FakeNode = Node("F4K3")
+		FakeNode.addDataField(datapoint,keyword)
+		todo = [FakeNode]
 		return self._recursiveSearch(todo)
 
 	def _recursiveSearch(self,todo) -> Node:
@@ -56,6 +58,7 @@ class Core():
 		"""
 		# pbar = getPbar(todo,"Processing Nodes","Nodes")
 		for node in todo:
+			print(node.data)
 			for dataField in node.data["data"]:
 				for datatype,data in dataField.items():
 					plugins = self.pluginRegister.getPluginNamesByDatapoint(datatype)
