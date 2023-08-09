@@ -24,6 +24,8 @@ class Example(Plugin):                # Class Name must be the same as the File 
 		return [dp.name.first_name,dp.name.first_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name]
 
 	def run(self,arg) -> list:
-		testResult = Node("Example Result",debug=self._DEBUG)
-		testResult.addDataField(dp.hashes.generic,"RXhhbXBsZQ==")
-		return [testResult]
+		testResult = Node("Eye Color",debug=self._DEBUG)
+		testResult.addDataField(dp.person.body.eye_color,"blue")
+		testResult2 = Node("Hair Color",debug=self._DEBUG)
+		testResult2.addDataField(dp.person.body.hair_color,"blonde")
+		return [testResult,testResult2]
