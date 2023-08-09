@@ -32,21 +32,26 @@ class RelationalNodeUI:
 		self.pos = [y,x]
 		self.editorWindow = dpg.add_child_window(border=False,no_scrollbar=True,parent=parent,width=self.width,height=self.height,pos=self.pos)
 		self.editor = dpg.add_node_editor(parent=self.editorWindow,width=self.width,height=self.height)
-		# with dpg.theme() as self.node_editor_theme:
-		# 	with dpg.theme_component(dpg.mvWindowAppItem):
-		# 		dpg.add_theme_style(dpg.mvStyleVar_WindowPadding,0, category=dpg.mvThemeCat_Core)
-				# dpg.add_theme_style(dpg.mvNodeStyleVar_GridSpacing, 0, category=dpg.mvThemeCat_Core)
-		# 		dpg.add_theme_style(dpg.mvStyleVar_ChildBorderSize, 0, category=dpg.mvThemeCat_Core)
-		# 		dpg.add_theme_style(dpg.mvStyleVar_WindowPadding,0,0,category=dpg.mvThemeCat_Core)
-		# 		dpg.add_theme_color(dpg.mvNodeCol_GridBackground, (0,0,0,0), category=dpg.mvThemeCat_Core)
-		# 		dpg.add_theme_color(dpg.mvThemeCol_ChildBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
-
+		with dpg.theme() as self.node_editor_window_theme:
+			with dpg.theme_component(dpg.mvAll):
+				dpg.add_theme_style(dpg.mvNodeStyleVar_GridSpacing, 0,category=dpg.mvThemeCat_Nodes)
+				dpg.add_theme_style(dpg.mvStyleVar_ChildBorderSize, 0, category=dpg.mvThemeCat_Core)
+				dpg.add_theme_style(dpg.mvStyleVar_WindowPadding,0,0,category=dpg.mvThemeCat_Core)
+				dpg.add_theme_style(dpg.mvStyleVar_ChildRounding,30,category=dpg.mvThemeCat_Core)
+				dpg.add_theme_style(dpg.mvNodeStyleVar_NodeCornerRounding,10,category=dpg.mvThemeCat_Nodes)
+				dpg.add_theme_style(dpg.mvNodeStyleVar_NodePadding,4,4,category=dpg.mvThemeCat_Nodes)
+				dpg.add_theme_style(dpg.mvStyleVar_ButtonTextAlign,0.5,category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvNodeCol_GridBackground, (0,0,0,0), category=dpg.mvThemeCat_Nodes)
+				dpg.add_theme_color(dpg.mvThemeCol_ChildBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvNodeCol_NodeBackground,(255,255,255,25),category=dpg.mvThemeCat_Nodes)
+				dpg.add_theme_color(dpg.mvNodeCol_NodeOutline,(255,255,255,0),category=dpg.mvThemeCat_Nodes)
+				dpg.add_theme_color(dpg.mvNodeCol_TitleBar,(80,0,255,100),category=dpg.mvThemeCat_Nodes)
 	def setup_draw_layer(self):
-		with dpg.window(no_background=True,pos=self.pos,width=self.width,height=self.height,no_move=True,no_title_bar=True,no_scrollbar=True,no_resize=True,max_size=(self.width,self.height),horizontal_scrollbar=False,min_size=(self.width,self.height),no_close=True,no_collapse=True) as drawWindow:
-			self.drawList = dpg.add_drawlist(parent=drawWindow,width=self.width,height=self.height,pos=self.pos)
-		# dpg.bind_item_theme(self.editorWindow,self.node_editor_theme)
-		# dpg.bind_item_theme(self.editor,self.node_editor_theme)
-		# dpg.bind_item_theme(drawWindow,self.node_editor_theme)
+		with dpg.window(no_background=True,pos=self.pos,width=self.width,height=self.height,no_move=True,no_title_bar=True,no_scrollbar=True,no_resize=True,max_size=(self.width,self.height),horizontal_scrollbar=False,min_size=(self.width,self.height),no_close=True,no_collapse=True) as self.drawWindow:
+			self.drawList = dpg.add_drawlist(parent=self.drawWindow,width=self.width,height=self.height,pos=self.pos)
+		dpg.bind_item_theme(self.editorWindow,self.node_editor_window_theme)
+		dpg.bind_item_theme(self.drawWindow,self.node_editor_window_theme)
+		dpg.bind_item_theme(self.editor,self.node_editor_window_theme)
 		self.logger.debugMsg("Added drawlist")
 
 	def startInteractionThreads(self):
@@ -58,6 +63,10 @@ class RelationalNodeUI:
 
 	def stopInteractionThreads(self):
 		self.Interaction = False
+		self.dragThread.join()
+		self.drawThread.join()
+		dpg.delete_item(self.drawList)
+		dpg.delete_item(self.drawWindow)
 
 	def visualize(self,root) -> None:
 		# Convert Tree data to relational data
@@ -68,7 +77,7 @@ class RelationalNodeUI:
 		# Center root node
 		self.logger.debugMsg("Visualizing [2/5] - Centering root node")
 		rootNode = self.get_editor_nodes()[0]
-		center = getItemMiddle(self.editor)
+		center = getItemMiddle(self.editorWindow)
 		dpg.set_item_pos(rootNode,[center[0] - dpg.get_item_width(rootNode),center[1] - dpg.get_item_height(rootNode)])
 		# Randomise position of nodes (except root node)
 		self.logger.debugMsg("Visualizing [3/5] - Randomising node positions")

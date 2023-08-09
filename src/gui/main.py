@@ -4,6 +4,7 @@ from src.Logger import Logger
 from screeninfo import get_monitors
 from src.gui.lib.RelationalUI import RelationalNodeUI
 from src.Core import Core
+import time
 
 class GUI():
 	def __init__(self,DEBUG=False) -> None:
@@ -15,10 +16,9 @@ class GUI():
 		dpg.setup_dearpygui()
 		self.initStyles()
 		self.loadTextures()
-		self.mainWindow = dpg.add_window(label="Heimdall",on_close=self.closeGUI,horizontal_scrollbar=False,no_title_bar=True,no_scrollbar=True,no_collapse=True,no_close=False,no_resize=True,menubar=False,no_move=True,height=dpg.get_viewport_height(),width=dpg.get_viewport_width())
+		self.mainWindow = dpg.add_window(label="Heimdall",on_close=self.closeGUI,horizontal_scrollbar=False,no_title_bar=True,no_scrollbar=True,no_collapse=True,no_close=False,no_resize=True,menubar=False,no_move=True)
 		dpg.set_primary_window(self.mainWindow,True)
-		# dpg.set_frame_callback(1,callback=lambda: self.switchState("MAIN"))
-		dpg.set_frame_callback(1,callback=lambda: self.switchState("VIEW"))
+		dpg.set_frame_callback(1,callback=lambda: self.switchState("MAIN"))
 		self.centerViewport()
 		dpg.show_viewport()
 		dpg.start_dearpygui()
@@ -102,7 +102,7 @@ class GUI():
 				# Structure
 				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
-				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
+				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["title"],parent=self.mainWindow,pos=[251,198])
 				dpg.add_image_button(label="button-new",texture_tag=self.textures["button-new"],parent=self.mainWindow,pos=[255,342],callback=lambda: self.switchState("SEARCH"))
 				dpg.add_image_button(label="button-load",texture_tag=self.textures["button-load"],parent=self.mainWindow,pos=[510,342]) #,callback=lambda: self.switchState("LOAD")
@@ -120,6 +120,8 @@ class GUI():
 					value = dpg.get_value(search_input)
 					self.switchState("LOADING")
 					self.logger.debugMsg(f"Starting search with dp:{datapoint},value:{value}")
+					if self.DEBUG:
+						self.startedSerchTime = time.time()
 					if results := self.core.search(datapoint,value):
 						self.result = results
 						self.logger.debugMsg(f"Got search results: {self.result}")
@@ -146,18 +148,25 @@ class GUI():
 				# TODO | needs more work with an actual loader or whatever. maybe a debug console idfk
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
 			case "VIEW":
+				def backToSearch():
+					self.RNUI.stopInteractionThreads()
+					self.switchState("SEARCH")
 				# Structure
 				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
-				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
+				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["view-background"],parent=self.mainWindow,pos=[79,111])
 				dpg.add_image(texture_tag=self.textures["view-filename-background"],parent=self.mainWindow,pos=[408,52])
 				file_name = dpg.add_input_text(parent=self.mainWindow,pos=[425,53],width=260,multiline=False,hint="Unsaved File",no_spaces=True) # ,callback=searchCallback,on_enter=True
 				self.RNUI = RelationalNodeUI(parent=self.mainWindow,width=942,height=512,x=111,y=79,DEBUG=self.DEBUG)
+				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,635],callback=backToSearch)
 				# TODO | Uncomment this
-				# self.RNUI.visualize(self.result)
+				self.RNUI.visualize(self.result)
+				if self.DEBUG:
+					self.logger.debugMsg(f"Search took {round(time.time() - self.startedSerchTime,2)}s")
 				# Style
+				dpg.bind_item_theme(back_button,self.search_ui_theme)
 				dpg.bind_item_font(file_name,self.file_name_font)
 				dpg.bind_item_theme(file_name,self.view_ui_theme)
 			case "LOAD":
