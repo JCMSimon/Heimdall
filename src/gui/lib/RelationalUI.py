@@ -32,16 +32,21 @@ class RelationalNodeUI:
 		self.pos = [y,x]
 		self.editorWindow = dpg.add_child_window(border=False,no_scrollbar=True,parent=parent,width=self.width,height=self.height,pos=self.pos)
 		self.editor = dpg.add_node_editor(parent=self.editorWindow,width=self.width,height=self.height)
-		# dpg.set_frame_callback(dpg.get_frame_count() + 1,self.setup_draw_layer)
-
+		# with dpg.theme() as self.node_editor_theme:
+		# 	with dpg.theme_component(dpg.mvWindowAppItem):
+		# 		dpg.add_theme_style(dpg.mvStyleVar_WindowPadding,0, category=dpg.mvThemeCat_Core)
+				# dpg.add_theme_style(dpg.mvNodeStyleVar_GridSpacing, 0, category=dpg.mvThemeCat_Core)
+		# 		dpg.add_theme_style(dpg.mvStyleVar_ChildBorderSize, 0, category=dpg.mvThemeCat_Core)
+		# 		dpg.add_theme_style(dpg.mvStyleVar_WindowPadding,0,0,category=dpg.mvThemeCat_Core)
+		# 		dpg.add_theme_color(dpg.mvNodeCol_GridBackground, (0,0,0,0), category=dpg.mvThemeCat_Core)
+		# 		dpg.add_theme_color(dpg.mvThemeCol_ChildBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
 
 	def setup_draw_layer(self):
-		with dpg.theme() as draw_window_theme:
-			with dpg.theme_component(dpg.mvAll):
-				dpg.add_theme_style(dpg.mvStyleVar_WindowPadding,0,0,category=dpg.mvThemeCat_Core)
 		with dpg.window(no_background=True,pos=self.pos,width=self.width,height=self.height,no_move=True,no_title_bar=True,no_scrollbar=True,no_resize=True,max_size=(self.width,self.height),horizontal_scrollbar=False,min_size=(self.width,self.height),no_close=True,no_collapse=True) as drawWindow:
 			self.drawList = dpg.add_drawlist(parent=drawWindow,width=self.width,height=self.height,pos=self.pos)
-			dpg.bind_item_theme(drawWindow,draw_window_theme)
+		# dpg.bind_item_theme(self.editorWindow,self.node_editor_theme)
+		# dpg.bind_item_theme(self.editor,self.node_editor_theme)
+		# dpg.bind_item_theme(drawWindow,self.node_editor_theme)
 		self.logger.debugMsg("Added drawlist")
 
 	def startInteractionThreads(self):
@@ -152,11 +157,14 @@ class RelationalNodeUI:
 			list_of_drawn_elements = [link.draw(self.drawList) for link in self.links]
 			time.sleep(1 / int(dpg.get_frame_rate()))
 			for item in list_of_drawn_elements:
-				dpg.delete_item(item)
+				try:
+					dpg.delete_item(item)
+				except SystemError:
+					pass
 
 	def handleDragging(self,isDragging = False):
 		while self.Interaction:
-			time.sleep(0.016)
+			time.sleep(1 / int(dpg.get_frame_rate()))
 			if dpg.is_mouse_button_dragging(button=dpg.mvMouseButton_Left,threshold=0.05) and not isDragging and not dpg.is_mouse_button_released(button=dpg.mvMouseButton_Left):
 				isDragging = True
 				# allow start dragging for 2 ms
@@ -189,14 +197,7 @@ def createDPGNode(hdllnode,editor) -> int:
 	try:
 		return hdllnode.dpgID
 	except AttributeError:
-
-		# TODO | make this better lmao
-		description = ""
-		for field in hdllnode.data["data"]:
-			for key,value in field.items():
-				if key != dp._internal.is_root_node:
-					description = description + f"{value}\n"
-
+		description = '\n'.join(value for field in hdllnode.data["data"] for key, value in field.items() if key != dp._internal.is_root_node)
 		with dpg.node(label=hdllnode.data["title"],parent=editor) as DPGNodeID:
 			if description != "":
 				with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Static):
