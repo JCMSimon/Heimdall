@@ -7,6 +7,7 @@ from src.Core import Core
 
 class GUI():
 	def __init__(self,DEBUG=False) -> None:
+		self.DEBUG = DEBUG
 		self.logger = Logger("GUI",DEBUG=DEBUG)
 		self.core = Core(DEBUG=DEBUG)
 		dpg.create_context()
@@ -16,12 +17,16 @@ class GUI():
 		self.loadTextures()
 		self.mainWindow = dpg.add_window(label="Heimdall",on_close=self.closeGUI,horizontal_scrollbar=False,no_title_bar=True,no_scrollbar=True,no_collapse=True,no_close=False,no_resize=True,menubar=False,no_move=True,height=dpg.get_viewport_height(),width=dpg.get_viewport_width())
 		dpg.set_primary_window(self.mainWindow,True)
-		dpg.set_frame_callback(1,callback=lambda: self.switchState("SEARCH"))
+		# dpg.set_frame_callback(1,callback=lambda: self.switchState("MAIN"))
+		dpg.set_frame_callback(1,callback=lambda: self.switchState("VIEW"))
 		self.centerViewport()
 		dpg.show_viewport()
 		dpg.start_dearpygui()
 
 	def initStyles(self):  # sourcery skip: extract-duplicate-method
+		with dpg.font_registry():
+			self.input_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=55)
+			self.file_name_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=40)
 		with dpg.theme() as global_theme:
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_color(dpg.mvThemeCol_WindowBg, (13, 17, 23), category=dpg.mvThemeCat_Core)
@@ -36,8 +41,6 @@ class GUI():
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (0,0,0,0), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (0,0,0,0), category=dpg.mvThemeCat_Core)
 		with dpg.theme() as self.search_ui_theme:
-			with dpg.font_registry():
-				self.input_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=55)
 			with dpg.theme_component(dpg.mvInputText):
 				dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_Text, (73,50,154,255), category=dpg.mvThemeCat_Core)
@@ -61,6 +64,11 @@ class GUI():
 				dpg.add_theme_color(dpg.mvThemeCol_Button, (0,0,0,0), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (0,0,0,0), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (0,0,0,0), category=dpg.mvThemeCat_Core)
+		with dpg.theme() as self.view_ui_theme:
+			with dpg.theme_component(dpg.mvInputText):
+				dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_Text, (73,50,154,255), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_TextSelectedBg, (73,50,154,100), category=dpg.mvThemeCat_Core)
 		dpg.bind_theme(global_theme)
 
 	def loadTextures(self):
@@ -74,6 +82,9 @@ class GUI():
 			with dpg.texture_registry():
 				self.textures[asset.replace(".png","")] = dpg.add_dynamic_texture(width,height,data)
 				self.images[asset.replace(".png","")] = [width, height, data]
+		self.logger.debugMsg(f"Loaded Assets:")
+		self.logger.debugMsg(f"Textures: {len(self.textures)}")
+		self.logger.debugMsg(f"Images: {len(self.images)}")
 
 	def centerViewport(self):
 		for monitor in get_monitors():
@@ -84,6 +95,8 @@ class GUI():
 
 	def switchState(self,GUIState):
 		self.resetToDefault()
+		self.logger.debugMsg(f"Switching state to {GUIState}")
+		self.GUIState = GUIState
 		match GUIState:
 			case "MAIN":
 				# Structure
@@ -99,12 +112,17 @@ class GUI():
 				# Function
 				# TODO | Add a drag handler to the "bar" image to drag the window
 			case "SEARCH":
-				# Definition
+				# Function
 				def searchCallback():
-					self.switchState("LOADING")
+					# self.switchState("LOADING")
 					# TODO | Put searching into a seperate thread and load "LOADING" state while thats going
-					if results := self.core.search(dpg.get_value(data_type_selector),dpg.get_value(search_input)):
+					datapoint = dpg.get_value(data_type_selector)
+					value = dpg.get_value(search_input)
+					self.switchState("LOADING")
+					self.logger.debugMsg(f"Starting search with dp:{datapoint},value:{value}")
+					if results := self.core.search(datapoint,value):
 						self.result = results
+						self.logger.debugMsg(f"Got search results: {self.result}")
 						self.switchState("VIEW")
 				# Structure
 				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
@@ -113,6 +131,8 @@ class GUI():
 				dpg.add_image(texture_tag=self.textures["search-background"],parent=self.mainWindow,pos=[0,0])
 				data_values = list(self.core.getAvailableDatapoints())
 				data_values.sort()
+				self.logger.debugMsg("Gathered all available datapoints:")
+				self.logger.debugMsg(data_values)
 				data_type_selector = dpg.add_combo(parent=self.mainWindow,items=data_values,pos=[95,320],width=245,default_value=data_values[0],no_arrow_button=True,popup_align_left=True,height_mode=dpg.mvComboHeight_Small,)
 				search_input = dpg.add_input_text(parent=self.mainWindow,pos=[346,320],width=665,multiline=False,hint="Search",callback=searchCallback,on_enter=True)
 				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,396],callback=lambda: self.switchState("MAIN"))
@@ -122,19 +142,24 @@ class GUI():
 				dpg.bind_item_theme(data_type_selector,self.search_ui_theme)
 				dpg.bind_item_theme(search_input,self.search_ui_theme)
 				dpg.bind_item_theme(back_button,self.search_ui_theme)
-				# Function
 			case "LOADING":
 				# TODO | needs more work with an actual loader or whatever. maybe a debug console idfk
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
 			case "VIEW":
+				# Structure
 				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
 				dpg.add_image(texture_tag=self.textures["view-background"],parent=self.mainWindow,pos=[79,111])
 				dpg.add_image(texture_tag=self.textures["view-filename-background"],parent=self.mainWindow,pos=[408,52])
-				RNUI = RelationalNodeUI(parent=self.mainWindow,width=942,height=512,x=111,y=79)
-				RNUI.visualize(self.result)
+				file_name = dpg.add_input_text(parent=self.mainWindow,pos=[425,53],width=260,multiline=False,hint="Unsaved File",no_spaces=True) # ,callback=searchCallback,on_enter=True
+				self.RNUI = RelationalNodeUI(parent=self.mainWindow,width=942,height=512,x=111,y=79,DEBUG=self.DEBUG)
+				# TODO | Uncomment this
+				# self.RNUI.visualize(self.result)
+				# Style
+				dpg.bind_item_font(file_name,self.file_name_font)
+				dpg.bind_item_theme(file_name,self.view_ui_theme)
 			case "LOAD":
 				pass
 			case "SETTINGS":
@@ -147,6 +172,8 @@ class GUI():
 			dpg.delete_item(item)
 
 	def closeGUI(self):
+		if self.GUIState == "VIEW":
+			self.RNUI.stopInteractionThreads()
 		dpg.destroy_context()
 
 				# hovered

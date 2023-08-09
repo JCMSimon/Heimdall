@@ -3,6 +3,8 @@ from math import sqrt
 import time
 import threading
 from random import choice
+from plugins._lib.Data import datapoints as dp
+from src.Logger import Logger
 
 class Link:
 	def __init__(self,node_1,node_2,node_editor) -> None:
@@ -13,7 +15,7 @@ class Link:
 		node_1_poses = generate_anchor_points(self.node_1)
 		node_2_poses = generate_anchor_points(self.node_2)
 		poses = find_closest_points(node_1_poses,node_2_poses)
-		return dpg.draw_arrow(poses[1],poses[0],parent=drawList,thickness=3)
+		return dpg.draw_arrow(poses[1],poses[0],parent=drawList,thickness=3,color=(73,50,154,255))
 
 	def get_length(self) -> int:
 		x,y = getItemMiddle(self.node_1)
@@ -23,17 +25,15 @@ class Link:
 class RelationalNodeUI:
 	"""A Relational UI specifically made for [Heimdall](https://hdll.jcms.dev) based on the node editor from [dearpygui](https://github.com/hoffstadt/DearPyGui)
 	"""
-	def __init__(self,parent,width,height,y,x) -> None:
+	def __init__(self,parent,width,height,y,x,DEBUG=False) -> None:
+		self.logger = Logger("RNG",DEBUG=DEBUG)
 		self.width = width
 		self.height = height
 		self.pos = [y,x]
 		self.editorWindow = dpg.add_child_window(border=False,no_scrollbar=True,parent=parent,width=self.width,height=self.height,pos=self.pos)
-		with dpg.theme() as editor_theme:
-			with dpg.theme_component(dpg.mvAll):
-				dpg.add_theme_style(dpg.mvNodeStyleVar_GridSpacing,0)
 		self.editor = dpg.add_node_editor(parent=self.editorWindow,width=self.width,height=self.height)
-		dpg.bind_item_theme(self.editorWindow,editor_theme)
-		dpg.set_frame_callback(dpg.get_frame_count() + 1,self.setup_draw_layer)
+		# dpg.set_frame_callback(dpg.get_frame_count() + 1,self.setup_draw_layer)
+
 
 	def setup_draw_layer(self):
 		with dpg.theme() as draw_window_theme:
@@ -42,20 +42,40 @@ class RelationalNodeUI:
 		with dpg.window(no_background=True,pos=self.pos,width=self.width,height=self.height,no_move=True,no_title_bar=True,no_scrollbar=True,no_resize=True,max_size=(self.width,self.height),horizontal_scrollbar=False,min_size=(self.width,self.height),no_close=True,no_collapse=True) as drawWindow:
 			self.drawList = dpg.add_drawlist(parent=drawWindow,width=self.width,height=self.height,pos=self.pos)
 			dpg.bind_item_theme(drawWindow,draw_window_theme)
+		self.logger.debugMsg("Added drawlist")
 
 	def startInteractionThreads(self):
+		self.Interaction = True
 		self.drawThread = threading.Thread(target=self.drawLinks)
 		self.dragThread = threading.Thread(target=self.handleDragging)
 		self.drawThread.start()
 		self.dragThread.start()
 
+	def stopInteractionThreads(self):
+		self.Interaction = False
+
 	def visualize(self,root) -> None:
+		# Convert Tree data to relational data
+		self.logger.debugMsg("Visualizing [1/5] - Converting data to relational model")
 		self.createLinks(root)
-		# Center Root Node
-		dpg.set_item_pos(self.get_editor_nodes()[0],getItemMiddle(self.editor))
-		# Randomise other nodes
+		# Need to split the frame to get updated element positions and sizes
+		dpg.split_frame()
+		# Center root node
+		self.logger.debugMsg("Visualizing [2/5] - Centering root node")
+		rootNode = self.get_editor_nodes()[0]
+		center = getItemMiddle(self.editor)
+		dpg.set_item_pos(rootNode,[center[0] - dpg.get_item_width(rootNode),center[1] - dpg.get_item_height(rootNode)])
+		# Randomise position of nodes (except root node)
+		self.logger.debugMsg("Visualizing [3/5] - Randomising node positions")
 		for node in self.get_editor_nodes()[1:]:
-			dpg.set_item_pos(node,(choice(range(self.width)),choice(range(self.height))))
+			dpg.set_item_pos(node,(choice(range(round(self.width / 2))),choice(range(round(self.height / 2)))))
+		self.logger.debugMsg("Visualizing [4/5] - Applying math to nodes")
+		self.calculateNodePositions()
+		self.logger.debugMsg("Visualizing [5/5] - Adding draw and drag handler")
+		self.setup_draw_layer()
+		self.startInteractionThreads()
+
+	def calculateNodePositions(self):
 		self.settings = {
 		# Higher => Nodes further apart
 		"repulsive_force_constant":3.0,
@@ -68,13 +88,11 @@ class RelationalNodeUI:
 		# Iterations
 		"max_iterations":200,
 		}
-
 		# Iterative force calculations and position updates
 		for _ in range(self.settings["max_iterations"]):
 			max_displacement = 0.0
 			# Reset net force
 			net_forces = {node: [0.0, 0.0] for node in self.get_editor_nodes()}
-
 		# Calculate repulsive forces
 		for i, node1 in enumerate(self.get_editor_nodes()):
 			pos1 = dpg.get_item_pos(node1)
@@ -89,7 +107,6 @@ class RelationalNodeUI:
 				net_forces[node1][1] += force[1]
 				net_forces[node2][0] -= force[0]
 				net_forces[node2][1] -= force[1]
-
 			# Calculate attractive forces
 			for link in self.links:
 				node1, node2 = link.node_1,link.node_2
@@ -103,7 +120,6 @@ class RelationalNodeUI:
 				net_forces[node1][1] -= force[1]
 				net_forces[node2][0] += force[0]
 				net_forces[node2][1] += force[1]
-
 			# Update positions based on net forces
 			for node in self.get_editor_nodes():
 				displacement = net_forces[node]
@@ -112,10 +128,8 @@ class RelationalNodeUI:
 				current_pos = dpg.get_item_pos(node)
 				new_pos = [current_pos[0] + displacement[0], current_pos[1] + displacement[1]]
 				dpg.set_item_pos(node, new_pos)
-
 				# Calculate maximum displacement for convergence check
 				max_displacement = max(max_displacement, sqrt(displacement[0] ** 2 + displacement[1] ** 2))
-
 			# Check for convergence
 			if max_displacement < self.settings["max_displacement_threshold"]:
 				break
@@ -127,19 +141,21 @@ class RelationalNodeUI:
 		for node in todo:
 			self.links.extend(Link(node,child,self.editor) for child in node._children)
 			todo.extend(node._children)
+		self.logger.debugMsg(f"Generated Links: {len(self.links)}")
+		self.logger.debugMsg(f"Generated Links: {self.links}")
 
 	def get_editor_nodes(self) -> list[int]:
 		return dpg.get_item_children(self.editor)[childrenIndex := 1]
 
 	def drawLinks(self):
-		while True:
+		while self.Interaction:
 			list_of_drawn_elements = [link.draw(self.drawList) for link in self.links]
 			time.sleep(1 / int(dpg.get_frame_rate()))
 			for item in list_of_drawn_elements:
 				dpg.delete_item(item)
 
 	def handleDragging(self,isDragging = False):
-		while True:
+		while self.Interaction:
 			time.sleep(0.016)
 			if dpg.is_mouse_button_dragging(button=dpg.mvMouseButton_Left,threshold=0.05) and not isDragging and not dpg.is_mouse_button_released(button=dpg.mvMouseButton_Left):
 				isDragging = True
@@ -157,7 +173,7 @@ class RelationalNodeUI:
 
 
 def getNodeByPosition(nodes,mousepos):
-	draggable_nodes = [node for node in nodes if dpg.get_item_configuration(node)["draggable"]]
+	draggable_nodes = [node for node in nodes if dpg.get_item_configuration(node)["draggable"] != False]
 	# generate bounding boxes for all nodes that are draggable
 	for node in draggable_nodes:
 		nodeBox = {node:(dpg.get_item_pos(node),[dpg.get_item_pos(node)[0] + dpg.get_item_rect_size(node)[0],dpg.get_item_pos(node)[1] + dpg.get_item_rect_size(node)[1]])}
@@ -173,7 +189,14 @@ def createDPGNode(hdllnode,editor) -> int:
 	try:
 		return hdllnode.dpgID
 	except AttributeError:
-		description = '\n'.join([value for field in hdllnode.data['data'] for key, value in field.items() if hdllnode._is_root_node != True])
+
+		# TODO | make this better lmao
+		description = ""
+		for field in hdllnode.data["data"]:
+			for key,value in field.items():
+				if key != dp._internal.is_root_node:
+					description = description + f"{value}\n"
+
 		with dpg.node(label=hdllnode.data["title"],parent=editor) as DPGNodeID:
 			if description != "":
 				with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Static):
@@ -192,10 +215,10 @@ def generate_anchor_points(node):
 	height = dpg.get_item_rect_size(node)[1]
 
 	# Calculate the coordinates of the four corners
-	top_left = position
-	top_right = (position[0] + width, position[1])
-	bottom_left = (position[0], position[1] + height)
-	bottom_right = (position[0] + width, position[1] + height)
+	# top_left = position
+	# top_right = (position[0] + width, position[1])
+	# bottom_left = (position[0], position[1] + height)
+	# bottom_right = (position[0] + width, position[1] + height)
 
 	# Calculate the coordinates of the midpoints on each side
 	top_midpoint = (position[0] + width // 2, position[1])

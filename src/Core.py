@@ -58,7 +58,6 @@ class Core():
 		"""
 		# pbar = getPbar(todo,"Processing Nodes","Nodes")
 		for node in todo:
-			print(node.data)
 			for dataField in node.data["data"]:
 				for datatype,data in dataField.items():
 					plugins = self.pluginRegister.getPluginNamesByDatapoint(datatype)
