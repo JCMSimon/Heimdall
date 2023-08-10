@@ -69,6 +69,10 @@ class GUI():
 				dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_Text, (73,50,154,255), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_TextSelectedBg, (73,50,154,100), category=dpg.mvThemeCat_Core)
+		with dpg.theme() as self.loading_theme:
+			with dpg.theme_component(dpg.mvText):
+				dpg.add_theme_style(dpg.mvStyleVar_SelectableTextAlign, 0.5, category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_Text, (73,50,154,255), category=dpg.mvThemeCat_Core)
 		dpg.bind_theme(global_theme)
 
 	def loadTextures(self):
@@ -114,18 +118,13 @@ class GUI():
 			case "SEARCH":
 				# Function
 				def searchCallback():
-					# self.switchState("LOADING")
-					# TODO | Put searching into a seperate thread and load "LOADING" state while thats going
 					datapoint = dpg.get_value(data_type_selector)
 					value = dpg.get_value(search_input)
-					self.switchState("LOADING")
+					self.searchData = [datapoint,value]
 					self.logger.debugMsg(f"Starting search with dp:{datapoint},value:{value}")
 					if self.DEBUG:
 						self.startedSerchTime = time.time()
-					if results := self.core.search(datapoint,value):
-						self.result = results
-						self.logger.debugMsg(f"Got search results: {self.result}")
-						self.switchState("VIEW")
+					self.switchState("LOADING")
 				# Structure
 				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
@@ -145,8 +144,21 @@ class GUI():
 				dpg.bind_item_theme(search_input,self.search_ui_theme)
 				dpg.bind_item_theme(back_button,self.search_ui_theme)
 			case "LOADING":
-				# TODO | needs more work with an actual loader or whatever. maybe a debug console idfk
-				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,-100])
+				def setLoadingText(text):
+					dpg.set_value(self.loadingText,text)
+					dpg.split_frame()
+					dpg.set_item_pos(self.loadingText,[580 - dpg.get_item_rect_size(self.loadingText)[0] / 2,353])
+				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
+				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
+				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
+				dpg.add_image(texture_tag=self.textures["loading-background"],parent=self.mainWindow,pos=[0,0])
+				self.loadingText = dpg.add_text(default_value="",pos=[580,353],parent=self.mainWindow)
+				dpg.bind_item_theme(self.loadingText,self.loading_theme)
+				dpg.bind_item_font(self.loadingText,self.input_font)
+				if results := self.core.search(self.searchData[0],self.searchData[1],feedbackFunc=setLoadingText):
+						self.result = results
+						self.logger.debugMsg(f"Got search results: {self.result}")
+						self.switchState("VIEW")
 			case "VIEW":
 				def backToSearch():
 					self.RNUI.stopInteractionThreads()
@@ -161,7 +173,6 @@ class GUI():
 				file_name = dpg.add_input_text(parent=self.mainWindow,pos=[425,53],width=260,multiline=False,hint="Unsaved File",no_spaces=True) # ,callback=searchCallback,on_enter=True
 				self.RNUI = RelationalNodeUI(parent=self.mainWindow,width=942,height=512,x=111,y=79,DEBUG=self.DEBUG)
 				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,635],callback=backToSearch)
-				# TODO | Uncomment this
 				self.RNUI.visualize(self.result)
 				if self.DEBUG:
 					self.logger.debugMsg(f"Search took {round(time.time() - self.startedSerchTime,2)}s")

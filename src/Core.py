@@ -26,7 +26,7 @@ class Core():
 		self.logger = Logger("Core",DEBUG=self._DEBUG)
 		self.pluginRegister = PluginRegister(DEBUG=self._DEBUG)
 
-	def search(self,datapoint,keyword) -> Node:
+	def search(self,datapoint,keyword,feedbackFunc=None) -> Node:
 		"""
 		> The function takes a plugin name and a keyword, and returns a list of nodes that are the result of
 		the search
@@ -34,10 +34,13 @@ class Core():
 		Args:
 		  datapoint: a defined data point.
 		  keyword: The keyword to search for
+		  feedbackFunc: A function that gets input as strings
 
 		Returns:
 		  A list of nodes.
 		"""
+		self.ff = feedbackFunc
+		self.ff("Creating fake node")
 		self.root = Node("ROOT", debug=self._DEBUG).addDataField(dp._internal.is_root_node,True)
 		FakeNode = Node("F4K3")
 		FakeNode.addDataField(datapoint,keyword)
@@ -63,6 +66,7 @@ class Core():
 					plugins = self.pluginRegister.getPluginNamesByDatapoint(datatype)
 					results = []
 					for plugin in plugins:
+						self.ff(f"Running plugin: {plugin}")
 						results.extend(self.pluginRegister.runPlugin(plugin,data))
 			if node.data["title"] == "F4K3":
 				self.root._children.extend(results) # type: ignore
