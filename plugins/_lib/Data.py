@@ -2,8 +2,6 @@ class datapoints:
 	""" Keeps all supported data types\n
 		Examples in the 2nd line are not always exhaustive
 	"""
-	ip_address = "dp.ip_address"
-	" '192.168.123.132' "
 	undefined = "dp.undefined"
 	" Any data that does not fit into any other datapoint "
 	class _internal:
@@ -76,267 +74,117 @@ class datapoints:
 			"""
 			hair_color = "Hair Color"
 			" 'Blonde', 'Black', 'Red', 'Green' "
+	class vehicle:
+		type = "Vehicle type"
+		" 'Car', 'Bike', 'Plane', 'Boat' "
+		color = "Vehicle color"
+		" 'black', 'red', 'blue', 'green' "
+		brand = "Vehicle Brand"
+		" 'BMW', 'Kia', etc "
+		build_year = "Vehicle build year"
+		" '1989', '2010' "
+		class identifier:
+			license_plate = "License plate"
+			"""For Cars, bikes etc\n
+			'SAM 911E', 'HH 07194' """
+			tail_number = "Tail number"
+			"""For Planes\n
+			'7T-WHM	', 'N16-100	' """
+			hull_identification_number = "Hull Identification Number (HIN)"
+			"""For Boats\n
+			'ABC12345D404'"""
+	class location:
+		latitude = "Latitude"
+		" '37.275036', '37°16'30.1\"N' "
+		longitude = "Longitude"
+		" '-115.799632', '115°47'58.7\"W' "
+		zip_code = "Zip code"
 
-	# class education:
-	# 	level = "dp.education.level"
-	# 	class school:
-	# 		school_name = "dp.education.school.school_name"
-	# 		class address:
-	# 			address = "dp.education.school.adress.address"
-	# 			city = "dp.education.school.adress.city"
-	# 			county = "dp.education.school.adress.county"
-	# 			latitude = "dp.education.school.adress.latitude"
-	# 			longitude = "dp.education.school.adress.longitude"
-	## 			region = "dp.education.school.adress.region"
-	# 			state = "dp.education.school.adress.state"
-	# 			street_name = "dp.education.school.adress.street_name"
-	# 			zip_code = "dp.education.school.adress.zip_code"
-	# class vehicle:
-	# 	type = "dp.vehicle.type"
-	# 	license_plate = "dp.vehicle.license_plate"
-	# 	tail_number = "dp.vehicle.tail_number"
-	# 	model = "dp.vehicle.model"
-	# 	build_year = "dp.vehicle.build_year"
-	# class family:
-	# 	class father:
-	# 		class name:
-	# 			title = "dp.family.father.name.title"
-	# 			first_name = "dp.family.father.name.first_name"
-	# 			middle_name = "dp.family.father.name.middle_name"
-	# 			last_name = "dp.family.father.name.last_name"
-	# 		class age:
-	# 			age_in_years = "dp.family.father.age.age_in_years"
-	# 			date_of_birth = "dp.family.father.age.date_of_birth"
-	# 			date_of_birth_day = "dp.family.father.age.date_of_birth_day"
-	# 			date_of_birth_month = "dp.family.father.age.date_of_birth_month"
-	# 			date_of_birth_year = "dp.family.father.age.date_of_birth_year"
-	# 		class body:
-	# 			height = "dp.family.father.body.height"
-	# 			weight = "dp.family.father.body.weight"
-	# 			eye_color = "dp.family.father.body.eye_color"
-	# 			skin_color = "dp.family.father.body.skin_color"
-	# 			hair_color = "dp.family.father.body.hair_color"
-	# 			gender = "dp.family.father.body.gender"
-	# 		class education:
-	# 			level = "dp.family.father.education.level"
-	# 		class person:
-	# 			ethnicity = "dp.family.father.person.ethnicity"
-	# 			nationality = "dp.family.father.person.nationality"
-	# 		class contact:
-	# 			phone_number = "dp.family.father.contact.phone_number"
-	# 			email = "dp.family.father.contact.email"
-	# 			fax_number = "dp.family.father.contact.fax_number"
-	# 	class mother:
-	# 		class name:
-	# 			title = "dp.family.mother.name.title"
-	# 			first_name = "dp.family.mother.name.first_name"
-	# 			middle_name = "dp.family.mother.name.middle_name"
-	# 			last_name = "dp.family.mother.name.last_name"
-	# 		class age:
-	# 			age_in_years = "dp.family.mother.age.age_in_years"
-	# 			date_of_birth = "dp.family.mother.age.date_of_birth"
-	# 			date_of_birth_day = "dp.family.mother.age.date_of_birth_day"
-	# 			date_of_birth_month = "dp.family.mother.age.date_of_birth_month"
-	# 			date_of_birth_year = "dp.family.mother.age.date_of_birth_year"
-	# 		class body:
-	# 			height = "dp.family.mother.body.height"
-	# 			weight = "dp.family.mother.body.weight"
-	# 			eye_color = "dp.family.mother.body.eye_color"
-	# 			skin_color = "dp.family.mother.body.skin_color"
-	# 			hair_color = "dp.family.mother.body.hair_color"
-	# 			gender = "dp.family.mother.body.gender"
-	# 		class education:
-	# 			level = "dp.family.mother.education.level"
-	# 		class person:
-	# 			ethnicity = "dp.family.mother.person.ethnicity"
-	# 			nationality = "dp.family.mother.person.nationality"
-	# 		class contact:
-	# 			phone_number = "dp.family.mother.contact.phone_number"
-	# 			email = "dp.family.mother.contact.email"
-	# 			fax_number = "dp.family.mother.contact.fax_number"
-	# 	class brother:
-	# 		class name:
-	# 			title = "dp.family.brother.name.title"
-	# 			first_name = "dp.family.brother.name.first_name"
-	# 			middle_name = "dp.family.brother.name.middle_name"
-	# 			last_name = "dp.family.brother.name.last_name"
-	# 		class age:
-	# 			age_in_years = "dp.family.brother.age.age_in_years"
-	# 			date_of_birth = "dp.family.brother.age.date_of_birth"
-	# 			date_of_birth_day = "dp.family.brother.age.date_of_birth_day"
-	# 			date_of_birth_month = "dp.family.brother.age.date_of_birth_month"
-	# 			date_of_birth_year = "dp.family.brother.age.date_of_birth_year"
-	# 		class body:
-	# 			height = "dp.family.brother.body.height"
-	# 			weight = "dp.family.brother.body.weight"
-	# 			eye_color = "dp.family.brother.body.eye_color"
-	# 			skin_color = "dp.family.brother.body.skin_color"
-	# 			hair_color = "dp.family.brother.body.hair_color"
-	# 			gender = "dp.family.brother.body.gender"
-	# 		class education:
-	# 			level = "dp.family.brother.education.level"
-	# 		class person:
-	# 			ethnicity = "dp.family.brother.person.ethnicity"
-	# 			nationality = "dp.family.brother.person.nationality"
-	# 		class contact:
-	# 			phone_number = "dp.family.brother.contact.phone_number"
-	# 			email = "dp.family.brother.contact.email"
-	# 			fax_number = "dp.family.brother.contact.fax_number"
-	# 	class sister:
-	# 		class name:
-	# 			title = "dp.family.sister.name.title"
-	# 			first_name = "dp.family.sister.name.first_name"
-	# 			middle_name = "dp.family.sister.name.middle_name"
-	# 			last_name = "dp.family.sister.name.last_name"
-	# 		class age:
-	# 			age_in_years = "dp.family.sister.age.age_in_years"
-	# 			date_of_birth = "dp.family.sister.age.date_of_birth"
-	# 			date_of_birth_day = "dp.family.sister.age.date_of_birth_day"
-	# 			date_of_birth_month = "dp.family.sister.age.date_of_birth_month"
-	# 			date_of_birth_year = "dp.family.sister.age.date_of_birth_year"
-	# 		class body:
-	# 			height = "dp.family.sister.body.height"
-	# 			weight = "dp.family.sister.body.weight"
-	# 			eye_color = "dp.family.sister.body.eye_color"
-	# 			skin_color = "dp.family.sister.body.skin_color"
-	# 			hair_color = "dp.family.sister.body.hair_color"
-	# 			gender = "dp.family.sister.body.gender"
-	# 		class education:
-	# 			level = "dp.family.sister.education.level"
-	# 		class person:
-	# 			ethnicity = "dp.family.sister.person.ethnicity"
-	# 			nationality = "dp.family.sister.person.nationality"
-	# 		class contact:
-	# 			phone_number = "dp.family.sister.contact.phone_number"
-	# 			email = "dp.family.sister.contact.email"
-	# 			fax_number = "dp.family.sister.contact.fax_number"
-	# 	class pet:
-	# 		type = "dp.family.pet.type"
-	# 		color = "dp.family.pet.color"
-	# 		class name:
-	# 			title = "dp.family.pet.name.title"
-	# 			first_name = "dp.family.pet.name.first_name"
-	# 			middle_name = "dp.family.pet.name.middle_name"
-	# 			last_name = "dp.family.pet.name.last_name"
-	# 		class age:
-	# 			age_in_years = "dp.family.pet.age.age_in_years"
-	# 			date_of_birth = "dp.family.pet.age.date_of_birth"
-	# 			date_of_birth_day = "dp.family.pet.age.date_of_birth_day"
-	# 			date_of_birth_month = "dp.family.pet.age.date_of_birth_month"
-	# 			date_of_birth_year = "dp.family.pet.age.date_of_birth_year"
-	# 		class body:
-	# 			height = "dp.family.pet.body.height"
-	# 			length = "dp.family.pet.body.length"
-	# 			weight = "dp.family.pet.body.weight"
-	# 			gender = "dp.family.pet.body.gender"
-	# 	class generic:
-	# 		type = "dp.family.generic.type"
-	# 		class name:
-	# 			title = "dp.family.generic.name.title"
-	# 			first_name = "dp.family.generic.name.first_name"
-	# 			middle_name = "dp.family.generic.name.middle_name"
-	# 			last_name = "dp.family.generic.name.last_name"
-	# 		class age:
-	# 			age_in_years = "dp.family.generic.age.age_in_years"
-	# 			date_of_birth = "dp.family.generic.age.date_of_birth"
-	# 			date_of_birth_day = "dp.family.generic.age.date_of_birth_day"
-	# 			date_of_birth_month = "dp.family.generic.age.date_of_birth_month"
-	# 			date_of_birth_year = "dp.family.generic.age.date_of_birth_year"
-	# 		class body:
-	# 			height = "dp.family.generic.body.height"
-	# 			weight = "dp.family.generic.body.weight"
-	# 			eye_color = "dp.family.generic.body.eye_color"
-	# 			skin_color = "dp.family.generic.body.skin_color"
-	# 			hair_color = "dp.family.generic.body.hair_color"
-	# 			gender = "dp.family.generic.body.gender"
-	# 		class education:
-	# 			level = "dp.family.generic.education.level"
-	# 		class person:
-	# 			ethnicity = "dp.family.generic.person.ethnicity"
-	# 			nationality = "dp.family.generic.person.nationality"
-	# 		class contact:
-	# 			phone_number = "dp.family.generic.contact.phone_number"
-	# 			email = "dp.family.generic.contact.email"
-	# 			fax_number = "dp.family.generic.contact.fax_number"
+		state_or_region = "State/Region"
+		" 'Kansas', 'Pest', 'Bayern', "
+		city = "City"
+		" 'Manhattan', 'Monor', 'München' "
+		street = "Street"
+		" 'Claflin Rd', 'Kossuth Lajos u.', 'Adelheidstraße' "
+		house_number = "House number"
+		" '1800 ', '74', '14' "
+		class country:
+			name = "Country name"
+			" 'Germany', 'Hungary', 'United States of America' "
+			code = "Country code"
+			" 'DE', 'HU', 'USA' "
+	class email:
+		generic = "Generic Email"
+		" '*@*.*' "
+		gmail = "Gmail"
+		" '*@gmail.com' "
+		hotmail = "Hotmail"
+		" '*@hotmail.com', '*@hotmail.co.uk', '*@hotmail.fr' "
+		outlook = "Outlook mail"
+		" '*@outlook.com' "
+		proton = "Proton Mail"
+		" '*@proton.me', '*@protonmail.com', '*pm.me' '*@protonmail.ch' "
+		yahoo = "Yahoo Mail"
+		" '*@yahoo.com', '*@yahoo.fr', '*@myyahoo.com' "
+		aol = "AOL Email"
+		" '*@aol.com' "
+		msn = "MSN Email"
+		" '*@msn.com' "
+		# TODO | Expand list using https://email-verify.my-addr.com/list-of-most-popular-email-domains.php
+	class ip:
+		address_v4 = "Ip Address (v4)"
+		" '192.168.123.132' "
+		address_v6 = "Ip Address (v6)"
+		" '0000:0000:0000:0000:0000:ffff:c0a8:7b84' "
+		port = "Port"
+		" '8080', 25565 "
+	class hash:
+		generic = "Generic hash"
+		" Any hash that does not fit into any other datapoint "
+		md5 = "MD5 hash"
+		" '8ce21631012f107953cb2f1bcf3dad29' "
+		sha1 = "SHA-1 hash"
+		" 'cfb9a5cb56f4b910863ed7a4a671ced2c17f5807' "
+		sha256 = "SHA-256 hash"
+		" 'ebab140b3fb81566002d832257eef15795545dbca18f679d3cb800de1da80b15' "
+		bcrypt = "bcrypt hash"
+		" '$2y$10$S2VvQQ9aqSLdNVPqvsYAteApDyQcH6YLO0qWUqqrBD2CWpqml/Pnq' "
+		argon2i = "argon2i hash"
+		" '$argon2i$v=19$m=16,t=2,p=1$SGVpbWRhbGw$kXV2SueEXeBeBpkEex6MsA' "
+	class socialmedia:
+		class discord:
+			id = "Discord User id"
+			" '155149108183695360' "
+			username = "Discord Username"
+			" 'Dyno' "
+			old_tag = "Discord tag (#)"
+			" '3861' "
+			user_url = "Discord User URL"
+			" 'https://discord.com/users/155149108183695360' "
+			pfp_url = "Discord avatar"
+			" 'https://cdn.discordapp.com/avatars/155149108183695360/19a5ee4114b47195fcecc6646f2380b1.png' "
+			banner_url = "Discord banner"
+			" 'https://cdn.discordapp.com/banners/204683417445466112/a6ca48aad51922940e6bc383dbd0d852.png' "
+			bio = "Discord bio"
+			""" Replace new lines with escaped new lines \n
+'The Discord bot to make server management and moderation easy. Follow your favorite streamers, run giveaways, and more! \\n \\n https://dyno.gg/' """
+		class facebook:
+			id = "Facebook User Id"
+			" '100081847450786' "
+			# TODO | add a bunch of dogshit
+
 	# class personal_website:
 	# 	name = "dp.personal_website.name"
 	# 	domain = "dp.personal_website.domain"
 	# 	ip = "dp.personal_website.ip"
 	# 	subdomain = "dp.personal_website.subdomain"
 	# 	dns_server = "dp.personal_website.dns_server"
-	# class email:
-	# 	apple = "dp.email.apple"
-	# 	generic = "dp.email.generic"
-	# 	gmail = "dp.email.gmail"
-	# 	hotmail = "dp.email.hotmail"
-	# 	outlook = "dp.email.outlook"
-	# 	proton = "dp.email.proton"
-	# 	web_de = "dp.email.web_de"
-	# 	yahoo = "dp.email.yahoo"
-	# class hashes:
-	# 	email = "dp.hashed.email"
-	# 	password = "dp.hashed.password"
-	# 	generic = "dp.hashed.generic"
 	# class credentials:
 	# 	numerical_pin_number = "dp.credentials.numerical_pin_number"
 	# 	password = "dp.credentials.password"
 	# class contact:
 	# 	fax_number = "dp.contact.fax_number"
 	# 	phone_number = "dp.contact.phone_number"
-	# class property:
-	# 	class home:
-	# 		address = "dp.property.home.address"
-	# 		latitude = "dp.property.home.latitude"
-	# 		longitude = "dp.property.home.longitude"
-	# 		apartment_number = "dp.property.home.apartment_number"
-	# 		city = "dp.property.home.city"
-	# 		country = "dp.property.home.country"
-	# 		county = "dp.property.home.county"
-	# 		house_number = "dp.property.home.house_number"
-	# 		region = "dp.property.home.region"
-	# 		state = "dp.property.home.state"
-	# 		street_name = "dp.property.home.street_name"
-	# 		zip_code = "dp.property.home.zip_code"
-	# 	class generic:
-	# 		type = "dp.property.generic.type"
-	# 		address = "dp.property.generic.address"
-	# 		latitude = "dp.property.generic.apartment_latitude"
-	# 		longitude = "dp.property.generic.apartment_longitude"
-	# 		apartment_number = "dp.property.generic.apartment_number"
-	# 		city = "dp.property.generic.city"
-	# 		country = "dp.property.generic.country"
-	# 		county = "dp.property.generic.county"
-	# 		house_number = "dp.property.generic.house_number"
-	# 		region = "dp.property.generic.region"
-	# 		state = "dp.property.generic.state"
-	# 		street_name = "dp.property.generic.street_name"
-	# 		zip_code = "dp.property.generic.zip_code"
-	# class work:
-	# 	title = "dp.work.title"
-	# 	class workplace:
-	# 		company_name = "dp.work.workplace.company_name"
-	# 		class address:
-	# 			address = "dp.work.workplace.address.address"
-	# 			city = "dp.work.workplace.address.city"
-	# 			county = "dp.work.workplace.address.county"
-	# 			latitude = "dp.work.workplace.address.latitude"
-	# 			longitude = "dp.work.workplace.address.longitude"
-	# 			region = "dp.work.workplace.address.region"
-	# 			state = "dp.work.workplace.address.state"
-	# 			street_name = "dp.work.workplace.address.street_name"
-	# 			zip_code = "dp.work.workplace.address.zip_code"
-	# class birth_place:
-	# 	name = 0
-	# 	class address:
-	# 		address = "dp.birth_place.address.address"
-	# 		city = "dp.birth_place.address.city"
-	# 		county = "dp.birth_place.address.county"
-	# 		latitude = "dp.birth_place.address.latitude"
-	# 		longitude = "dp.birth_place.address.longitude"
-	# 		region = "dp.birth_place.address.region"
-	# 		state = "dp.birth_place.address.state"
-	# 		street_name = "dp.birth_place.address.street_name"
-	# 		zip_code = "dp.birth_place.address.zip_code"
 	# class sensetive_data:
 	# 	social_security_number = "dp.sensetive_data.social_security_number"
 	# 	class credit_card:
@@ -347,7 +195,6 @@ class datapoints:
 	# 		expiry_year = "dp.sensetive_data.credit_card.expiry_year"
 	# 		cvc = "dp.sensetive_data.credit_card.cvc"
 	# class username:
-	# 	discord = "dp.username.discord"
 	# 	facebook = "dp.username.facebook"
 	# 	generic = "dp.username.generic"
 	# 	google_plus = "dp.username.google_plus"

@@ -5,6 +5,7 @@ from screeninfo import get_monitors
 from src.gui.lib.RelationalUI import RelationalNodeUI
 from src.Core import Core
 import time
+import threading
 
 class GUI():
 	def __init__(self,DEBUG=False) -> None:
@@ -12,13 +13,14 @@ class GUI():
 		self.logger = Logger("GUI",DEBUG=DEBUG)
 		self.core = Core(DEBUG=DEBUG)
 		dpg.create_context()
-		dpg.create_viewport(title="Heimdall", min_width=1100, min_height=700, width=1100, height=700, decorated=False)
+		dpg.create_viewport(title="Heimdall", min_width=1100, min_height=700, width=1100, height=700, decorated=False, vsync=True)
 		dpg.setup_dearpygui()
 		self.initStyles()
 		self.loadTextures()
 		self.mainWindow = dpg.add_window(label="Heimdall",on_close=self.closeGUI,horizontal_scrollbar=False,no_title_bar=True,no_scrollbar=True,no_collapse=True,no_close=False,no_resize=True,menubar=False,no_move=True)
 		dpg.set_primary_window(self.mainWindow,True)
 		dpg.set_frame_callback(1,callback=lambda: self.switchState("MAIN"))
+		self.running = True
 		self.centerViewport()
 		dpg.show_viewport()
 		dpg.start_dearpygui()
@@ -104,7 +106,7 @@ class GUI():
 		match GUIState:
 			case "MAIN":
 				# Structure
-				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
+				self.mainbar = dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["title"],parent=self.mainWindow,pos=[251,198])
@@ -113,8 +115,7 @@ class GUI():
 				dpg.add_image_button(label="button-settings",texture_tag=self.textures["button-settings"],parent=self.mainWindow,pos=[765,342]) #,callback=lambda: self.switchState("SETTINGS")
 				# Style
 				dpg.bind_item_theme(exit_button,self.exit_button_theme)
-				# Function
-				# TODO | Add a drag handler to the "bar" image to drag the window
+				self.dragWindow()
 			case "SEARCH":
 				# Function
 				def searchCallback():
@@ -126,7 +127,7 @@ class GUI():
 						self.startedSerchTime = time.time()
 					self.switchState("LOADING")
 				# Structure
-				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
+				self.mainbar = dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["search-background"],parent=self.mainWindow,pos=[0,0])
@@ -148,7 +149,7 @@ class GUI():
 					dpg.set_value(self.loadingText,text)
 					dpg.split_frame()
 					dpg.set_item_pos(self.loadingText,[580 - dpg.get_item_rect_size(self.loadingText)[0] / 2,353])
-				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
+				self.mainbar = dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["loading-background"],parent=self.mainWindow,pos=[0,0])
@@ -164,7 +165,7 @@ class GUI():
 					self.RNUI.stopInteractionThreads()
 					self.switchState("SEARCH")
 				# Structure
-				dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
+				self.mainbar = dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,0])
@@ -187,6 +188,27 @@ class GUI():
 			case _:
 				print("OHNO")
 
+
+	def dragWindow(self, isDragging = False):
+		bar_x_range = range(0,1076)
+		bar_y_range = range(-20,16)
+		while self.running:
+			time.sleep(1 / int(dpg.get_frame_rate()))
+			if dpg.is_mouse_button_dragging(button=dpg.mvMouseButton_Left,threshold=0.05) and not isDragging and not dpg.is_mouse_button_released(button=dpg.mvMouseButton_Left):
+				isDragging = True
+				# allow start dragging for 2 ms
+				drag_ts_timeout = time.time() + 0.02
+			elif isDragging and not dpg.is_mouse_button_down(button=dpg.mvMouseButton_Left):
+				isDragging = False
+			if isDragging:
+				if dpg.get_mouse_pos(local=True)[0] in bar_x_range and dpg.get_mouse_pos(local=True)[1] in bar_y_range:
+					if time.time() < drag_ts_timeout:
+						old_vp_pos = dpg.get_viewport_pos()
+						while dpg.is_mouse_button_down(button=dpg.mvMouseButton_Left):
+							delta = dpg.get_mouse_drag_delta()
+							dpg.set_viewport_pos([old_vp_pos[0] + delta[0],old_vp_pos[1] + delta[1]])
+							time.sleep(1 / int(dpg.get_frame_rate()))
+
 	def resetToDefault(self):
 		for item in dpg.get_item_children(self.mainWindow)[children_index := 1]:
 			dpg.delete_item(item)
@@ -196,7 +218,3 @@ class GUI():
 			self.RNUI.stopInteractionThreads()
 		dpg.destroy_context()
 
-				# hovered
-				# dpg.set_value(item=self.textures[dpg.get_item_label(item)],value=self.images[f"hovered-{dpg.get_item_label(item)}"][image_index := 2])
-				# normal
-				# dpg.set_value(item=self.textures[dpg.get_item_label(item)],value=self.images[dpg.get_item_label(item)][image_index := 2])
