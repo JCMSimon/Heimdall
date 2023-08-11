@@ -124,7 +124,7 @@ class Core():
 		Returns:
 		  A boolean value. True if file was deleted successfuly. False if not.
 		"""
-		path = f"./saves/{filename}.pickle" #TODO This might not work. gonna see in future
+		path = f"./saves/{filename}.pickle" # TODO | This might not work. gonna see in future
 		if os.path.exists(path):
 			os.system(f"del {path}")
 			return True

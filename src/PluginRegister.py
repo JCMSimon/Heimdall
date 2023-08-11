@@ -33,7 +33,7 @@ class PluginRegister():
 					"display":pluginClassInstance.display, # type: ignore
 					"runMethod":pluginClassInstance.run, # type: ignore
 				}
-				# TODO Add stuff like getcredits etc
+				# TODO | Add stuff like getcredits etc
 				self.logger.infoMsg(f"{plugins[pluginName]['displayName']} v{plugins[pluginName]['version']} loaded succesfully!")
 		return plugins
 

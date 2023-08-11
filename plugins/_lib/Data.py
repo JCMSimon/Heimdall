@@ -153,25 +153,71 @@ class datapoints:
 		" '$argon2i$v=19$m=16,t=2,p=1$SGVpbWRhbGw$kXV2SueEXeBeBpkEex6MsA' "
 	class socialmedia:
 		class discord:
+			class _badges:
+				""" DO NOT USE AS ACTUAL DATAPOINT \n
+				This class is used to standartize discord badge representation """
+				active_developer = 0
+				class hype_squad:
+					brilliance = 0
+				# TODO | Add all Discord Badges
 			id = "Discord User id"
 			" '155149108183695360' "
 			username = "Discord Username"
 			" 'Dyno' "
 			old_tag = "Discord tag (#)"
-			" '3861' "
-			user_url = "Discord User URL"
-			" 'https://discord.com/users/155149108183695360' "
+			" 'Dyno#3861' "
 			pfp_url = "Discord avatar"
 			" 'https://cdn.discordapp.com/avatars/155149108183695360/19a5ee4114b47195fcecc6646f2380b1.png' "
 			banner_url = "Discord banner"
 			" 'https://cdn.discordapp.com/banners/204683417445466112/a6ca48aad51922940e6bc383dbd0d852.png' "
 			bio = "Discord bio"
 			""" Replace new lines with escaped new lines \n
-'The Discord bot to make server management and moderation easy. Follow your favorite streamers, run giveaways, and more! \\n \\n https://dyno.gg/' """
-		class facebook:
-			id = "Facebook User Id"
-			" '100081847450786' "
-			# TODO | add a bunch of dogshit
+			'The Discord bot to make server management and moderation easy. Follow your favorite streamers, run giveaways, and more! \\n \\n https://dyno.gg/' """
+			badges = "Discord user badges"
+			""" Refer to datapoints.socialmedia.discord._badges for a list of all supported badges \n
+			'[datapoints.socialmedia.discord._badges.active_developer,datapoints.socialmedia.discord._badges.hype_squad.brilliance]' """
+		class youtube:
+			alias = "Youtube alias"
+			" '@JCMS_', '@Miimii' "
+			channel_id = "Youtube channel id"
+			" 'UC3jv2yNiKPOZoWLLflNOzvg', 'UCOAmvK5o2JmH0vXi3Ql_qWg' "
+			subscriber_count = "Youtube subscriber count"
+			" '125', '31364', '2135949' "
+			view_count = "Youtube view count (global)"
+			" '438', '46228', '2649476' "
+			video_count = "Youtube video count"
+			" '268', '56', '1068' "
+			community_post_count = "Youtube communty post count"
+			" '125', '56', '1068' "
+			playlist_count = "Youtube playlist count"
+			" '125', '56', '1068' "
+			bio = "Youtube bio"
+			""" Replace new lines with escaped new lines \n
+			'#TODO | Add Example Bio' """
+		# class facebook:
+		# class reddit:
+		# class instagram:
+		# class snapchat:
+		# class twitter:
+		# class threads:
+		# class telegram:
+		# class pinterest:
+		# class steam:
+		# class twitch:
+		# class vk:
+		# class tiktok:
+		# class github:
+		# class chessdotcom:
+		# class riotgames:
+	# class sensetive_data:
+	# 	social_security_number = "dp.sensetive_data.social_security_number"
+	# class credit_card:
+	# 	name = "Credit card holder"
+	# 	expiry_date = "Credit card "
+	# 	expiry_month = "dp.sensetive_data.credit_card.expiry_month"
+	# 	expiry_number = "dp.sensetive_data.credit_card.expiry_number"
+	# 	expiry_year = "dp.sensetive_data.credit_card.expiry_year"
+	# 	cvc = "dp.sensetive_data.credit_card.cvc"
 
 	# class personal_website:
 	# 	name = "dp.personal_website.name"
@@ -185,48 +231,6 @@ class datapoints:
 	# class contact:
 	# 	fax_number = "dp.contact.fax_number"
 	# 	phone_number = "dp.contact.phone_number"
-	# class sensetive_data:
-	# 	social_security_number = "dp.sensetive_data.social_security_number"
-	# 	class credit_card:
-	# 		name = "dp.sensetive_data.credit_card.name"
-	# 		expiry_date = "dp.sensetive_data.credit_card.expiry_date"
-	# 		expiry_month = "dp.sensetive_data.credit_card.expiry_month"
-	# 		expiry_number = "dp.sensetive_data.credit_card.expiry_number"
-	# 		expiry_year = "dp.sensetive_data.credit_card.expiry_year"
-	# 		cvc = "dp.sensetive_data.credit_card.cvc"
-	# class username:
-	# 	facebook = "dp.username.facebook"
-	# 	generic = "dp.username.generic"
-	# 	google_plus = "dp.username.google_plus"
-	# 	google = "dp.username.google"
-	# 	instagram = "dp.username.instagram"
-	# 	pinterest = "dp.username.pinterest"
-	# 	reddit = "dp.username.reddit"
-	# 	snapchat = "dp.username.snapchat"
-	# 	steam = "dp.username.steam"
-	# 	telegram = "dp.username.telegram"
-	# 	tiktok = "dp.username.tiktok"
-	# 	twitch = "dp.username.twitch"
-	# 	twitter = "dp.username.twitter"
-	# 	vk = "dp.username.vk"
-	# 	youtube = "dp.username.youtube"
-	# class account:
-	# 	discord = "dp.account.discord"
-	# 	facebook = "dp.account.facebook"
-	# 	generic = "dp.account.generic"
-	# 	google = "dp.account.google"
-	# 	google_plus = "dp.account.google_plus"
-	# 	instagram = "dp.account.instagram"
-	# 	pinterest = "dp.account.pinterest"
-	# 	reddit = "dp.account.reddit"
-	# 	snapchat = "dp.account.snapchat"
-	# 	steam = "dp.account.steam"
-	# 	telegram = "dp.account.telegram"
-	# 	tiktok = "dp.account.tiktok"
-	# 	twitch = "dp.account.twitch"
-	# 	twitter = "dp.account.twitter"
-	# 	vk = "dp.account.vk"
-	# 	youtube = "dp.account.youtube"
 	# class image:
 	# 	generic = "dp.image.generic"
 	# 	face = "dp.image.face"

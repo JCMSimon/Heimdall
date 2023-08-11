@@ -188,7 +188,7 @@ class GUI():
 			case _:
 				print("OHNO")
 
-
+	# TODO | some werid offset, ask dpg dc
 	def dragWindow(self, isDragging = False):
 		bar_x_range = range(0,1076)
 		bar_y_range = range(-20,16)
