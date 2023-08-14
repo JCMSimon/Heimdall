@@ -21,6 +21,10 @@ class GUI():
 		dpg.set_primary_window(self.mainWindow,True)
 		dpg.set_frame_callback(1,callback=lambda: self.switchState("fawfw"))
 		self.running = True
+		self.is_menu_bar_clicked = True
+		with dpg.handler_registry():
+			dpg.add_mouse_drag_handler(button=0, threshold=0, callback=self.mouse_drag_callback)
+			dpg.add_mouse_click_handler(button=0, callback=self.mouse_click_callback)
 		self.centerViewport()
 		dpg.show_viewport()
 		dpg.start_dearpygui()
@@ -115,7 +119,6 @@ class GUI():
 				dpg.add_image_button(label="button-settings",texture_tag=self.textures["button-settings"],parent=self.mainWindow,pos=[765,342]) #,callback=lambda: self.switchState("SETTINGS")
 				# Style
 				dpg.bind_item_theme(exit_button,self.exit_button_theme)
-				self.dragWindow()
 			case "SEARCH":
 				# Function
 				def searchCallback():
@@ -194,26 +197,40 @@ class GUI():
 				dpg.bind_item_theme(back_button,self.search_ui_theme)
 
 
-	# TODO | some werid offset, ask dpg dc
-	def dragWindow(self, isDragging = False):
-		bar_x_range = range(0,1076)
-		bar_y_range = range(-20,16)
-		while self.running:
-			time.sleep(1 / int(dpg.get_frame_rate()))
-			if dpg.is_mouse_button_dragging(button=dpg.mvMouseButton_Left,threshold=0.05) and not isDragging and not dpg.is_mouse_button_released(button=dpg.mvMouseButton_Left):
-				isDragging = True
-				# allow start dragging for 2 ms
-				drag_ts_timeout = time.time() + 0.02
-			elif isDragging and not dpg.is_mouse_button_down(button=dpg.mvMouseButton_Left):
-				isDragging = False
-			if isDragging:
-				if dpg.get_mouse_pos(local=True)[0] in bar_x_range and dpg.get_mouse_pos(local=True)[1] in bar_y_range:
-					if time.time() < drag_ts_timeout:
-						old_vp_pos = dpg.get_viewport_pos()
-						while dpg.is_mouse_button_down(button=dpg.mvMouseButton_Left):
-							delta = dpg.get_mouse_drag_delta()
-							dpg.set_viewport_pos([old_vp_pos[0] + delta[0],old_vp_pos[1] + delta[1]])
-							time.sleep(1 / int(dpg.get_frame_rate()))
+
+
+
+	# # TODO | some werid offset, ask dpg dc
+	# def dragWindow(self, isDragging = False):
+	# 	bar_x_range = range(0,1076)
+	# 	bar_y_range = range(-20,16)
+	# 	while self.running:
+	# 		time.sleep(1 / int(dpg.get_frame_rate()))
+	# 		if dpg.is_mouse_button_dragging(button=dpg.mvMouseButton_Left,threshold=0.05) and not isDragging and not dpg.is_mouse_button_released(button=dpg.mvMouseButton_Left):
+	# 			isDragging = True
+	# 			# allow start dragging for 2 ms
+	# 			drag_ts_timeout = time.time() + 0.02
+	# 		elif isDragging and not dpg.is_mouse_button_down(button=dpg.mvMouseButton_Left):
+	# 			isDragging = False
+	# 		if isDragging:
+	# 			if dpg.get_mouse_pos(local=True)[0] in bar_x_range and dpg.get_mouse_pos(local=True)[1] in bar_y_range:
+	# 				if time.time() < drag_ts_timeout:
+	# 					old_vp_pos = dpg.get_viewport_pos()
+	# 					while dpg.is_mouse_button_down(button=dpg.mvMouseButton_Left):
+	# 						delta = dpg.get_mouse_drag_delta()
+	# 						dpg.set_viewport_pos([old_vp_pos[0] + delta[0],old_vp_pos[1] + delta[1]])
+	# 						time.sleep(1 / int(dpg.get_frame_rate()))
+
+	def mouse_drag_callback(self, _, app_data):
+		if self.is_menu_bar_clicked:
+			_, drag_delta_x, drag_delta_y = app_data
+			viewport_pos_x, viewport_pos_y = dpg.get_viewport_pos()
+			new_pos_x = viewport_pos_x + drag_delta_x
+			new_pos_y = max(viewport_pos_y + drag_delta_y, 0)
+			dpg.set_viewport_pos([new_pos_x, new_pos_y])
+
+	def mouse_click_callback(self):
+		self.is_menu_bar_clicked = True if dpg.get_mouse_pos(local=True)[0] in range(0,1076) and dpg.get_mouse_pos(local=True)[1] in range(-20,16) else False
 
 	def resetToDefault(self):
 		for item in dpg.get_item_children(self.mainWindow)[children_index := 1]:
