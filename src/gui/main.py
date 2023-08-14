@@ -19,7 +19,7 @@ class GUI():
 		self.loadTextures()
 		self.mainWindow = dpg.add_window(label="Heimdall",on_close=self.closeGUI,horizontal_scrollbar=False,no_title_bar=True,no_scrollbar=True,no_collapse=True,no_close=False,no_resize=True,menubar=False,no_move=True)
 		dpg.set_primary_window(self.mainWindow,True)
-		dpg.set_frame_callback(1,callback=lambda: self.switchState("fawfw"))
+		dpg.set_frame_callback(1,callback=lambda: self.switchState("MAIN"))
 		self.running = True
 		self.is_menu_bar_clicked = True
 		with dpg.handler_registry():
