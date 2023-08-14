@@ -37,6 +37,7 @@ class GUI():
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_color(dpg.mvThemeCol_WindowBg, (13, 17, 23), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize, 0, category=dpg.mvThemeCat_Core)
+				dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, 0, category=dpg.mvThemeCat_Core)
 			with dpg.theme_component(dpg.mvImageButton):
 				dpg.add_theme_color(dpg.mvThemeCol_Button, (0,0,0,0), category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (13,17,23,75), category=dpg.mvThemeCat_Core)
