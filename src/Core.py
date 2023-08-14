@@ -11,6 +11,7 @@ from plugins._lib.Data import datapoints as dp
 from plugins._lib.Node import Node
 from src.Logger import Logger
 
+import os
 
 class Core():
 	"""Heimdall's Core. responsible for the search process"""
@@ -25,6 +26,8 @@ class Core():
 		self._DEBUG = DEBUG
 		self.logger = Logger("Core",DEBUG=self._DEBUG)
 		self.pluginRegister = PluginRegister(DEBUG=self._DEBUG)
+		if not os.path.exists("./saves"):
+			os.system("mkdir saves")
 
 	def search(self,datapoint,keyword,feedbackFunc=None) -> Node:
 		"""
@@ -78,7 +81,7 @@ class Core():
 		# pbar.close()
 		return self.root # type: ignore
 
-	def createSave(self,filename) -> None:
+	def createSave(self,filename) -> str:
 		"""
 		It saves the Core root to a file
 
@@ -96,6 +99,7 @@ class Core():
 		else:
 			with open(path,"wb") as picklefile:
 				pickle.dump(self.root,picklefile)
+				return filename
 
 	def loadSave(self,filename) -> None:
 		"""

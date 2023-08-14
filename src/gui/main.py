@@ -32,7 +32,7 @@ class GUI():
 	def initStyles(self):  # sourcery skip: extract-duplicate-method
 		with dpg.font_registry():
 			self.input_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=55)
-			self.file_name_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=40)
+			self.file_name_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=30)
 		with dpg.theme() as global_theme:
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_color(dpg.mvThemeCol_WindowBg, (13, 17, 23), category=dpg.mvThemeCat_Core)
@@ -168,14 +168,18 @@ class GUI():
 				def backToSearch():
 					self.RNUI.stopInteractionThreads()
 					self.switchState("SEARCH")
+				def saveCallback(_, app_data):
+					dpg.split_frame()
+					self.core.createSave(dpg.get_value(file_name_field))
 				# Structure
 				self.mainbar = dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["view-background"],parent=self.mainWindow,pos=[79,111])
-				dpg.add_image(texture_tag=self.textures["view-filename-background"],parent=self.mainWindow,pos=[408,52])
-				file_name = dpg.add_input_text(parent=self.mainWindow,pos=[425,53],width=260,multiline=False,hint="Unsaved File",no_spaces=True) # ,callback=searchCallback,on_enter=True
+				dpg.add_image(texture_tag=self.textures["view-filename-background"],parent=self.mainWindow,pos=[395,52])
+				file_name_field = dpg.add_input_text(parent=self.mainWindow,pos=[410,58],width=260,multiline=False,hint="Unsaved File")
+				save_button = dpg.add_image_button(label="button-save",texture_tag=self.textures["button-save"],parent=self.mainWindow,pos=[611,52],callback=saveCallback)
 				self.RNUI = RelationalNodeUI(parent=self.mainWindow,width=942,height=512,x=111,y=79,DEBUG=self.DEBUG)
 				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,635],callback=backToSearch)
 				self.RNUI.visualize(self.result)
@@ -183,8 +187,8 @@ class GUI():
 					self.logger.debugMsg(f"Search took {round(time.time() - self.startedSerchTime,2)}s")
 				# Style
 				dpg.bind_item_theme(back_button,self.search_ui_theme)
-				dpg.bind_item_font(file_name,self.file_name_font)
-				dpg.bind_item_theme(file_name,self.view_ui_theme)
+				dpg.bind_item_font(file_name_field,self.file_name_font)
+				dpg.bind_item_theme(file_name_field,self.view_ui_theme)
 			case "LOAD":
 				pass
 			case "SETTINGS":

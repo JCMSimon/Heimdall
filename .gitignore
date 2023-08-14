@@ -1,6 +1,5 @@
 saves/*
 pluginData/*
-updateconfig.json
 Heimdall.pyw
 .vscode/*
 *.cpython-*.pyc
