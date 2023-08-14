@@ -19,7 +19,7 @@ class GUI():
 		self.loadTextures()
 		self.mainWindow = dpg.add_window(label="Heimdall",on_close=self.closeGUI,horizontal_scrollbar=False,no_title_bar=True,no_scrollbar=True,no_collapse=True,no_close=False,no_resize=True,menubar=False,no_move=True)
 		dpg.set_primary_window(self.mainWindow,True)
-		dpg.set_frame_callback(1,callback=lambda: self.switchState("MAIN"))
+		dpg.set_frame_callback(1,callback=lambda: self.switchState("fawfw"))
 		self.running = True
 		self.centerViewport()
 		dpg.show_viewport()
@@ -186,7 +186,13 @@ class GUI():
 			case "SETTINGS":
 				pass
 			case _:
-				print("OHNO")
+				self.mainbar = dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
+				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
+				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
+				dpg.add_image(texture_tag=self.textures["404-background"],parent=self.mainWindow,pos=[0,0])
+				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[330,517],callback=lambda: self.switchState("MAIN"))
+				dpg.bind_item_theme(back_button,self.search_ui_theme)
+
 
 	# TODO | some werid offset, ask dpg dc
 	def dragWindow(self, isDragging = False):
