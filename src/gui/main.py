@@ -19,7 +19,8 @@ class GUI():
 		self.loadTextures()
 		self.mainWindow = dpg.add_window(label="Heimdall",on_close=self.closeGUI,horizontal_scrollbar=False,no_title_bar=True,no_scrollbar=True,no_collapse=True,no_close=False,no_resize=True,menubar=False,no_move=True)
 		dpg.set_primary_window(self.mainWindow,True)
-		dpg.set_frame_callback(1,callback=lambda: self.switchState("MAIN"))
+		# dpg.set_frame_callback(1,callback=lambda: self.switchState("MAIN")) # TODO | uncomment this
+		dpg.set_frame_callback(1,callback=lambda: self.switchState("LOAD"))
 		self.running = True
 		self.is_menu_bar_clicked = True
 		with dpg.handler_registry():
@@ -33,6 +34,7 @@ class GUI():
 		with dpg.font_registry():
 			self.input_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=55)
 			self.file_name_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=30)
+			self.load_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=70)
 		with dpg.theme() as global_theme:
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_color(dpg.mvThemeCol_WindowBg, (13, 17, 23), category=dpg.mvThemeCat_Core)
@@ -168,8 +170,7 @@ class GUI():
 				def backToSearch():
 					self.RNUI.stopInteractionThreads()
 					self.switchState("SEARCH")
-				def saveCallback(_, app_data):
-					dpg.split_frame()
+				def saveCallback():
 					self.core.createSave(dpg.get_value(file_name_field))
 				# Structure
 				self.mainbar = dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
@@ -178,8 +179,8 @@ class GUI():
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["view-background"],parent=self.mainWindow,pos=[79,111])
 				dpg.add_image(texture_tag=self.textures["view-filename-background"],parent=self.mainWindow,pos=[395,52])
+				save_button = dpg.add_image_button(label="button-save",texture_tag=self.textures["button-save"],parent=self.mainWindow,pos=[611,50],callback=saveCallback)
 				file_name_field = dpg.add_input_text(parent=self.mainWindow,pos=[410,58],width=260,multiline=False,hint="Unsaved File")
-				save_button = dpg.add_image_button(label="button-save",texture_tag=self.textures["button-save"],parent=self.mainWindow,pos=[611,52],callback=saveCallback)
 				self.RNUI = RelationalNodeUI(parent=self.mainWindow,width=942,height=512,x=111,y=79,DEBUG=self.DEBUG)
 				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,635],callback=backToSearch)
 				self.RNUI.visualize(self.result)
@@ -190,7 +191,24 @@ class GUI():
 				dpg.bind_item_font(file_name_field,self.file_name_font)
 				dpg.bind_item_theme(file_name_field,self.view_ui_theme)
 			case "LOAD":
-				pass
+				def loadButtonCallback():
+					pass
+				self.mainbar = dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
+				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
+				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
+				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,0])
+				fileWindow = dpg.add_child_window(parent=self.mainWindow,width=1000,height=600,pos=[50,50])
+				for (_, _, filenames) in walk("./saves"):
+					files = [filename.replace(".pickle","") for filename in filenames if filename.endswith(".pickle")]
+				for filename in files:
+					with dpg.group(parent=fileWindow,horizontal=True):
+						label = dpg.add_text(default_value=filename)
+						dpg.bind_item_font(label,self.load_font)
+						dpg.add_button(label="Load",callback=loadButtonCallback)
+
+				# make list
+				# button callback to set core.root and then go into view mode
+				# self.result = self.core.root
 			case "SETTINGS":
 				pass
 			case _:
@@ -200,31 +218,6 @@ class GUI():
 				dpg.add_image(texture_tag=self.textures["404-background"],parent=self.mainWindow,pos=[0,0])
 				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[330,517],callback=lambda: self.switchState("MAIN"))
 				dpg.bind_item_theme(back_button,self.search_ui_theme)
-
-
-
-
-
-	# # TODO | some werid offset, ask dpg dc
-	# def dragWindow(self, isDragging = False):
-	# 	bar_x_range = range(0,1076)
-	# 	bar_y_range = range(-20,16)
-	# 	while self.running:
-	# 		time.sleep(1 / int(dpg.get_frame_rate()))
-	# 		if dpg.is_mouse_button_dragging(button=dpg.mvMouseButton_Left,threshold=0.05) and not isDragging and not dpg.is_mouse_button_released(button=dpg.mvMouseButton_Left):
-	# 			isDragging = True
-	# 			# allow start dragging for 2 ms
-	# 			drag_ts_timeout = time.time() + 0.02
-	# 		elif isDragging and not dpg.is_mouse_button_down(button=dpg.mvMouseButton_Left):
-	# 			isDragging = False
-	# 		if isDragging:
-	# 			if dpg.get_mouse_pos(local=True)[0] in bar_x_range and dpg.get_mouse_pos(local=True)[1] in bar_y_range:
-	# 				if time.time() < drag_ts_timeout:
-	# 					old_vp_pos = dpg.get_viewport_pos()
-	# 					while dpg.is_mouse_button_down(button=dpg.mvMouseButton_Left):
-	# 						delta = dpg.get_mouse_drag_delta()
-	# 						dpg.set_viewport_pos([old_vp_pos[0] + delta[0],old_vp_pos[1] + delta[1]])
-	# 						time.sleep(1 / int(dpg.get_frame_rate()))
 
 	def mouse_drag_callback(self, _, app_data):
 		if self.is_menu_bar_clicked:

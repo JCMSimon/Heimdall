@@ -5,3 +5,6 @@ key = "test"
 
 [PROXYLIST]
 file = "proxlist.txt"
+
+[GUI]
+value = 5
