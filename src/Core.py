@@ -111,12 +111,16 @@ class Core():
 		path = f"./saves/{filename}.pickle"
 		self.logger.debugMsg(f"Loading from {path}")
 		self.root = None
-		with open(path,"rb") as picklefile:
-			try:
-				self.root = pickle.load(picklefile)
-				return self.root
-			except EOFError:
-				self.logger.errorMsg("Cant load empty File")
+		try:
+			with open(path,"rb") as picklefile:
+				try:
+					self.root = pickle.load(picklefile)
+					return self.root
+				except EOFError:
+					self.logger.errorMsg("Cant load empty File")
+		except FileNotFoundError:
+				self.logger.errorMsg("File does not exist")
+
 
 	def deleteSave(self,filename) -> bool:
 		"""

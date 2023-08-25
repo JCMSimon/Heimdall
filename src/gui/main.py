@@ -34,7 +34,7 @@ class GUI():
 		with dpg.font_registry():
 			self.input_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=55)
 			self.file_name_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=30)
-			self.load_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=70)
+			self.load_font = dpg.add_font(file="./src/gui/assets/fonts/Roboto-Regular.ttf",size=60)
 		with dpg.theme() as global_theme:
 			with dpg.theme_component(dpg.mvAll):
 				dpg.add_theme_color(dpg.mvThemeCol_WindowBg, (13, 17, 23), category=dpg.mvThemeCat_Core)
@@ -82,6 +82,12 @@ class GUI():
 			with dpg.theme_component(dpg.mvText):
 				dpg.add_theme_style(dpg.mvStyleVar_SelectableTextAlign, 0.5, category=dpg.mvThemeCat_Core)
 				dpg.add_theme_color(dpg.mvThemeCol_Text, (73,50,154,255), category=dpg.mvThemeCat_Core)
+		with dpg.theme() as self.load_theme:
+			with dpg.theme_component(dpg.mvAll):
+				dpg.add_theme_color(dpg.mvThemeCol_ChildBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_color(dpg.mvThemeCol_ScrollbarBg, (0,0,0,0), category=dpg.mvThemeCat_Core)
+				dpg.add_theme_style(dpg.mvStyleVar_ChildBorderSize, 0)
+				dpg.add_theme_color(dpg.mvThemeCol_Text, (73,50,154,255), category=dpg.mvThemeCat_Core)
 		dpg.bind_theme(global_theme)
 
 	def loadTextures(self):
@@ -118,7 +124,7 @@ class GUI():
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["title"],parent=self.mainWindow,pos=[251,198])
 				dpg.add_image_button(label="button-new",texture_tag=self.textures["button-new"],parent=self.mainWindow,pos=[255,342],callback=lambda: self.switchState("SEARCH"))
-				dpg.add_image_button(label="button-load",texture_tag=self.textures["button-load"],parent=self.mainWindow,pos=[510,342]) #,callback=lambda: self.switchState("LOAD")
+				dpg.add_image_button(label="button-load",texture_tag=self.textures["button-load"],parent=self.mainWindow,pos=[510,342],callback=lambda: self.switchState("LOAD"))
 				dpg.add_image_button(label="button-settings",texture_tag=self.textures["button-settings"],parent=self.mainWindow,pos=[765,342]) #,callback=lambda: self.switchState("SETTINGS")
 				# Style
 				dpg.bind_item_theme(exit_button,self.exit_button_theme)
@@ -184,31 +190,43 @@ class GUI():
 				self.RNUI = RelationalNodeUI(parent=self.mainWindow,width=942,height=512,x=111,y=79,DEBUG=self.DEBUG)
 				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,635],callback=backToSearch)
 				self.RNUI.visualize(self.result)
-				if self.DEBUG:
+				if self.DEBUG and self.startedSerchTime != None:
 					self.logger.debugMsg(f"Search took {round(time.time() - self.startedSerchTime,2)}s")
 				# Style
 				dpg.bind_item_theme(back_button,self.search_ui_theme)
 				dpg.bind_item_font(file_name_field,self.file_name_font)
 				dpg.bind_item_theme(file_name_field,self.view_ui_theme)
 			case "LOAD":
-				def loadButtonCallback():
-					pass
+				def loadButtonCallback(buttonId):
+					filename = dpg.get_item_label(buttonId - 2)
+					self.logger.debugMsg(f"Loading save '{filename}'")
+					self.result = self.core.loadSave(filename)
+					self.startedSerchTime = None
+					self.switchState("VIEW")
+				def deleteButtonCallback(buttonId):
+					filename = dpg.get_item_label(buttonId - 1)
+					self.logger.debugMsg(f"Deleting save '{filename}'")
+					self.core.deleteSave(filename)
 				self.mainbar = dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,0])
-				fileWindow = dpg.add_child_window(parent=self.mainWindow,width=1000,height=600,pos=[50,50])
+				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,635],callback=lambda: self.switchState("MAIN"))
+				fileWindow = dpg.add_child_window(parent=self.mainWindow,width=730,height=520,pos=[194,70],no_scrollbar=False)
 				for (_, _, filenames) in walk("./saves"):
 					files = [filename.replace(".pickle","") for filename in filenames if filename.endswith(".pickle")]
-				for filename in files:
-					with dpg.group(parent=fileWindow,horizontal=True):
-						label = dpg.add_text(default_value=filename)
-						dpg.bind_item_font(label,self.load_font)
-						dpg.add_button(label="Load",callback=loadButtonCallback)
-
-				# make list
-				# button callback to set core.root and then go into view mode
-				# self.result = self.core.root
+				yGap = 114
+				for filename,index in zip(files,range(0,len(files))):
+					dpg.add_image(texture_tag=self.textures["file-background"],parent=fileWindow)
+					filename = dpg.add_text(default_value=filename,label=filename,parent=fileWindow,pos=[24,16 + index * yGap])
+					del_button = dpg.add_image_button(callback=deleteButtonCallback,label="button-file-delete",texture_tag=self.textures["button-file-delete"],parent=fileWindow,pos=[544,20 + index * yGap])
+					load_button = dpg.add_image_button(callback=loadButtonCallback,label="button-file-load",texture_tag=self.textures["button-file-load"],parent=fileWindow,pos=[403,20 + index * yGap])
+					dpg.bind_item_font(filename,self.load_font)
+					dpg.bind_item_theme(filename,self.load_theme)
+					dpg.bind_item_theme(del_button,self.search_ui_theme)
+					dpg.bind_item_theme(load_button,self.search_ui_theme)
+				dpg.bind_item_theme(back_button,self.search_ui_theme)
+				dpg.bind_item_theme(fileWindow,self.load_theme)
 			case "SETTINGS":
 				pass
 			case _:
