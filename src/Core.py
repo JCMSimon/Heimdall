@@ -1,96 +1,110 @@
+import os
+import pathlib
+import pickle
 import string
 from time import strftime
 from typing import LiteralString
-from src.NodeInterface import NodeInterface
+
+from tqdm import tqdm
+
+from src.PluginRegister import PluginRegister
+from plugins._lib.Data import datapoints as dp
+from plugins._lib.Node import Node
 from src.Logger import Logger
-from plugins.lib.Data import datapoints as dp
-from plugins.lib.Node import Node
-import pickle
+
 import os
-from dearpygui.dearpygui import get_item_children,delete_item,split_frame
 
 class Core():
-	"""
-	Main Core Class. Will be used for the CLI too.
-
-	Args:
-		pluginRegister: This is the plugin register that the core will use to register plugins.
-		nodeEditor: The NodeEditor class
-		debug: If set to true, the logger will print out debug messages. Defaults to False
-	"""
-	def __init__(self,pluginRegister,nodeEditor,debug=False) -> None:
+	"""Heimdall's Core. responsible for the search process"""
+	def __init__(self,DEBUG=False) -> None:
 		"""
-		"""
-		self.debug = debug
-		self.logger = Logger("Core",debug=self.debug)
-		self.pluginRegister = pluginRegister
-		self.nodeInterFace = NodeInterface(nodeEditor,debug=debug)
-
-	def search(self,datatype,keyword) -> None:
-		"""
-		It takes a keyword and a datatype, runs the plugins that accept that datatype, and then recursively
-		runs the plugins that accept the datatypes of the data fields of the results
+		This function initializes the Core class
 
 		Args:
-		  datatype: the type of data that is being searched for
+		  pluginRegister: This is the plugin register that the core will use to execute plugins.
+		  DEBUG: If set to True, the logger will print out debug messages. Defaults to False
+		"""
+		self._DEBUG = DEBUG
+		self.logger = Logger("Core",DEBUG=self._DEBUG)
+		self.pluginRegister = PluginRegister(DEBUG=self._DEBUG)
+		if not os.path.exists("./saves"):
+			os.system("mkdir saves")
+
+	def search(self,datapoint,keyword,feedbackFunc=None) -> Node:
+		"""
+		> The function takes a plugin name and a keyword, and returns a list of nodes that are the result of
+		the search
+
+		Args:
+		  datapoint: a defined data point.
 		  keyword: The keyword to search for
-		"""
-		#TODO later on it should already ask for all plugins to be ran that accept the type that is input
-		#TODO have plugins define a default input type
-		self.logger.debugMsg(f"Searching '{keyword}' as '{datatype}'")
-		# Create root node
-		self.root = Node("ROOT", debug=self.debug)
-		self.root.addDataField(dp._internal.is_root_node,True)
-		# First Search
-		initialResults = self.pluginRegister.runPlugin(datatype,keyword)
-		self.root._children.extend(initialResults)
-		self.todo = initialResults
-		# Recursive search
-		while self.todo:
-			for node in self.todo:
-				for dataField in node.data["data"]: # this might be wrong syntax. it should loop through data fields
-					for datatype,data in dataField.items():
-						plugins = self.pluginRegister.getPluginNamesByType(datatype)
-						results = []
-						for plugin in plugins:
-							try:
-								results.extend(self.pluginRegister.runPlugin(plugin,data))
-							except (TypeError,IndexError):
-								self.logger.infoMsg(f"{plugin} returned no results")
-				node._children.extend(results)
-				self.todo.extend(results)
-				self.todo.remove(node)
-		# Visualize whole Tree
-		self.nodeInterFace.visualize(self.root)
+		  feedbackFunc: A function that gets input as strings
 
-	def reloadPlugins(self) -> None:
+		Returns:
+		  A list of nodes.
 		"""
-		It reloads the plugins
-		"""
-		self.pluginRegister.reload()
+		self.ff = feedbackFunc
+		self.ff("Creating fake node")
+		self.root = Node("ROOT", debug=self._DEBUG).addDataField(dp._internal.is_root_node,True)
+		FakeNode = Node("F4K3")
+		FakeNode.addDataField(datapoint,keyword)
+		todo = [FakeNode]
+		return self._recursiveSearch(todo)
 
-	def save(self,filename) -> None:
+	def _recursiveSearch(self,todo) -> Node:
 		"""
-		It saves the current state of the program to a file
+		It takes a list of nodes, and for each node, it runs all plugins that are registered for the
+		datatype of the node's data, and then adds the results of those plugins to the node's children
+
+		Args:
+		  todo: A list of nodes to process
+		  pbar: The progress bar object
+
+		Returns:
+		  A Tree of nodes
+		"""
+		# pbar = getPbar(todo,"Processing Nodes","Nodes")
+		for node in todo:
+			for dataField in node.data["data"]:
+				for datatype,data in dataField.items():
+					plugins = self.pluginRegister.getPluginNamesByDatapoint(datatype)
+					results = []
+					for plugin in plugins:
+						self.ff(f"Running plugin: {plugin}")
+						results.extend(self.pluginRegister.runPlugin(plugin,data))
+			if node.data["title"] == "F4K3":
+				self.root._children.extend(results) # type: ignore
+			else:
+				node._children.extend(results) # type: ignore
+			# pbar.update(1)
+			# todo.extend(results) # type: ignore
+			# pbar.total += len(results)
+		# pbar.close()
+		return self.root # type: ignore
+
+	def createSave(self,filename) -> str:
+		"""
+		It saves the Core root to a file
 
 		Args:
 		  filename: The name of the file to save to.
 		"""
-		try:
-			filename = format_filename(filename)
-			if filename == "":
-				filename = strftime("%Y%m%d-%H%M%S")
-			path = f"./saves/{filename}.pickle"
-			self.logger.debugMsg(f"Saving to {path}")
-			split_frame()
+		filename = format_filename(filename)
+		# If the File nam would be empty, replace it with a timestamp
+		if filename == "":
+			filename = strftime("%Y%m%d-%H%M%S")
+		path = f"./saves/{filename}.pickle"
+		self.logger.debugMsg(f"Saving to {path}")
+		if self.root is None:
+			self.logger.infoMsg("No data to save")
+		else:
 			with open(path,"wb") as picklefile:
 				pickle.dump(self.root,picklefile)
-		except AttributeError:
-			self.logger.infoMsg("No data to save")
+				return filename
 
-	def load(self,filename) -> None:
+	def loadSave(self,filename) -> None:
 		"""
-		It loads a pickle file and then deletes all the nodes in the treeview.
+		It loads a save file and sets the Core root to the loaded object
 
 		Args:
 		  filename: The name of the file to load.
@@ -98,46 +112,66 @@ class Core():
 		path = f"./saves/{filename}.pickle"
 		self.logger.debugMsg(f"Loading from {path}")
 		self.root = None
-		with open(path,"rb") as picklefile:
-			try:
-				self.root = pickle.load(picklefile)
-			except EOFError:
-				self.logger.errorMsg("Cant load empty File")
-			else:
-				for node in get_item_children(self.nodeInterFace.NE)[1]:
-					delete_item(node)
-		if self.root:
-			self.nodeInterFace.visualize(self.root)
+		try:
+			with open(path,"rb") as picklefile:
+				try:
+					self.root = pickle.load(picklefile)
+					return self.root
+				except EOFError:
+					self.logger.errorMsg("Cant load empty File")
+		except FileNotFoundError:
+				self.logger.errorMsg("File does not exist")
+
 
 	def deleteSave(self,filename) -> bool:
 		"""
-		It deletes a file from the saves folder.
+		It deletes a save file
 
 		Args:
-		  filename: The name of the file you want to delete.
+		  filename: The name of the save file.
 
 		Returns:
-		  The return value is a boolean value.
+		  A boolean value. True if file was deleted successfuly. False if not.
 		"""
-		path = f".\saves\{filename}.pickle"
+		CurrentDir = pathlib.Path(__file__).parent.parent.absolute()
+		path = f"{CurrentDir}\saves\{filename}.pickle" # TODO | This might not work. gonna see in future
 		if os.path.exists(path):
-			os.system(f"del {path}")
+			self.logger.debugMsg(f"Trying to delete '{CurrentDir}\saves\{filename}.pickle'")
+			os.system(f'del "{path}"')
 			return True
 		else:
-			self.logger.errorMsg(f"There is no Save at {path}")
+			self.logger.errorMsg(f"There is no save at {path}")
 			return False
 
+	def getAvailableDatapoints(self) -> set:
+		return self.pluginRegister.getAvailableDatapoints()
+
 # Thanks to https://gist.github.com/seanh/93666 !
-def format_filename(s) -> LiteralString:
+def format_filename(name) -> LiteralString:
 	"""
-	It takes a string and returns a valid filename, replacing spaces with underscores
+	It takes a string and returns a string that is a valid filename
 
 	Args:
-	  s: the string to be formatted
+	  name: The string to be formatted
 
 	Returns:
-	  the filename with the spaces replaced with underscores.
+	  A string with the characters in the string s that are in the string valid_chars.
 	"""
 	valid_chars = f"-_ {string.ascii_letters}{string.digits}"
-	filename = ''.join(c for c in s if c in valid_chars)
+	filename = ''.join(c for c in name if c in valid_chars)
 	return filename.replace(' ','_')
+
+def getPbar(iterable,desc,unit,color="#7800C8") -> tqdm:
+	"""
+	`getPbar` is a function that returns a progress bar object from the `tqdm` library
+
+	Args:
+	  iterable: the iterable object you want to present
+	  desc: The description of the progress bar
+	  unit: The unit of the progress bar.
+	  color: The color of the progress bar. Defaults to #7800C8
+
+	Returns:
+	  A progress bar object.
+	"""
+	return tqdm(total=len(iterable),ascii=True,desc=desc,leave=False,unit=unit,colour=color)

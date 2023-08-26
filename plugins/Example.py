@@ -1,22 +1,31 @@
-from plugins.lib.Plugin import Plugin
-from plugins.lib.Data import datapoints as dp
-from plugins.lib.Node import Node
+from plugins._lib.Plugin import Plugin
+from plugins._lib.Data import datapoints as dp
+from plugins._lib.Node import Node
 
 class Example(Plugin):                # Class Name must be the same as the File Name
-	def __init__(self,debug) -> None:
-		self.debug = debug
-		super().__init__(debug=self.debug,display=True,)
+	def __init__(self,DEBUG) -> None:
+		self._DEBUG = DEBUG
+		super().__init__(DEBUG=self._DEBUG,display=True,)
 
-	def getDisplayName(self) -> str:
+	def getCredits(self):
+		return {
+				"author": "JCMS", # your name or alias
+				"image": "https://whatever", # Url or path to a image. can be a profile picture or specific to the plugin
+				"social": "fucck.yourmom", # for ex a github link
+				}
+
+	def displayname(self) -> str:
 		return "Example Plugin"
 
-	def getVersion(self) -> str:
+	def version(self) -> str:
 		return "0.0.1"
 
 	def accepts(self):
-		return [dp.name.first_name]
+		return [dp.name.first_name,dp.name.first_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name]
 
 	def run(self,arg) -> list:
-		testResult = Node("Example Result",debug=self.debug)
-		testResult.addDataField(dp.hashes.generic,"RXhhbXBsZQ==")
-		return [testResult]
+		testResult = Node("Eye Color",debug=self._DEBUG)
+		testResult.addDataField(dp.person.body.eye_color,"blue")
+		testResult2 = Node("Hair Color",debug=self._DEBUG)
+		testResult2.addDataField(dp.person.body.hair_color,"blonde")
+		return [testResult,testResult2]
