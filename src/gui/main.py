@@ -221,6 +221,7 @@ class GUI():
 				for (_, _, filenames) in walk("./saves"):
 					files = [filename.replace(".pickle","") for filename in filenames if filename.endswith(".pickle")]
 				if len(files) == 0:
+					# TODO | Make this "No Files found" sreen better
 					hintText = dpg.add_text(default_value="No Saves found :c",parent=fileWindow,pos=[0,0])
 					dpg.bind_item_font(hintText,self.load_font)
 					return
