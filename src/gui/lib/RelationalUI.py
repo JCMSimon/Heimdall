@@ -204,8 +204,10 @@ def getNodeByPosition(nodes,mousepos):
 
 def createDPGNode(hdllnode,editor) -> int:
 	try:
+		# Trying to get the pos cause i cant be sure if its a real item or not
+		dpg.get_item_pos(hdllnode.dpgID)
 		return hdllnode.dpgID
-	except AttributeError:
+	except Exception:
 		description = '\n'.join(value for field in hdllnode.data["data"] for key, value in field.items() if key != dp._internal.is_root_node)
 		with dpg.node(label=hdllnode.data["title"],parent=editor) as DPGNodeID:
 			if description != "":

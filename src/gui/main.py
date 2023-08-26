@@ -206,27 +206,34 @@ class GUI():
 				def deleteButtonCallback(buttonId):
 					filename = dpg.get_item_label(buttonId - 1)
 					self.logger.debugMsg(f"Deleting save '{filename}'")
-					self.core.deleteSave(filename)
+					if self.core.deleteSave(filename):
+						dpg.delete_item(buttonId+1)
+						dpg.delete_item(buttonId)
+						dpg.set_value(buttonId-1,"[DELETED]")
 				self.mainbar = dpg.add_image(texture_tag=self.textures["bar"],parent=self.mainWindow,pos=[0,0])
 				dpg.add_image(texture_tag=self.textures["small-title"],parent=self.mainWindow,pos=[468,4])
 				exit_button = dpg.add_image_button(label="button-exit",texture_tag=self.textures["button-exit"],parent=self.mainWindow,pos=[1060,5],callback=self.closeGUI)
 				dpg.add_image(texture_tag=self.textures["main-background"],parent=self.mainWindow,pos=[0,0])
 				back_button = dpg.add_image_button(label="button-back",texture_tag=self.textures["button-back"],parent=self.mainWindow,pos=[489,635],callback=lambda: self.switchState("MAIN"))
 				fileWindow = dpg.add_child_window(parent=self.mainWindow,width=730,height=520,pos=[194,70],no_scrollbar=False)
-				for (_, _, filenames) in walk("./saves"):
-					files = [filename.replace(".pickle","") for filename in filenames if filename.endswith(".pickle")]
-				yGap = 114
-				for filename,index in zip(files,range(0,len(files))):
-					dpg.add_image(texture_tag=self.textures["file-background"],parent=fileWindow)
-					filename = dpg.add_text(default_value=filename,label=filename,parent=fileWindow,pos=[24,16 + index * yGap])
-					del_button = dpg.add_image_button(callback=deleteButtonCallback,label="button-file-delete",texture_tag=self.textures["button-file-delete"],parent=fileWindow,pos=[544,20 + index * yGap])
-					load_button = dpg.add_image_button(callback=loadButtonCallback,label="button-file-load",texture_tag=self.textures["button-file-load"],parent=fileWindow,pos=[403,20 + index * yGap])
-					dpg.bind_item_font(filename,self.load_font)
-					dpg.bind_item_theme(filename,self.load_theme)
-					dpg.bind_item_theme(del_button,self.search_ui_theme)
-					dpg.bind_item_theme(load_button,self.search_ui_theme)
 				dpg.bind_item_theme(back_button,self.search_ui_theme)
 				dpg.bind_item_theme(fileWindow,self.load_theme)
+				for (_, _, filenames) in walk("./saves"):
+					files = [filename.replace(".pickle","") for filename in filenames if filename.endswith(".pickle")]
+				if len(files) == 0:
+					hintText = dpg.add_text(default_value="No Saves found :c",parent=fileWindow,pos=[0,0])
+					dpg.bind_item_font(hintText,self.load_font)
+					return
+				yGap = 114
+				for hintText,index in zip(files,range(0,len(files))):
+					dpg.add_image(texture_tag=self.textures["file-background"],parent=fileWindow)
+					hintText = dpg.add_text(default_value=hintText,label=hintText,parent=fileWindow,pos=[24,16 + index * yGap])
+					del_button = dpg.add_image_button(callback=deleteButtonCallback,label="button-file-delete",texture_tag=self.textures["button-file-delete"],parent=fileWindow,pos=[544,20 + index * yGap])
+					load_button = dpg.add_image_button(callback=loadButtonCallback,label="button-file-load",texture_tag=self.textures["button-file-load"],parent=fileWindow,pos=[403,20 + index * yGap])
+					dpg.bind_item_font(hintText,self.load_font)
+					dpg.bind_item_theme(hintText,self.load_theme)
+					dpg.bind_item_theme(del_button,self.search_ui_theme)
+					dpg.bind_item_theme(load_button,self.search_ui_theme)
 			case "SETTINGS":
 				pass
 			case _:

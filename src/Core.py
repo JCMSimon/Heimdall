@@ -1,4 +1,5 @@
 import os
+import pathlib
 import pickle
 import string
 from time import strftime
@@ -132,9 +133,11 @@ class Core():
 		Returns:
 		  A boolean value. True if file was deleted successfuly. False if not.
 		"""
-		path = f"./saves/{filename}.pickle" # TODO | This might not work. gonna see in future
+		CurrentDir = pathlib.Path(__file__).parent.parent.absolute()
+		path = f"{CurrentDir}\saves\{filename}.pickle" # TODO | This might not work. gonna see in future
 		if os.path.exists(path):
-			os.system(f"del {path}")
+			self.logger.debugMsg(f"Trying to delete '{CurrentDir}\saves\{filename}.pickle'")
+			os.system(f'del "{path}"')
 			return True
 		else:
 			self.logger.errorMsg(f"There is no save at {path}")
