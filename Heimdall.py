@@ -15,7 +15,8 @@ def start():
     from src.Core import Core
     myCore = Core(DEBUG=args.debug)
     if args.listDatapoints:
-        print(myCore.pluginRegister.getAvailableDatapoints())
+        print(sorted(myCore.pluginRegister.getAvailableDatapoints()))
+        return
     if args.searchterm is None:
         return
     if args.searchterm.strip() == "":
