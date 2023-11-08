@@ -44,8 +44,11 @@ class Core():
 		  A list of nodes.
 		"""
 		self.ff = feedbackFunc
+		if self.ff is None:
+			self.ff = print 
 		self.ff("Creating fake node")
-		self.root = Node("ROOT", debug=self._DEBUG).addDataField(dp._internal.is_root_node,True)
+		self.root = Node("ROOT", debug=self._DEBUG)
+		self.root.addDataField(dp._internal.is_root_node,True)
 		FakeNode = Node("F4K3")
 		FakeNode.addDataField(datapoint,keyword)
 		todo = [FakeNode]
