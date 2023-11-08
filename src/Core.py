@@ -45,7 +45,7 @@ class Core():
 		"""
 		self.ff = feedbackFunc
 		if self.ff is None:
-			self.ff = print 
+			self.ff = self.logger.infoMsg
 		self.ff("Creating fake node")
 		self.root = Node("ROOT", debug=self._DEBUG)
 		self.root.addDataField(dp._internal.is_root_node,True)
@@ -66,7 +66,7 @@ class Core():
 		Returns:
 		  A Tree of nodes
 		"""
-		# pbar = getPbar(todo,"Processing Nodes","Nodes")
+		pbar = getPbar(todo,"Processing Nodes","Nodes")
 		for node in todo:
 			for dataField in node.data["data"]:
 				for datatype,data in dataField.items():
@@ -76,14 +76,14 @@ class Core():
 						self.ff(f"Running plugin: {plugin}")
 						results.extend(self.pluginRegister.runPlugin(plugin,data))
 			if node.data["title"] == "F4K3":
-				self.root._children.extend(results) # type: ignore
+				self.root._children.extend(results) 
 			else:
-				node._children.extend(results) # type: ignore
-			# pbar.update(1)
-			# todo.extend(results) # type: ignore
-			# pbar.total += len(results)
-		# pbar.close()
-		return self.root # type: ignore
+				node._children.extend(results) 
+			pbar.update()
+			todo.extend(results) 
+			pbar.total += len(results)
+		pbar.close()
+		return self.root 
 
 	def createSave(self,filename) -> str:
 		"""
