@@ -1,7 +1,7 @@
 class datapoints:
 	""" Keeps all supported data types\n
 		Examples in the 2nd line are not always exhaustive
-	"""
+	"""		
 	undefined = "dp.undefined"
 	" Any data that does not fit into any other datapoint "
 	class _internal:
@@ -235,3 +235,15 @@ class datapoints:
 	# 	generic = "dp.image.generic"
 	# 	face = "dp.image.face"
 	# 	id = "dp.image.id"
+
+import inspect
+
+def getDatapointbyString(value, cls=datapoints):
+	for name, attribute in cls.__dict__.items():
+		if isinstance(attribute, str) and str(attribute).lower().replace(" ","") == str(value).lower().replace(" ",""):
+			return attribute
+		elif inspect.isclass(attribute):
+			result = getDatapointbyString(value, attribute)
+			if result:
+				return result
+	return None

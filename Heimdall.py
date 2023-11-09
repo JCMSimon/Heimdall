@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from src.gui.main import GUI
+from plugins._lib.Data import getDatapointbyString
 import sys
 
 class helpOnDefaultParser(ArgumentParser):
@@ -15,7 +16,7 @@ def start():
     from src.Core import Core
     myCore = Core(DEBUG=args.debug)
     if args.list:
-        print(sorted(myCore.pluginRegister.getAvailableDatapoints()))
+        print(sorted([datapoint.lower().replace(" ","") for datapoint in myCore.pluginRegister.getAvailableDatapoints()]))
         return
     # no gui and no listing of datapoint -> keyword is needed
     if args.keyword is None:
@@ -29,12 +30,13 @@ def start():
     if args.datapoint.strip() == "":
         print(f"Heimdall: error: argument -dp/--datapoint: can not be an empty string")
         return
-    if args.datapoint.strip().lower() not in [datapoint.lower() for datapoint in myCore.pluginRegister.getAvailableDatapoints()]:
+    if args.datapoint.strip().lower().replace(" ","") not in [datapoint.lower().replace(" ","") for datapoint in myCore.pluginRegister.getAvailableDatapoints()]:
         print(f"Heimdall: error: None of your plugins support the datatype: '{args.datapoint}'")
         return
     # Finally everything is validated and we can perform the search pog
-    results = myCore.search(datapoint=args.datapoint,keyword=args.searchterm)
-
+    myCore.search(datapoint=getDatapointbyString(args.datapoint),keyword=args.keyword)
+    # Process Data here
+    
 if __name__ == "__main__":
     parser = helpOnDefaultParser(
         prog="Heimdall",
