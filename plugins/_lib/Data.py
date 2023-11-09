@@ -140,7 +140,7 @@ class datapoints:
 		" '8080', 25565 "
 	class hash:
 		generic = "Generic hash"
-		" Any hash that does not fit into any other datapoint "
+		" Any hash that does not have a dedicated datapoint "
 		md5 = "MD5 hash"
 		" '8ce21631012f107953cb2f1bcf3dad29' "
 		sha1 = "SHA-1 hash"
@@ -193,7 +193,7 @@ class datapoints:
 			" '125', '56', '1068' "
 			bio = "Youtube bio"
 			""" Replace new lines with escaped new lines \n
-			'#TODO | Add Example Bio' """
+			'Welcome back to my channel!' """
 		# class facebook:
 		# class reddit:
 		# class instagram:

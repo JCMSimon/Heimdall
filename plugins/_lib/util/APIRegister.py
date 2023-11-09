@@ -1,3 +1,5 @@
+# TODO | Needs a redo :c
+
 import toml
 
 from src.Logger import Logger

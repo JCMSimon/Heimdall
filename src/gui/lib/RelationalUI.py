@@ -46,6 +46,7 @@ class RelationalNodeUI:
 				dpg.add_theme_color(dpg.mvNodeCol_NodeBackground,(255,255,255,25),category=dpg.mvThemeCat_Nodes)
 				dpg.add_theme_color(dpg.mvNodeCol_NodeOutline,(255,255,255,0),category=dpg.mvThemeCat_Nodes)
 				dpg.add_theme_color(dpg.mvNodeCol_TitleBar,(80,0,255,100),category=dpg.mvThemeCat_Nodes)
+	
 	def setup_draw_layer(self):
 		with dpg.window(no_background=True,pos=self.pos,width=self.width,height=self.height,no_move=True,no_title_bar=True,no_scrollbar=True,no_resize=True,max_size=(self.width,self.height),horizontal_scrollbar=False,min_size=(self.width,self.height),no_close=True,no_collapse=True) as self.drawWindow:
 			self.drawList = dpg.add_drawlist(parent=self.drawWindow,width=self.width,height=self.height,pos=self.pos)
@@ -164,7 +165,7 @@ class RelationalNodeUI:
 	def drawLinks(self):
 		while self.Interaction:
 			list_of_drawn_elements = [link.draw(self.drawList) for link in self.links]
-			time.sleep(1 / int(dpg.get_frame_rate()))
+			dpg.split_frame()
 			for item in list_of_drawn_elements:
 				try:
 					dpg.delete_item(item)
@@ -173,7 +174,7 @@ class RelationalNodeUI:
 
 	def handleDragging(self,isDragging = False):
 		while self.Interaction:
-			time.sleep(1 / int(dpg.get_frame_rate()))
+			dpg.split_frame()
 			if dpg.is_mouse_button_dragging(button=dpg.mvMouseButton_Left,threshold=0.05) and not isDragging and not dpg.is_mouse_button_released(button=dpg.mvMouseButton_Left):
 				isDragging = True
 				# allow start dragging for 2 ms
@@ -205,11 +206,11 @@ def getNodeByPosition(nodes,mousepos):
 def createDPGNode(hdllnode,editor) -> int:
 	try:
 		# Trying to get the pos cause i cant be sure if its a real item or not
-		dpg.get_item_pos(hdllnode.dpgID)
+		dpg.get_item_pos(hdllnode.dpgID) # TODO | surely this can be done without forcing a error
 		return hdllnode.dpgID
 	except Exception:
-		description = '\n'.join(value for field in hdllnode.data["data"] for key, value in field.items() if key != dp._internal.is_root_node)
-		with dpg.node(label=hdllnode.data["title"],parent=editor) as DPGNodeID:
+		description = '\n'.join(value for datapoint in hdllnode.datapoints for key, value in datapoint.items() if key != dp._internal.is_root_node)
+		with dpg.node(label=hdllnode.title,parent=editor) as DPGNodeID:
 			if description != "":
 				with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Static):
 					dpg.add_text(description)

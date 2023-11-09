@@ -1,29 +1,17 @@
 import os
 import pathlib
 import pickle
-import string
+from string import ascii_letters,digits
 from time import strftime
 from typing import LiteralString
-
-from tqdm import tqdm
 
 from src.PluginRegister import PluginRegister
 from plugins._lib.Data import datapoints as dp
 from plugins._lib.Node import Node
 from src.Logger import Logger
 
-import os
-
 class Core():
-	"""Heimdall's Core. responsible for the search process"""
 	def __init__(self,DEBUG=False) -> None:
-		"""
-		This function initializes the Core class
-
-		Args:
-		  pluginRegister: This is the plugin register that the core will use to execute plugins.
-		  DEBUG: If set to True, the logger will print out debug messages. Defaults to False
-		"""
 		self._DEBUG = DEBUG
 		self.logger = Logger("Core",DEBUG=self._DEBUG)
 		self.pluginRegister = PluginRegister(DEBUG=self._DEBUG)
@@ -31,78 +19,41 @@ class Core():
 			os.system("mkdir saves")
 
 	def search(self,datapoint,keyword,feedbackFunc=None) -> Node:
-		"""
-		> The function takes a plugin name and a keyword, and returns a list of nodes that are the result of
-		the search
-
-		Args:
-		  datapoint: a defined data point.
-		  keyword: The keyword to search for
-		  feedbackFunc: A function that gets input as strings
-
-		Returns:
-		  A list of nodes.
-		"""
-		self.ff = feedbackFunc
-		if self.ff is None:
-			self.ff = self.logger.infoMsg
-		self.ff("Creating fake node")
-		self.root = Node("ROOT", debug=self._DEBUG)
-		self.root.addDataField(dp._internal.is_root_node,True)
+		self.ff = self.logger.infoMsg if feedbackFunc is None else feedbackFunc		
+		self.rootNode = Node("ROOT", debug=self._DEBUG).addDataField(dp._internal.is_root_node,True)
+		# Using a fake node as a starting point
 		FakeNode = Node("F4K3")
 		FakeNode.addDataField(datapoint,keyword)
 		todo = [FakeNode]
 		return self._recursiveSearch(todo)
 
 	def _recursiveSearch(self,todo) -> Node:
-		"""
-		It takes a list of nodes, and for each node, it runs all plugins that are registered for the
-		datatype of the node's data, and then adds the results of those plugins to the node's children
-
-		Args:
-		  todo: A list of nodes to process
-		  pbar: The progress bar object
-
-		Returns:
-		  A Tree of nodes
-		"""
-		pbar = getPbar(todo,"Processing Nodes","Nodes")
 		for node in todo:
-			for dataField in node.data["data"]:
-				for datatype,data in dataField.items():
-					plugins = self.pluginRegister.getPluginNamesByDatapoint(datatype)
+			for datapoint in node.datapoints:
+				for datatype,data in datapoint.items():
+					plugins = self.pluginRegister.getPluginNamesByDatatype(datatype)
 					results = []
 					for plugin in plugins:
 						self.ff(f"Running plugin: {plugin}")
 						results.extend(self.pluginRegister.runPlugin(plugin,data))
-			if node.data["title"] == "F4K3":
-				self.root._children.extend(results) 
+			if node.title == "F4K3":
+				self.rootNode._children.extend(results) 
 			else:
 				node._children.extend(results) 
-			pbar.update()
 			todo.extend(results) 
-			pbar.total += len(results)
-		pbar.close()
-		return self.root 
+		return self.rootNode 
 
 	def createSave(self,filename) -> str:
-		"""
-		It saves the Core root to a file
-
-		Args:
-		  filename: The name of the file to save to.
-		"""
-		filename = format_filename(filename)
+		formatted_filename = format_filename(filename)
 		# If the File nam would be empty, replace it with a timestamp
-		if filename == "":
-			filename = strftime("%Y%m%d-%H%M%S")
+		filename = strftime("%Y%m%d-%H%M%S") if filename.strip() == "" else formatted_filename
 		path = f"./saves/{filename}.pickle"
-		self.logger.debugMsg(f"Saving to {path}")
-		if self.root is None:
+		if self.rootNode is None:
 			self.logger.infoMsg("No data to save")
 		else:
+			self.logger.infoMsg(f"Saving to {path}")
 			with open(path,"wb") as picklefile:
-				pickle.dump(self.root,picklefile)
+				pickle.dump(self.rootNode,picklefile)
 				return filename
 
 	def loadSave(self,filename) -> None:
@@ -114,17 +65,16 @@ class Core():
 		"""
 		path = f"./saves/{filename}.pickle"
 		self.logger.debugMsg(f"Loading from {path}")
-		self.root = None
+		self.rootNode = None
 		try:
 			with open(path,"rb") as picklefile:
 				try:
-					self.root = pickle.load(picklefile)
-					return self.root
+					self.rootNode = pickle.load(picklefile)
+					return self.rootNode
 				except EOFError:
 					self.logger.errorMsg("Cant load empty File")
 		except FileNotFoundError:
 				self.logger.errorMsg("File does not exist")
-
 
 	def deleteSave(self,filename) -> bool:
 		"""
@@ -137,7 +87,7 @@ class Core():
 		  A boolean value. True if file was deleted successfuly. False if not.
 		"""
 		CurrentDir = pathlib.Path(__file__).parent.parent.absolute()
-		path = f"{CurrentDir}\saves\{filename}.pickle" # TODO | This might not work. gonna see in future
+		path = f"{CurrentDir}\saves\{filename}.pickle"
 		if os.path.exists(path):
 			self.logger.debugMsg(f"Trying to delete '{CurrentDir}\saves\{filename}.pickle'")
 			os.system(f'del "{path}"')
@@ -147,10 +97,11 @@ class Core():
 			return False
 
 	def getAvailableDatapoints(self) -> set:
+		"Simple passthrough method"
 		return self.pluginRegister.getAvailableDatapoints()
 
 # Thanks to https://gist.github.com/seanh/93666 !
-def format_filename(name) -> LiteralString:
+def format_filename(filename) -> LiteralString:
 	"""
 	It takes a string and returns a string that is a valid filename
 
@@ -158,23 +109,8 @@ def format_filename(name) -> LiteralString:
 	  name: The string to be formatted
 
 	Returns:
-	  A string with the characters in the string s that are in the string valid_chars.
+	  A string that is a valid filename
 	"""
-	valid_chars = f"-_ {string.ascii_letters}{string.digits}"
-	filename = ''.join(c for c in name if c in valid_chars)
+	valid_chars = f"-_ {ascii_letters}{digits}"
+	filename = ''.join(char for char in filename if char in valid_chars)
 	return filename.replace(' ','_')
-
-def getPbar(iterable,desc,unit,color="#7800C8") -> tqdm:
-	"""
-	`getPbar` is a function that returns a progress bar object from the `tqdm` library
-
-	Args:
-	  iterable: the iterable object you want to present
-	  desc: The description of the progress bar
-	  unit: The unit of the progress bar.
-	  color: The color of the progress bar. Defaults to #7800C8
-
-	Returns:
-	  A progress bar object.
-	"""
-	return tqdm(total=len(iterable),ascii=True,desc=desc,leave=False,unit=unit,colour=color)

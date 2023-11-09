@@ -2,12 +2,11 @@
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| Latest Release   | :white_check_mark: |
-| Older Releases   | ❌ |
-
+| Version        | Supported |
+| -------------- | --------- |
+| Latest Release | ✅        |
+| Older Releases | ❌        |
 
 ## Reporting a Vulnerability
 
-To report security vulnerabilities, DM JCMS#0557 on Discord
+To report security vulnerabilities, DM JCMS on Discord or email heimdall@jcms.dev

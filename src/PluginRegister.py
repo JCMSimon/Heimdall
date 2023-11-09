@@ -27,14 +27,13 @@ class PluginRegister():
 		for pluginName in self.getPluginFiles():
 			if pluginClassInstance := self.getPluginInstance(pluginName):
 				plugins[pluginName] = {
-					"displayName":pluginClassInstance.displayname(), # type: ignore
-					"version":pluginClassInstance.version(), # type: ignore
-					"accepts":pluginClassInstance.accepts(), # type: ignore
-					"display":pluginClassInstance.display, # type: ignore
-					"runMethod":pluginClassInstance.run, # type: ignore
+					"displayName":pluginClassInstance.displayname(), 
+					"version":pluginClassInstance.version(), 
+					"accepts":pluginClassInstance.accepts(), 
+					"credits":pluginClassInstance.getCredits(), 
+					"runMethod":pluginClassInstance.run, 
 				}
-				# TODO | Add stuff like getcredits etc
-				self.logger.infoMsg(f"{plugins[pluginName]['displayName']} v{plugins[pluginName]['version']} loaded succesfully!")
+				self.logger.debugMsg(f"{plugins[pluginName]['displayName']} v{plugins[pluginName]['version']} loaded succesfully!")
 		return plugins
 
 	def getPluginFiles(self) -> list[str]:
@@ -90,7 +89,7 @@ class PluginRegister():
 		self.logger.debugMsg(f"Running Plugin '{pluginName}' with Argument '{keyword}'")
 		return self.getPluginInstance(pluginName).run(keyword) # type: ignore
 
-	def getPluginNamesByDatapoint(self,DATAPOINT) -> list:
+	def getPluginNamesByDatatype(self,DATAPOINT) -> list:
 		"""
 		> Return a list of plugin names that have a default input of the given datapoint
 
