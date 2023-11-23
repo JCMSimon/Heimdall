@@ -9,7 +9,7 @@ class helpOnDefaultParser(ArgumentParser):
 
 def start():
     if args.gui:
-        from src.gui.main import GUI
+        from src.gui.gui import GUI
         HeimdallUI = GUI(DEBUG=args.debug)
         return
     from src.Core import Core
