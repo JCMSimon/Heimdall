@@ -92,13 +92,13 @@ class GUI():
 		dpg.bind_theme(global_theme)
 
 	def loadTextures(self):
-		for (_, _, filenames) in walk("./src/gui/assets/main"):
+		for (_, _, filenames) in walk("./src/gui/assets/img"):
 			assets = [filename for filename in filenames if filename.endswith(".png")]
 			break
 		self.images = {}
 		self.textures = {}
 		for asset in assets:
-			width, height, _, data = dpg.load_image(f"./src/gui/assets/main/{asset}")
+			width, height, _, data = dpg.load_image(f"./src/gui/assets/img/{asset}")
 			with dpg.texture_registry():
 				self.textures[asset.replace(".png","")] = dpg.add_dynamic_texture(width,height,data)
 				self.images[asset.replace(".png","")] = [width, height, data]
