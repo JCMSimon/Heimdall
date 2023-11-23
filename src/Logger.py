@@ -26,7 +26,7 @@ class Logger():
 			print(f"{Fore.BLUE}[?] [{self.getTimeStamp()} - DEBUG]> ({self._PREFIX}) {text}{Style.RESET_ALL}")
 
 	def infoMsg(self,text) -> None:
-		print(f"{Fore.CYAN}[i] [{self.getTimeStamp()} - INFO ] > ({self._PREFIX}) {text}{Style.RESET_ALL}")
+		print(f"{Fore.CYAN}[i] [{self.getTimeStamp()} - INFO ]> ({self._PREFIX}) {text}{Style.RESET_ALL}")
 
 	def warnMsg(self,text) -> None:
 		print(f"{Fore.YELLOW}[!] [{self.getTimeStamp()} - WARN ] > ({self._PREFIX}) {text}{Style.RESET_ALL}")

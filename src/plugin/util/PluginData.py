@@ -1,7 +1,9 @@
 import hashlib
 import pickle
 from typing import Any
+
 from src.Logger import Logger
+
 
 class PluginData:
 	"""Utility for plugins to save and load arbitrary data"""

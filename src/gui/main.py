@@ -1,10 +1,13 @@
-import dearpygui.dearpygui as dpg
-from os import walk
-from src.Logger import Logger
-from screeninfo import get_monitors
-from src.gui.lib.RelationalUI import RelationalNodeUI
-from src.Core import Core
 import time
+from os import walk
+
+import dearpygui.dearpygui as dpg
+from screeninfo import get_monitors
+
+from src.Core import Core
+from src.gui.elements.RelationalUI import RelationalNodeUI
+from src.Logger import Logger
+
 
 class GUI():
 	def __init__(self,DEBUG=False) -> None:

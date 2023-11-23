@@ -1,10 +1,10 @@
-from plugins._lib.Plugin import Plugin
-from plugins._lib.Data import datapoints as dp
-from plugins._lib.Node import Node
+from src.plugin.Data import datapoints as dp
+from src.plugin.Node import Node
+from src.plugin.Plugin import Plugin
 
 # TODO | Abondone this and write a holehe plugin as test plugin pagman
 
-class Example(Plugin):                # Class Name must be the same as the File Name
+class yourmom(Plugin):          # max 1 class in a file
 	def __init__(self,DEBUG) -> None:
 		self._DEBUG = DEBUG
 		super().__init__(DEBUG=self._DEBUG)
@@ -31,3 +31,6 @@ class Example(Plugin):                # Class Name must be the same as the File 
 		testResult2 = Node("Hair Color",debug=self._DEBUG)
 		testResult2.addDataField(dp.person.body.hair_color,"blonde")
 		return [testResult,testResult2]
+		
+# def test(): #this is forbidden
+# 	print("hi")

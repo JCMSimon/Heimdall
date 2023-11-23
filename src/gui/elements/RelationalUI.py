@@ -1,10 +1,13 @@
-import dearpygui.dearpygui as dpg
-from math import sqrt
-import time
 import threading
+import time
+from math import sqrt
 from random import choice
-from plugins._lib.Data import datapoints as dp
+
+import dearpygui.dearpygui as dpg
+
 from src.Logger import Logger
+from src.plugin.Data import datapoints as dp
+
 
 class Link:
 	def __init__(self,node_1,node_2,node_editor) -> None:

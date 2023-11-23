@@ -1,15 +1,14 @@
 import os
 import pathlib
 import pickle
-from string import ascii_letters,digits
+from string import ascii_letters, digits
 from time import strftime
 from typing import LiteralString
 
-from src.PluginRegister import PluginRegister
-from plugins._lib.Data import datapoints as dp
-from plugins._lib.Node import Node
 from src.Logger import Logger
-
+from src.plugin.Data import datapoints as dp
+from src.plugin.Node import Node
+from src.PluginRegister import PluginRegister
 
 
 class Core():
@@ -34,6 +33,7 @@ class Core():
 			for datapoint in node.datapoints:
 				for datatype,data in datapoint.items():
 					plugins = self.pluginRegister.getPluginNamesByDatatype(datatype)
+					self.logger.debugMsg(f"Found {len(plugins)} plugins ({','.join(plugins) or None})")
 					results = []
 					for plugin in plugins:
 						self.ff(f"Running plugin: {plugin}")

@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from src.Logger import Logger
 
+
 class Plugin(ABC):
 	"""
 	Base Class for all Heimdall Plugins

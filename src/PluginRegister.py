@@ -1,6 +1,6 @@
 from os import walk
 from src.Logger import Logger
-from plugins._lib.Plugin import Plugin
+from src.plugin.Plugin import Plugin
 class PluginRegister():
 	"""
 	Plugin Register/Manager for Heimdall
@@ -62,6 +62,7 @@ class PluginRegister():
 			# Import the Plugin File
 			pluginModule = __import__(f'plugins.{pluginName}', fromlist=[pluginName])
 			# Create a Class instance of the Plugin
+			pluginName = list(pluginModule.__dict__.keys())[-1] 
 			pluginClass = getattr(pluginModule, pluginName)
 			return pluginClass(DEBUG=self._DEBUG)
 		except AttributeError as e:
