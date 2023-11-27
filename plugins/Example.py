@@ -2,35 +2,35 @@ from src.plugin.Data import datapoints as dp
 from src.plugin.Node import Node
 from src.plugin.Plugin import Plugin
 
-# TODO | Abondone this and write a holehe plugin as test plugin pagman
-
-class yourmom(Plugin):          # max 1 class in a file
+class MyExamplePlugin(Plugin):
 	def __init__(self,DEBUG) -> None:
 		self._DEBUG = DEBUG
 		super().__init__(DEBUG=self._DEBUG)
 
-	def getCredits(self):
-		return {
-				"author": "JCMS", # your name or alias
-				"image": "https://whatever", # Url or path to a image. can be a profile picture or specific to the plugin
-				"social": "https://jcms.dev", # for ex a github link
-				}
-
 	def displayname(self) -> str:
-		return "Example Plugin"
+			return "Example Plugin"
 
 	def version(self) -> str:
 		return "0.0.1"
 
-	def accepts(self) -> list[str]:
-		return [dp.name.first_name,dp.name.first_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name,dp.name.last_name]
+	def getCredits(self) -> dict[str, str]:
+		return {
+				"author": "JCMS",
+				"image": "https://whatever", # Currently unused
+				"social": "https://jcms.dev",
+				}
+	
+	def accepts(self) -> set[str]:
+		return {
+			dp.name.first_name,
+			dp.name.last_name,
+			}
 
-	def run(self,arg) -> list:
-		testResult = Node("Eye Color",debug=self._DEBUG)
-		testResult.addDataField(dp.person.body.eye_color,"blue")
-		testResult2 = Node("Hair Color",debug=self._DEBUG)
-		testResult2.addDataField(dp.person.body.hair_color,"blonde")
-		return [testResult,testResult2]
-		
-# def test(): #this is forbidden
-# 	print("hi")
+	def run(self,keyword) -> list:
+		if len(keyword) % 2 == 0:
+			testResult = Node("Eye Color",debug=self._DEBUG)
+			testResult.addDataField(dp.person.body.eye_color,"blue")
+		else:
+			testResult = Node("Hair Color",debug=self._DEBUG)
+			testResult.addDataField(dp.person.body.hair_color,"blonde")
+		return [testResult]
