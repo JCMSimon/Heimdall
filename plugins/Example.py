@@ -6,7 +6,7 @@ class MyExamplePlugin(Plugin):
 	def __init__(self,DEBUG) -> None:
 		self._DEBUG = DEBUG
 		super().__init__(DEBUG=self._DEBUG)
-
+		
 	def displayname(self) -> str:
 			return "Example Plugin"
 
