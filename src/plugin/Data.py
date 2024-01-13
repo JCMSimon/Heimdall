@@ -6,43 +6,43 @@ class datapoints:
 	" Any data that does not fit into any other datapoint "
 	class _internal:
 		" DO NOT USE "
-		is_root_node = "Root node"
+		is_root_node = "Root Node"
 		" INTERNAL USE ONLY! No Plugin should use this. "
 	class name:
 		title = "Title"
 		" 'Dr.', 'Mr.', 'Ms.' "
-		first_name = "First name"
+		first_name = "First Name"
 		" 'Mark' 'Susan' "
-		middle_name = "Middle name"
+		middle_name = "Middle Name"
 		" 'Andrew' 'Anne' "
-		last_name = "Last name"
+		last_name = "Last Name"
 		" 'Smith' 'Langley' "
-		full_name = "Full name"
+		full_name = "Full Name"
 		" 'Dr. Mark Andrew Smith', 'Ms. Susan Anne Langley' "
 	class age:
 		class text:
-			age = "Age (text)"
+			age = "Age (Text)"
 			""" 'Twenty-six', 'Sixty-five'\n
 			as in Twenty-six/Sixty-five years old"""
 		class numeric:
-			age = "Age (numeric)"
+			age = "Age (Numeric)"
 			""" '26', '65'\n
 			as in 26/65 years old"""
 	class date_of_birth:
-		generic = "Date of Birth"
+		generic = "Date Of Birth"
 		""" '1st of March 20250', '12.05.2005', '15th March' \n
 		If possible use the more specific datapoints"""
 		class text:
-			day = "Day of Birth (text)"
+			day = "Day Of Birth (Text)"
 			" 'First', '1st', 'Second', '2nd', 'Twenty-third', '23rd' "
-			month = "Month of Birth (text)"
+			month = "Month Of Birth (Text)"
 			" 'March', 'April' "
 		class numeric:
-			day = "Day of Birth (numeric)"
+			day = "Day Of Birth (Numeric)"
 			" '1' '2' '23' "
-			month = "Month of Birth (numeric)"
+			month = "Month Of Birth (Numeric)"
 			" '03', '04' "
-			year = "Year of Birth (numeric)"
+			year = "Year Of Birth (Numeric)"
 			" '2005', '2008' "
 	class person:
 		pronoun = "Pronoun"
@@ -66,7 +66,7 @@ class datapoints:
 				" '95', '78' "
 				pounds = "Weight (lbs)"
 				" '140', '150' "
-			bio_gender = "Gender (bio)"
+			biological_gender = "Gender (Biological)"
 			" 'Male', 'Female', 'Other', etc "
 			eye_color = "Eye Color"
 			" 'Blue', 'Brown', 'Green' "
@@ -77,19 +77,19 @@ class datapoints:
 			hair_color = "Hair Color"
 			" 'Blonde', 'Black', 'Red', 'Green' "
 	class vehicle:
-		type = "Vehicle type"
+		type = "Vehicle Type"
 		" 'Car', 'Bike', 'Plane', 'Boat' "
-		color = "Vehicle color"
+		color = "Vehicle Color"
 		" 'black', 'red', 'blue', 'green' "
 		brand = "Vehicle Brand"
 		" 'BMW', 'Kia', etc "
-		build_year = "Vehicle build year"
+		build_year = "Vehicle Build Year"
 		" '1989', '2010' "
 		class identifier:
-			license_plate = "License plate"
+			license_plate = "License Plate"
 			"""For Cars, bikes etc\n
 			'SAM 911E', 'HH 07194' """
-			tail_number = "Tail number"
+			tail_number = "Tail Number"
 			"""For Planes\n
 			'7T-WHM	', 'N16-100	' """
 			hull_identification_number = "Hull Identification Number (HIN)"
@@ -100,7 +100,7 @@ class datapoints:
 		" '37.275036', '37°16'30.1\"N' "
 		longitude = "Longitude"
 		" '-115.799632', '115°47'58.7\"W' "
-		zip_code = "Zip code"
+		zip_code = "Zip Code"
 
 		state_or_region = "State/Region"
 		" 'Kansas', 'Pest', 'Bayern', "
@@ -108,12 +108,12 @@ class datapoints:
 		" 'Manhattan', 'Monor', 'München' "
 		street = "Street"
 		" 'Claflin Rd', 'Kossuth Lajos u.', 'Adelheidstraße' "
-		house_number = "House number"
+		house_number = "House Number"
 		" '1800 ', '74', '14' "
 		class country:
-			name = "Country name"
+			name = "Country Name"
 			" 'Germany', 'Hungary', 'United States of America' "
-			code = "Country code"
+			code = "Country Code"
 			" 'DE', 'HU', 'USA' "
 	class email:
 		generic = "Generic Email"
@@ -122,7 +122,7 @@ class datapoints:
 		" '*@gmail.com' "
 		hotmail = "Hotmail"
 		" '*@hotmail.com', '*@hotmail.co.uk', '*@hotmail.fr' "
-		outlook = "Outlook mail"
+		outlook = "Outlook Mail"
 		" '*@outlook.com' "
 		proton = "Proton Mail"
 		" '*@proton.me', '*@protonmail.com', '*pm.me' '*@protonmail.ch' "
@@ -141,17 +141,17 @@ class datapoints:
 		port = "Port"
 		" '8080', 25565 "
 	class hash:
-		generic = "Generic hash"
+		generic = "Generic Hash"
 		" Any hash that does not have a dedicated datapoint "
-		md5 = "MD5 hash"
+		md5 = "Md5 Hash"
 		" '8ce21631012f107953cb2f1bcf3dad29' "
-		sha1 = "SHA-1 hash"
+		sha1 = "Sha-1 Hash"
 		" 'cfb9a5cb56f4b910863ed7a4a671ced2c17f5807' "
-		sha256 = "SHA-256 hash"
+		sha256 = "Sha-256 Hash"
 		" 'ebab140b3fb81566002d832257eef15795545dbca18f679d3cb800de1da80b15' "
-		bcrypt = "bcrypt hash"
+		bcrypt = "Bcrypt Hash"
 		" '$2y$10$S2VvQQ9aqSLdNVPqvsYAteApDyQcH6YLO0qWUqqrBD2CWpqml/Pnq' "
-		argon2i = "argon2i hash"
+		argon2i = "Argon2i Hash"
 		" '$argon2i$v=19$m=16,t=2,p=1$SGVpbWRhbGw$kXV2SueEXeBeBpkEex6MsA' "
 	class profile:
 		class discord:
@@ -162,38 +162,38 @@ class datapoints:
 				class hype_squad:
 					brilliance = 0
 				# TODO | Add all Discord Badges
-			id = "Discord User id"
+			id = "Discord User Id"
 			" '155149108183695360' "
 			username = "Discord Username"
 			" 'Dyno' "
-			old_tag = "Discord tag (#)"
+			old_tag = "Discord Tag (#)"
 			" 'Dyno#3861' "
-			pfp_url = "Discord avatar"
+			pfp_url = "Discord Avatar"
 			" 'https://cdn.discordapp.com/avatars/155149108183695360/19a5ee4114b47195fcecc6646f2380b1.png' "
-			banner_url = "Discord banner"
+			banner_url = "Discord Banner"
 			" 'https://cdn.discordapp.com/banners/204683417445466112/a6ca48aad51922940e6bc383dbd0d852.png' "
-			bio = "Discord bio"
+			bio = "Discord Bio"
 			""" Replace new lines with escaped new lines \n
 			'The Discord bot to make server management and moderation easy. Follow your favorite streamers, run giveaways, and more! \\n \\n https://dyno.gg/' """
-			badges = "Discord user badges"
+			badges = "Discord User Badges"
 			""" Refer to datapoints.socialmedia.discord._badges for a list of all supported badges \n
 			'[datapoints.socialmedia.discord._badges.active_developer,datapoints.socialmedia.discord._badges.hype_squad.brilliance]' """
 		class youtube:
-			alias = "Youtube alias"
+			alias = "Youtube Alias"
 			" '@JCMS_', '@Miimii' "
-			channel_id = "Youtube channel id"
+			channel_id = "Youtube Channel Id"
 			" 'UC3jv2yNiKPOZoWLLflNOzvg', 'UCOAmvK5o2JmH0vXi3Ql_qWg' "
-			subscriber_count = "Youtube subscriber count"
+			subscriber_count = "Youtube Subscriber Count"
 			" '125', '31364', '2135949' "
-			view_count = "Youtube view count (global)"
+			view_count = "Youtube View Count (Global)"
 			" '438', '46228', '2649476' "
-			video_count = "Youtube video count"
+			video_count = "Youtube Video Count"
 			" '268', '56', '1068' "
-			community_post_count = "Youtube communty post count"
+			community_post_count = "Youtube Communty Post Count"
 			" '125', '56', '1068' "
-			playlist_count = "Youtube playlist count"
+			playlist_count = "Youtube Playlist Count"
 			" '125', '56', '1068' "
-			bio = "Youtube bio"
+			bio = "Youtube Bio"
 			""" Replace new lines with escaped new lines \n
 			'Welcome back to my channel!' """
 		# class facebook:
@@ -542,31 +542,31 @@ class datapoints:
 		# class wikivg:
 			
 	# class sensetive_data:
-	# 	social_security_number = "dp.sensetive_data.social_security_number"
+	# 	social_security_number = "Dp.Sensetive_Data.Social_Security_Number"
 	# class credit_card:
-	# 	name = "Credit card holder"
-	# 	expiry_date = "Credit card "
-	# 	expiry_month = "dp.sensetive_data.credit_card.expiry_month"
-	# 	expiry_number = "dp.sensetive_data.credit_card.expiry_number"
-	# 	expiry_year = "dp.sensetive_data.credit_card.expiry_year"
-	# 	cvc = "dp.sensetive_data.credit_card.cvc"
+	# 	name = "Credit Card Holder"
+	# 	expiry_date = "Credit Card "
+	# 	expiry_month = "Dp.Sensetive_Data.Credit_Card.Expiry_Month"
+	# 	expiry_number = "Dp.Sensetive_Data.Credit_Card.Expiry_Number"
+	# 	expiry_year = "Dp.Sensetive_Data.Credit_Card.Expiry_Year"
+	# 	cvc = "Dp.Sensetive_Data.Credit_Card.Cvc"
 
 	# class personal_website:
-	# 	name = "dp.personal_website.name"
-	# 	domain = "dp.personal_website.domain"
-	# 	ip = "dp.personal_website.ip"
-	# 	subdomain = "dp.personal_website.subdomain"
-	# 	dns_server = "dp.personal_website.dns_server"
+	# 	name = "Dp.Personal_Website.Name"
+	# 	domain = "Dp.Personal_Website.Domain"
+	# 	ip = "Dp.Personal_Website.Ip"
+	# 	subdomain = "Dp.Personal_Website.Subdomain"
+	# 	dns_server = "Dp.Personal_Website.Dns_Server"
 	# class credentials:
-	# 	numerical_pin_number = "dp.credentials.numerical_pin_number"
-	# 	password = "dp.credentials.password"
+	# 	numerical_pin_number = "Dp.Credentials.Numerical_Pin_Number"
+	# 	password = "Dp.Credentials.Password"
 	# class contact:
-	# 	fax_number = "dp.contact.fax_number"
-	# 	phone_number = "dp.contact.phone_number"
+	# 	fax_number = "Dp.Contact.Fax_Number"
+	# 	phone_number = "Dp.Contact.Phone_Number"
 	# class image:
-	# 	generic = "dp.image.generic"
-	# 	face = "dp.image.face"
-	# 	id = "dp.image.id"
+	# 	generic = "Dp.Image.Generic"
+	# 	face = "Dp.Image.Face"
+	# 	id = "Dp.Image.Id"
 
 import inspect
 
