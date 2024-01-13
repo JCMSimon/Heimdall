@@ -541,15 +541,16 @@ class datapoints:
 		# class uid:
 		# class wikivg:
 			
-	# class sensetive_data:
-	# 	social_security_number = "Dp.Sensetive_Data.Social_Security_Number"
-	# class credit_card:
-	# 	name = "Credit Card Holder"
-	# 	expiry_date = "Credit Card "
-	# 	expiry_month = "Dp.Sensetive_Data.Credit_Card.Expiry_Month"
-	# 	expiry_number = "Dp.Sensetive_Data.Credit_Card.Expiry_Number"
-	# 	expiry_year = "Dp.Sensetive_Data.Credit_Card.Expiry_Year"
-	# 	cvc = "Dp.Sensetive_Data.Credit_Card.Cvc"
+	class sensetive_data:
+		social_security_number = "Social Security Number"
+	class credit_card:
+		name = "Credit Card name"
+		number = "Credit Card Number"
+		cvc = "Credit Card CVC"
+		class expiry:
+			date = "Credit Card Expiry Date (mm/yyyy)"
+			month = "Credit Card Expiry Date (Month)"
+			year = "Credit Card Expiry Date (Year)"
 
 	# class personal_website:
 	# 	name = "Dp.Personal_Website.Name"
