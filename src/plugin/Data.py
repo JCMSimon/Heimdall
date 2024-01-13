@@ -2,11 +2,11 @@ class datapoints:
 	""" Keeps all supported data types\n
 		Examples in the 2nd line are not always exhaustive
 	"""		
-	undefined = "dp.undefined"
+	undefined = "Undefined"
 	" Any data that does not fit into any other datapoint "
 	class _internal:
 		" DO NOT USE "
-		is_root_node = "dp._internal.is_root_node"
+		is_root_node = "Root node"
 		" INTERNAL USE ONLY! No Plugin should use this. "
 	class name:
 		title = "Title"
@@ -66,6 +66,8 @@ class datapoints:
 				" '95', '78' "
 				pounds = "Weight (lbs)"
 				" '140', '150' "
+			bio_gender = "Gender (bio)"
+			" 'Male', 'Female', 'Other', etc "
 			eye_color = "Eye Color"
 			" 'Blue', 'Brown', 'Green' "
 			skin_color = "Skin Color"
@@ -151,7 +153,7 @@ class datapoints:
 		" '$2y$10$S2VvQQ9aqSLdNVPqvsYAteApDyQcH6YLO0qWUqqrBD2CWpqml/Pnq' "
 		argon2i = "argon2i hash"
 		" '$argon2i$v=19$m=16,t=2,p=1$SGVpbWRhbGw$kXV2SueEXeBeBpkEex6MsA' "
-	class socialmedia:
+	class profile:
 		class discord:
 			class _badges:
 				""" DO NOT USE AS ACTUAL DATAPOINT \n
@@ -195,20 +197,350 @@ class datapoints:
 			""" Replace new lines with escaped new lines \n
 			'Welcome back to my channel!' """
 		# class facebook:
-		# class reddit:
 		# class instagram:
 		# class snapchat:
-		# class twitter:
 		# class threads:
-		# class telegram:
 		# class pinterest:
-		# class steam:
-		# class twitch:
-		# class vk:
-		# class tiktok:
-		# class github:
 		# class chessdotcom:
 		# class riotgames:
+		# class namemc:
+		# class doxbin:
+		# class twoDimensions:
+		# class threednews:
+		# class sevenCups:
+		# class eighttracks:
+		# class nineGAG:
+		# class aPClips:
+		# class about.me:
+		# class academia.edu:
+		# class admireMe.Vip:
+		# class airPilotLife:
+		# class airbit:
+		# class airliners:
+		# class alik:
+		# class allMyLinks:
+		# class anilist:
+		# class archiveofOurOwn:
+		# class artStation:
+		# class askFedora:
+		# class askFM:
+		# class audiojungle:
+		# class autofrage:
+		# class avizo:
+		# class bLIPfm:
+		# class bOOTH:
+		# class bandcamp:
+		# class bazarcz:
+		# class behance:
+		# class biggerPockets:
+		# class bikemap:
+		# class bioHacking:
+		# class bitBucket:
+		# class bitwardenForum:
+		# class blogger:
+		# class bodyBuilding:
+		# class bookcrossing:
+		# class braveCommunity:
+		# class buyMeACoffee:
+		# class buzzFeed:
+		# class cNET:
+		# class cTAN:
+		# class caddyCommunity:
+		# class carTalkCommunity:
+		# class carbonmade:
+		# class careerhabr:
+		# class championat:
+		# class chaos:
+		# class chatujmecz:
+		# class choiceCommunity:
+		# class clapper:
+		# class cloudflareCommunity:
+		# class codecademy:
+		# class codechef:
+		# class codeforces:
+		# class codepen:
+		# class codersRank:
+		# class coinvote:
+		# class colourLovers:
+		# class contently:
+		# class coroflot:
+		# class cracked:
+		# class crevado:
+		# class crowdin:
+		# class cryptomatorForum:
+		# class dEVCommunity:
+		# class dMOJ:
+		# class dailyMotion:
+		# class dealabs:
+		# class discogs:
+		# class discussElasticco:
+		# class disqus:
+		# class docker Hub:
+		# class dribbble:
+		# class duolingo:
+		# class eintrachtFrankfurtForum:
+		# class envatoForum:
+		# class erome:
+		# class etsy:
+		# class euw:
+		# class exposure:
+		# class eyeEm:
+		# class f3cool:
+		# class fameswap:
+		# class fandom:
+		# class finanzfrage:
+		# class fiverr:
+		# class flickr:
+		# class flightradar24:
+		# class flipboard:
+		# class football:
+		# class forumOphilia:
+		# class fosstodon:
+		# class freelance.habr:
+		# class freelancer:
+		# class freesound:
+		# class g2G:
+		# class gNOMEVCS:
+		# class gaiaOnline:
+		# class gamespot:
+		# class geeksforGeeks:
+		# class geniusArtists:
+		# class geniusUsers:
+		# class gesundheitsfrage:
+		# class getMyUni:
+		# class giantBomb:
+		# class giphy:
+		# class gitBook:
+		# class gitHub:
+		# class gitLab:
+		# class gitee:
+		# class goodReads:
+		# class gradle:
+		# class grailed:
+		# class gravatar:
+		# class gumroad:
+		# class gutefrage:
+		# class hEXRPG:
+		# class hackTheBox:
+		# class hackaday:
+		# class hackerEarth:
+		# class hackerNews:
+		# class hackerOne:
+		# class hackerRank:
+		# class harvardScholar:
+		# class heavyR:
+		# class houzz:
+		# class hubPages:
+		# class hubski:
+		# class iCQ:
+		# class iFTTT:
+		# class icons8 Community:
+		# class imageFap:
+		# class imgUpcz:
+		# class imgur:
+		# class instructables:
+		# class ionic Forum:
+		# class issuu:
+		# class itch.io:
+		# class itemfix:
+		# class jellyfinWeblate:
+		# class jimdo:
+		# class joplinForum:
+		# class kEAKR:
+		# class kaggle:
+		# class keybase:
+		# class kik:
+		# class kongregate:
+		# class lOR:
+		# class launchpad:
+		# class leetCode:
+		# class lessWrong:
+		# class letterboxd:
+		# class linktree:
+		# class listed:
+		# class liveJournal:
+		# class lobsters:
+		# class lolchess:
+		# class lottieFiles:
+		# class lushStories:
+		# class mMORPGForum:
+		# class mapify:
+		# class medium:
+		# class memrise:
+		# class minecraft:
+		# class mixCloud:
+		# class modelhub:
+		# class monkeytype:
+		# class motherless:
+		# class motorradfrage:
+		# class myAnimeList:
+		# class myMiniFactory:
+		# class myspace:
+		# class nICommunityForum:
+		# class needrom:
+		# class nextcloud Forum:
+		# class nightbot:
+		# class ninjaKiwi:
+		# class nintendoLife:
+		# class nitroType:
+		# class notABug.org:
+		# class nyaa.si:
+		# class oGUsers:
+		# class openStreetMap:
+		# class opensource:
+		# class ourDJTalk:
+		# class pSNProfilescom:
+		# class packagist:
+		# class pastebin:
+		# class patreon:
+		# class periscope:
+		# class pinkbike:
+		# class pocketStars:
+		# class polarsteps:
+		# class polygon:
+		# class polymart:
+		# class pornhub:
+		# class productHunt:
+		# class promoDJ:
+		# class rajcenet:
+		# class rateYourMusic:
+		# class rclone Forum:
+		# class redTube:
+		# class redbubble:
+		# class reddit:
+		# class reisefrage:
+		# class replitcom:
+		# class researchGate:
+		# class reverbNation:
+		# class roblox:
+		# class rocketTube:
+		# class rubyGems:
+		# class rumble:
+		# class runeScape:
+		# class sWAPD:
+		# class sbazarcz:
+		# class scratch:
+		# class scribd:
+		# class shitpostBot5000:
+		# class shpock:
+		# class sketchfab:
+		# class slant:
+		# class slideShare:
+		# class slides:
+		# class smule:
+		# class soundCloud:
+		# class sourceForge:
+		# class speedruncom:
+		# class splice:
+		# class sporcle:
+		# class sportlerfrage:
+		# class sportsRU:
+		# class spotify:
+		# class starCitizen:
+		# class steamGroup:
+		# class strava:
+		# class sublimeForum:
+		# class tLDRLegal:
+		# class tRAKTRAIN:
+		# class telegram:
+		# class tellonymme:
+		# class tenor:
+		# class themeForest:
+		# class tikTok:
+		# class tnAFlix:
+		# class tradingView:
+		# class trakt:
+		# class trashboxRU:
+		# class trawelling:
+		# class trello:
+		# class tryHackMe:
+		# class tuna:
+		# class twitch:
+		# class twitter:
+		# class ultimateGuitar:
+		# class unsplash:
+		# class vK:
+		# class vSCO:
+		# class velomania:
+		# class venmo:
+		# class vero:
+		# class vimeo:
+		# class virgool:
+		# class virusTotal:
+		# class wICGForum:
+		# class warriorForum:
+		# class wattpad:
+		# class webNode:
+		# class weblate:
+		# class weebly:
+		# class whonixForum:
+		# class wikidot:
+		# class wikipedia:
+		# class windy:
+		# class wix:
+		# class wolframalphaForum:
+		# class wordPressOrg:
+		# class wordnik:
+		# class xboxGamertag:
+		# class xvideos:
+		# class youNow:
+		# class youPic:
+		# class zhihu:
+		# class akniga:
+		# class authorSTREAM:
+		# class babyRU:
+		# class babyblogRU:
+		# class chaossocial:
+		# class couchsurfing:
+		# class d3RU:
+		# class devRant:
+		# class drive2:
+		# class eGPU:
+		# class fl:
+		# class forumguns:
+		# class freecodecamp:
+		# class geocaching:
+		# class gfycat:
+		# class habr:
+		# class hunting:
+		# class iMGSRCRU:
+		# class igromania:
+		# class interpals:
+		# class irecommend:
+		# class jbzdcompl:
+		# class kwork:
+		# class labpentestit:
+		# class lastfm:
+		# class leasehackr:
+		# class livelib:
+		# class mastodoncloud:
+		# class mastodonsocial:
+		# class mastodontechnology:
+		# class mastodonxyz:
+		# class metacritic:
+		# class moikrug:
+		# class mstdnio:
+		# class nairalandcom:
+		# class nnRU:
+		# class note:
+		# class npm:
+		# class opennet:
+		# class osu!:
+		# class phpRU:
+		# class pikabu:
+		# class pr0gramm:
+		# class proghu:
+		# class queeraf:
+		# class satsisRU:
+		# class sessionize:
+		# class skyrock:
+		# class socialtchncsde:
+		# class spletnik:
+		# class svidbook:
+		# class toster:
+		# class uid:
+		# class wikivg:
+			
 	# class sensetive_data:
 	# 	social_security_number = "dp.sensetive_data.social_security_number"
 	# class credit_card:
