@@ -30,7 +30,7 @@ class datapoints:
 			as in 26/65 years old"""
 	class date_of_birth:
 		generic = "Date Of Birth"
-		""" '1st of March 20250', '12.05.2005', '15th March' \n
+		""" '1st of March 2025', '12.05.2005', '15th March' \n
 		If possible use the more specific datapoints"""
 		class text:
 			day = "Day Of Birth (Text)"
@@ -47,12 +47,12 @@ class datapoints:
 	class person:
 		pronoun = "Pronoun"
 		" 'He', 'She', 'They' "
-		ethnicity = "Ethnicity"
-		" 'Black', 'White', 'Asian', 'Hispanic' "
 		nationality = "Nationality"
 		" 'American', 'Canadian', 'Russian' "
+		ethnicity = "Ethnicity"
+		" 'Black', 'White', 'Asian', 'Hispanic' "
 		gender = "Gender"
-		" 'Male', 'Female', 'Other', etc "
+		" 'Male', 'Female', 'Other' "
 		class body:
 			class height:
 				cm = "Height (cm)"
@@ -67,7 +67,7 @@ class datapoints:
 				pounds = "Weight (lbs)"
 				" '140', '150' "
 			biological_gender = "Gender (Biological)"
-			" 'Male', 'Female', 'Other', etc "
+			" 'Male', 'Female', 'Intersex' "
 			eye_color = "Eye Color"
 			" 'Blue', 'Brown', 'Green' "
 			skin_color = "Skin Color"
@@ -88,7 +88,7 @@ class datapoints:
 		class identifier:
 			license_plate = "License Plate"
 			"""For Cars, bikes etc\n
-			'SAM 911E', 'HH 07194' """
+			'SAM 911E', 'HM 07194' """
 			tail_number = "Tail Number"
 			"""For Planes\n
 			'7T-WHM	', 'N16-100	' """
@@ -101,7 +101,7 @@ class datapoints:
 		longitude = "Longitude"
 		" '-115.799632', '115°47'58.7\"W' "
 		zip_code = "Zip Code"
-
+		" '90210', '90211' "
 		state_or_region = "State/Region"
 		" 'Kansas', 'Pest', 'Bayern', "
 		city = "City"
@@ -110,6 +110,8 @@ class datapoints:
 		" 'Claflin Rd', 'Kossuth Lajos u.', 'Adelheidstraße' "
 		house_number = "House Number"
 		" '1800 ', '74', '14' "
+		apartment_number = "House Number"
+		" '1', '2', '3' "
 		class country:
 			name = "Country Name"
 			" 'Germany', 'Hungary', 'United States of America' "
@@ -132,6 +134,8 @@ class datapoints:
 		" '*@aol.com' "
 		msn = "MSN Email"
 		" '*@msn.com' "
+		icloud = "iCloud Email"
+		" '@icloud.com', '@me.com', '@mac.com' "
 		# TODO | Expand list using https://email-verify.my-addr.com/list-of-most-popular-email-domains.php
 	class ip:
 		address_v4 = "Ip Address (v4)"
@@ -156,29 +160,61 @@ class datapoints:
 	class profile:
 		class discord:
 			class _badges:
+				# TODO | replace 0's with titles
 				""" DO NOT USE AS ACTUAL DATAPOINT \n
 				This class is used to standartize discord badge representation """
 				active_developer = 0
+				partner_server_owner = 0
+				discord_staff = 0
+				hypesquad_events = 0
+				moderator_program_alumini = 0
+				early_supporter = 0
+				class bug_hunter:
+					normal = 0
+					gold = 0
+				class nitro:
+					generic = 0
+					class type:
+						nitro = 0
+						classic = 0
+						basic = 0
+				class server_booster:
+					generic = 0
+					class months:
+						one = 0
+						two = 0
+						three = 0
+						six = 0
+						nine = 0
+						twelve = 0
+						fifteen = 0
+						eighteen = 0
+						twentyfour = 0
 				class hype_squad:
+					bravery = 0
 					brilliance = 0
-				# TODO | Add all Discord Badges
+					balance = 0
 			id = "Discord User Id"
 			" '155149108183695360' "
 			username = "Discord Username"
 			" 'Dyno' "
 			old_tag = "Discord Tag (#)"
 			" 'Dyno#3861' "
+			pronouns = "Discord Pronouns"
+			" 'He/Him', 'She/Her', 'They/Them' "
 			pfp_url = "Discord Avatar"
 			" 'https://cdn.discordapp.com/avatars/155149108183695360/19a5ee4114b47195fcecc6646f2380b1.png' "
 			banner_url = "Discord Banner"
 			" 'https://cdn.discordapp.com/banners/204683417445466112/a6ca48aad51922940e6bc383dbd0d852.png' "
 			bio = "Discord Bio"
-			""" Replace new lines with escaped new lines \n
+			""" Replace new lines with "\\n" \n
 			'The Discord bot to make server management and moderation easy. Follow your favorite streamers, run giveaways, and more! \\n \\n https://dyno.gg/' """
 			badges = "Discord User Badges"
 			""" Refer to datapoints.socialmedia.discord._badges for a list of all supported badges \n
 			'[datapoints.socialmedia.discord._badges.active_developer,datapoints.socialmedia.discord._badges.hype_squad.brilliance]' """
 		class youtube:
+			monetized = "Youtube Monetized (Channel)"
+			" 'True', 'False' "
 			alias = "Youtube Alias"
 			" '@JCMS_', '@Miimii' "
 			channel_id = "Youtube Channel Id"
@@ -193,10 +229,56 @@ class datapoints:
 			" '125', '56', '1068' "
 			playlist_count = "Youtube Playlist Count"
 			" '125', '56', '1068' "
+			pfp_url = "Youtube Avatar"
+			" 'https://yt3.googleusercontent.com/83wD4pS_vVQa8g537_4YnVZPjD9vND7YC_7zrnrNcMod8ARTSbtplGOKtDn6dnRrj3C9VHC_=s176-c-k-c0x00ffffff-no-rj' "
+			banner_url = "Youtube Banner"
+			" 'https://yt3.googleusercontent.com/Zu8akd4ko8jflbKe0NAfAPt-VMMRAB6sGuiR1a9sOMIM0U1_5GghAjYK4T7JcLzyYDoAcZjPCA=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj' "
 			bio = "Youtube Bio"
-			""" Replace new lines with escaped new lines \n
-			'Welcome back to my channel!' """
-		# class facebook:
+			""" Replace new lines with "\\n" \n
+			'Welcome back to my channel!' 'This is my new Channel! \\n Daily uploads!!!'"""
+			like_percentage = "Youtube Channel Like Percentage"
+			" '89', '45' "
+			dislike_percentage = "Youtube Channel Dislike Percentage"
+			" '89', '45' "
+			like_count = "Youtube Channel Like Count"
+			" '25', '1556486' "
+			dislike_count = "Youtube Channel Dislike Count"
+			" '25', '1556486' "
+			class video:
+				monetized = "Youtube Monetized (Video)"
+				" 'True', 'False' "
+				id = "Youtube Video Id"
+				" 'Uj2jZy9WQ3Z4H8FfYl0YyjwQ' "
+				title = "Youtube Video Title"
+				" 'The first 1000 subscribers!' "
+				thumbnail_url = "Youtube Video Thumbnail"
+				" 'https://i.ytimg.com/vi/Uj2jZy9WQ3Z4/hqdefault.jpg' "
+				view_count = "Youtube Video View Count"
+				" '301', '465486' "
+				like_count = "Youtube Video Like Count"
+				" '25', '1556486' "
+				dislike_count = "Youtube Video Dislike Count"
+				" '25', '1556486' "
+				comment_count = "Youtube Video Comment Count"
+				" '301', '496' "
+				like_percentage = "Youtube Video Like Percentage"
+				" '89', '45' "
+				dislike_percentage = "Youtube Video Dislike Percentage"
+				" '89', '45' "
+				upload_date = "Youtube Video Upload Date"
+				" '2022-11-11' " # TODO | replace with date thingy
+				description = "Youtube Video Description"
+				" 'The first 1000 subscribers! \\n So much fun!' "
+				class duration:
+					seconds = "Youtube Video Duration (Seconds)"
+					" '3600' "
+					minutes = "Youtube Video Duration (Minutes)"
+					" '60' "
+					hours = "Youtube Video Duration (Hours)"
+					" '1' "				
+		class facebook:
+			id = "Facebook Id"
+			""" '100481883450288', '106482883650228' """
 		# class instagram:
 		# class snapchat:
 		# class threads:
